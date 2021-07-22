@@ -15,7 +15,8 @@ CREATE TABLE "public"."users" (
 	"email" TEXT,
 	"createdAt" TIMESTAMP NOT NULL DEFAULT 'now()',
 	"avatar" TEXT,
-	"location" TEXT,
+	"city" TEXT,
+  "state" TEXT,
 	CONSTRAINT "users_pk" PRIMARY KEY ("userId")
 ) WITH (
   OIDS=FALSE

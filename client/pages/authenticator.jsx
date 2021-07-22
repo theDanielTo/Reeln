@@ -2,33 +2,24 @@ import React from 'react';
 
 const MIN_PASS_LEN = 6;
 
-class Input extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(e) {
-    this.props.onInputChange(e.target.id, e.target.value);
-  }
-
-  render() {
-    const inputType = (this.props.field === 'password')
-      ? 'password'
-      : 'text';
-    return (
-      <>
-        <label htmlFor={this.props.field}>{this.props.text}</label>
-        <input
-          type={inputType}
-          name={this.props.field}
-          id={this.props.field}
-          value={this.props.inputValue}
-          onChange={this.handleChange} />
-      </>
-    );
-  }
-
+function Input(props) {
+  const handleChange = e => {
+    props.onInputChange(e.target.id, e.target.value);
+  };
+  const inputType = (props.field === 'password')
+    ? 'password'
+    : 'text';
+  return (
+    <>
+      <label htmlFor={props.field}>{props.text}</label>
+      <input
+        type={inputType}
+        name={props.field}
+        id={props.field}
+        value={props.inputValue}
+        onChange={handleChange} />
+    </>
+  );
 }
 
 class AuthForm extends React.Component {
@@ -40,6 +31,7 @@ class AuthForm extends React.Component {
       userLocation: '',
       username: '',
       password: '',
+      email: '',
       avatar: '',
       isValid: false,
       errorMsg: ''
@@ -51,7 +43,6 @@ class AuthForm extends React.Component {
 
   onInputChange(field, value) {
     this.setState({ [field]: value });
-
   }
 
   handleSubmit(e) {
@@ -76,7 +67,7 @@ class AuthForm extends React.Component {
           body: JSON.stringify(userInfo)
         })
           .then(res => res.json())
-          .then(this.props.onSignUp())
+          .then(this.props.onAuthSubmit())
           .catch(err => console.error(err));
       }
     } else {
@@ -88,7 +79,7 @@ class AuthForm extends React.Component {
         body: JSON.stringify(userInfo)
       })
         .then(res => res.json(username, password))
-        .then(this.props.onSignIn())
+        .then(this.props.onAuthSubmit())
         .catch(err => console.error(err));
     }
   }
@@ -107,10 +98,70 @@ class AuthForm extends React.Component {
           inputValue={this.state.lastName}
           onInputChange={this.onInputChange}/>
         <Input
-          field="userLocation"
-          text="Location"
-          inputValue={this.state.userLocation}
+          field="email"
+          text="Email"
+          inputValue={this.state.email}
           onInputChange={this.onInputChange}/>
+        <Input
+          field="userLocation"
+          text="City"
+          inputValue={this.state.userLocation}
+          onInputChange={this.onInputChange} />
+        <label htmlFor="state">State</label>
+        <select name="state" id="state">
+          <option value="">--Select--</option>
+          <option value="AL">Alabama</option>
+          <option value="AK">Alaska</option>
+          <option value="AZ">Arizona</option>
+          <option value="AR">Arkansas</option>
+          <option value="CA">California</option>
+          <option value="CO">Colorado</option>
+          <option value="CT">Connecticut</option>
+          <option value="DE">Delaware</option>
+          <option value="DC">District Of Columbia</option>
+          <option value="FL">Florida</option>
+          <option value="GA">Georgia</option>
+          <option value="HI">Hawaii</option>
+          <option value="ID">Idaho</option>
+          <option value="IL">Illinois</option>
+          <option value="IN">Indiana</option>
+          <option value="IA">Iowa</option>
+          <option value="KS">Kansas</option>
+          <option value="KY">Kentucky</option>
+          <option value="LA">Louisiana</option>
+          <option value="ME">Maine</option>
+          <option value="MD">Maryland</option>
+          <option value="MA">Massachusetts</option>
+          <option value="MI">Michigan</option>
+          <option value="MN">Minnesota</option>
+          <option value="MS">Mississippi</option>
+          <option value="MO">Missouri</option>
+          <option value="MT">Montana</option>
+          <option value="NE">Nebraska</option>
+          <option value="NV">Nevada</option>
+          <option value="NH">New Hampshire</option>
+          <option value="NJ">New Jersey</option>
+          <option value="NM">New Mexico</option>
+          <option value="NY">New York</option>
+          <option value="NC">North Carolina</option>
+          <option value="ND">North Dakota</option>
+          <option value="OH">Ohio</option>
+          <option value="OK">Oklahoma</option>
+          <option value="OR">Oregon</option>
+          <option value="PA">Pennsylvania</option>
+          <option value="RI">Rhode Island</option>
+          <option value="SC">South Carolina</option>
+          <option value="SD">South Dakota</option>
+          <option value="TN">Tennessee</option>
+          <option value="TX">Texas</option>
+          <option value="UT">Utah</option>
+          <option value="VT">Vermont</option>
+          <option value="VA">Virginia</option>
+          <option value="WA">Washington</option>
+          <option value="WV">West Virginia</option>
+          <option value="WI">Wisconsin</option>
+          <option value="WY">Wyoming</option>
+        </select>
       </>
     );
   }
@@ -153,8 +204,7 @@ export default function Authenticator(props) {
       <h1>Reel&apos;n</h1>
       <AuthForm
         registered={props.registered}
-        onSignUp={props.onSignUp}
-        onSignIn={props.onSignIn} />
+        onAuthSubmit={props.onAuthSubmit} />
     </div>
   );
 }

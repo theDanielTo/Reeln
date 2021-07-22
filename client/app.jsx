@@ -2,21 +2,23 @@ import React from 'react';
 import Splash from './pages/splash';
 import Authenticator from './pages/authenticator';
 import Header from './components/header';
+import NavBar from './components/nav-bar';
 import Home from './pages/home';
 // import Tournaments from './pages/tournaments';
-// import { parseRoute } from './lib';
+import { parseRoute } from './lib';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // route: parseRoute(window.location.hash),
-      loading: false,
+      route: parseRoute(window.location.hash),
+      loading: true,
       registered: true,
-      authorized: true
+      authorized: true,
+      page: 'home'
     };
-    this.handleSignUp = this.handleSignUp.bind(this);
-    this.handleSignIn = this.handleSignIn.bind(this);
+    this.handleAuthSubmit = this.handleAuthSubmit.bind(this);
+    this.handleNavClick = this.handleNavClick.bind(this);
   }
 
   componentDidMount() {
@@ -24,21 +26,30 @@ export default class App extends React.Component {
       this.setState({
         loading: false
       });
-    }, 1500);
+    }, 2000);
   }
 
-  handleSignUp() {
-    this.setState({ registered: true });
+  handleAuthSubmit() {
+    if (!this.state.registered) {
+      this.setState({ registered: true });
+    } else {
+      this.setState({ authorized: true });
+    }
   }
 
-  handleSignIn() {
-    this.setState({ authorized: true });
+  handleNavClick(page) {
+    this.setState({ page: page });
   }
 
   renderPage() {
     // const { route } = this.state;
     // if (route.path === '') {
-    return <Home />;
+    return (
+      <>
+        <Home />
+        <NavBar onNavClick={this.handleNavClick} page={this.state.page}/>
+      </>
+    );
     // }
     // if (route.path === 'tournaments') {
     //   // const productId = route.params.get('productId');
@@ -52,8 +63,7 @@ export default class App extends React.Component {
       return (
         <Authenticator
           registered={this.state.registered}
-          onSignUp={this.handleSignUp}
-          onSignIn={this.handleSignIn} />
+          onAuthSubmit={this.handleAuthSubmit} />
       );
     }
     return (
