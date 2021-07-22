@@ -55,7 +55,6 @@ export default class App extends React.Component {
       );
     }
     if (route.path === 'tournaments') {
-      // const productId = route.params.get('productId');
       return (
         <>
           <Tournaments />;
