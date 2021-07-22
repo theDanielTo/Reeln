@@ -10,7 +10,7 @@ export default function Header(props) {
         <div className="header-title">{props.title}</div>
       </div>
       <div className="header-item">
-        <span className="header-cancel">Cancel</span>
+        <span className="header-cancel hidden">Cancel</span>
       </div>
     </header>
   );
