@@ -12,9 +12,11 @@ export default class App extends React.Component {
     this.state = {
       // route: parseRoute(window.location.hash),
       loading: false,
-      registered: true,
-      authorized: true
+      registered: false,
+      authorized: false
     };
+    this.handleSignUp = this.handleSignUp.bind(this);
+    this.handleSignIn = this.handleSignIn.bind(this);
   }
 
   componentDidMount() {
@@ -23,6 +25,14 @@ export default class App extends React.Component {
         loading: false
       });
     }, 1500);
+  }
+
+  handleSignUp() {
+    this.setState({ registered: true });
+  }
+
+  handleSignIn() {
+    this.setState({ authorized: true });
   }
 
   renderPage() {
@@ -41,7 +51,9 @@ export default class App extends React.Component {
     if (!this.state.authorized) {
       return (
         <Authenticator
-          registered={this.state.registered} />
+          registered={this.state.registered}
+          onSignUp={this.handleSignUp}
+          onSignIn={this.handleSignIn} />
       );
     }
     return (
