@@ -1,18 +1,11 @@
 require('dotenv/config');
-const argon2 = require('argon2'); // eslint-disable-line
 const express = require('express');
-const pg = require('pg');
+const db = require('./db');
+const argon2 = require('argon2'); // eslint-disable-line
 const jwt = require('jsonwebtoken'); // eslint-disable-line
 const ClientError = require('./client-error');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
-
-const db = new pg.Pool({ // eslint-disable-line
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
 
 const app = express();
 app.use(staticMiddleware);
@@ -27,7 +20,8 @@ app.post('/api/auth/sign-up', (req, res, next) => {
     .hash(password)
     .then(hashedPw => {
       const sql = `
-        INSERT into "users" ("firstName", "lastName", "location", "username", "hashedPw")
+        INSERT into "users"
+          ("firstName", "lastName", "location", "username", "hashedPw")
         VALUES ($1, $2, $3, $4, $5)
         returning *
       `;
