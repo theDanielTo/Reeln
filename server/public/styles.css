@@ -263,6 +263,7 @@ iframe {
   padding: 10px;
   border-radius: 10px;
   font-size: 18px;
+  text-align: center;
 }
 
 /* Card */
@@ -305,7 +306,7 @@ iframe {
 
 /* Create Tourney Form */
 .create-tourney-form {
-  padding: 90px 5%;
+  padding: 100px 5%;
 }
 
 .input-group {
@@ -338,8 +339,17 @@ iframe {
   flex-direction: column;
 }
 
+.inline-input label > span {
+  display: block;
+  font-size: 12px;
+}
+
 .inline-input input {
   width: 100%;
+}
+
+.point-counter {
+  text-align: center;
 }
 
 textarea {

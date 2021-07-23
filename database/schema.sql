@@ -26,7 +26,10 @@ CREATE TABLE "public"."users" (
 
 CREATE TABLE "public"."tourneyRules" (
 	"tourneyId" integer NOT NULL UNIQUE,
+  "tourneyImg" BOOLEAN,
 	"public" BOOLEAN NOT NULL,
+  "minWeight" integer,
+  "maxWeight" integer,
 	"heaviestFive" BOOLEAN NOT NULL,
 	"perPound" BOOLEAN NOT NULL,
 	"pointsPerPound" integer,
@@ -49,6 +52,7 @@ CREATE TABLE "public"."tournaments" (
 	"tourneyId" serial NOT NULL,
 	"userId" integer NOT NULL,
 	"tourneyName" TEXT NOT NULL,
+  "tourneyImg" text,
 	"startDate" serial NOT NULL UNIQUE,
 	"endDate" serial NOT NULL UNIQUE,
 	CONSTRAINT "tournaments_pk" PRIMARY KEY ("tourneyId")
