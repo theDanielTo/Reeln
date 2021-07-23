@@ -8,9 +8,9 @@ export default class TourneyForm extends React.Component {
       tourneyImg: '',
       startDate: '',
       endDate: '',
-      public: 'true',
-      minWeight: '',
-      maxWeight: '',
+      closed: 'true',
+      minWeight: 0,
+      maxWeight: 0,
       heaviestFive: 'false',
       perPound: 'false',
       pointsPerPound: 1,
@@ -44,6 +44,7 @@ export default class TourneyForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    this.props.onFormSubmit(this.state);
   }
 
   render() {
@@ -79,14 +80,14 @@ export default class TourneyForm extends React.Component {
           <label htmlFor="type">Type of tourney</label>
           <div>
             <input type="radio" name="public" id="public"
-              value={true}
+              value={false}
               onChange={this.handleChange}
-              checked={this.state.public === 'true'} />
+              checked={this.state.public === 'false'} />
             <label htmlFor="public">Public</label>
           </div>
           <div>
             <input type="radio" name="public" id="closed"
-              value={false}
+              value={true}
               onChange={this.handleChange} />
             <label htmlFor="closed">Closed / Invitational</label>
           </div>
@@ -182,12 +183,6 @@ export default class TourneyForm extends React.Component {
             onChange={this.handleChange} />
         </div>
 
-        <button type="submit" className="border-none submit-tourney-btn">
-          Create Tournament
-        </button>
-        <button className="border-none cancel-tourney-btn">
-          Cancel
-        </button>
         <datalist id="tickmarks-1">
           <option value="0"></option>
           <option value="1"></option>
@@ -214,6 +209,15 @@ export default class TourneyForm extends React.Component {
           <option value="90"></option>
           <option value="100"></option>
         </datalist>
+
+        <a href="#tournaments" className="link-no-deco">
+          <button type="submit" className="border-none submit-tourney-btn">
+            Create Tournament
+          </button>
+        </a>
+        <a href="#tournaments" className="border-none cancel-tourney-btn">
+          Cancel
+        </a>
       </form>
     );
   }

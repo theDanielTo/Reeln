@@ -8,58 +8,45 @@ create schema "public";
 
 CREATE TABLE "public"."users" (
 	"userId" serial NOT NULL,
-	"username" TEXT NOT NULL UNIQUE,
-	"hashedPw" TEXT NOT NULL,
 	"firstName" TEXT NOT NULL,
 	"lastName" TEXT NOT NULL,
 	"email" TEXT,
+	"city" TEXT NOT NULL,
+	"state" TEXT NOT NULL,
+	"username" TEXT NOT NULL UNIQUE,
+	"hashedPw" TEXT NOT NULL,
+	"avatar" TEXT NOT NULL,
 	"createdAt" TIMESTAMP NOT NULL DEFAULT 'now()',
-	"avatar" TEXT,
-	"city" TEXT,
-  "state" TEXT,
 	CONSTRAINT "users_pk" PRIMARY KEY ("userId")
 ) WITH (
   OIDS=FALSE
 );
 
 
-
-CREATE TABLE "public"."tourneyRules" (
-	"tourneyId" integer NOT NULL UNIQUE,
-  "tourneyImg" BOOLEAN,
-	"public" BOOLEAN NOT NULL,
-  "minWeight" integer,
-  "maxWeight" integer,
+CREATE TABLE "public"."tourneyDetails" (
+	"tourneyId" serial NOT NULL UNIQUE,
+	"userId" TEXT NOT NULL,
+	"tourneyName" TEXT NOT NULL,
+	"tourneyImg" TEXT NOT NULL,
+	"startDate" DATE NOT NULL,
+	"endDate" DATE NOT NULL,
+	"closed" BOOLEAN NOT NULL,
+	"minWeight" TEXT NOT NULL,
+	"maxWeight" TEXT NOT NULL,
 	"heaviestFive" BOOLEAN NOT NULL,
 	"perPound" BOOLEAN NOT NULL,
 	"pointsPerPound" integer,
-	"pointsPerOunce" integer,
+	"pointsHeaviest" integer,
 	"heaviest" BOOLEAN NOT NULL,
 	"longest" BOOLEAN NOT NULL,
-	"mostCaught" BOOLEAN NOT NULL,
-	"pointsHeaviest" integer,
 	"pointsLongest" integer,
+	"mostCaught" BOOLEAN NOT NULL,
 	"pointsMostCaught" integer,
 	"additionalRules" TEXT,
-	CONSTRAINT "tourneyRules_pk" PRIMARY KEY ("tourneyId")
+	CONSTRAINT "tourneyDetails_pk" PRIMARY KEY ("tourneyId")
 ) WITH (
   OIDS=FALSE
 );
-
-
-
-CREATE TABLE "public"."tournaments" (
-	"tourneyId" serial NOT NULL,
-	"userId" integer NOT NULL,
-	"tourneyName" TEXT NOT NULL,
-  "tourneyImg" text,
-	"startDate" serial NOT NULL UNIQUE,
-	"endDate" serial NOT NULL UNIQUE,
-	CONSTRAINT "tournaments_pk" PRIMARY KEY ("tourneyId")
-) WITH (
-  OIDS=FALSE
-);
-
 
 
 CREATE TABLE "public"."catches" (
@@ -77,7 +64,6 @@ CREATE TABLE "public"."catches" (
 );
 
 
-
 CREATE TABLE "public"."chatLog" (
 	"tourneyId" integer NOT NULL,
 	"userId" integer NOT NULL,
@@ -87,7 +73,6 @@ CREATE TABLE "public"."chatLog" (
 ) WITH (
   OIDS=FALSE
 );
-
 
 
 CREATE TABLE "public"."participants" (
@@ -101,15 +86,12 @@ CREATE TABLE "public"."participants" (
 
 
 
-ALTER TABLE "tourneyRules" ADD CONSTRAINT "tourneyRules_fk0" FOREIGN KEY ("tourneyId") REFERENCES "tournaments"("tourneyId");
-
-ALTER TABLE "tournaments" ADD CONSTRAINT "tournaments_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
 
 ALTER TABLE "catches" ADD CONSTRAINT "catches_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
-ALTER TABLE "catches" ADD CONSTRAINT "catches_fk1" FOREIGN KEY ("tourneyId") REFERENCES "tournaments"("tourneyId");
+ALTER TABLE "catches" ADD CONSTRAINT "catches_fk1" FOREIGN KEY ("tourneyId") REFERENCES "tourneyDetails"("tourneyId");
 
-ALTER TABLE "chatLog" ADD CONSTRAINT "chatLog_fk0" FOREIGN KEY ("tourneyId") REFERENCES "tournaments"("tourneyId");
+ALTER TABLE "chatLog" ADD CONSTRAINT "chatLog_fk0" FOREIGN KEY ("tourneyId") REFERENCES "tourneyDetails"("tourneyId");
 ALTER TABLE "chatLog" ADD CONSTRAINT "chatLog_fk1" FOREIGN KEY ("userId") REFERENCES "users"("userId");
 
 ALTER TABLE "participants" ADD CONSTRAINT "participants_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
-ALTER TABLE "participants" ADD CONSTRAINT "participants_fk1" FOREIGN KEY ("tourneyId") REFERENCES "tournaments"("tourneyId");
+ALTER TABLE "participants" ADD CONSTRAINT "participants_fk1" FOREIGN KEY ("tourneyId") REFERENCES "tourneyDetails"("tourneyId");

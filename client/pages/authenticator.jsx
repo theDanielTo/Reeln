@@ -1,4 +1,5 @@
 import React from 'react';
+import { storeToken } from '../lib';
 
 const MIN_PASS_LEN = 6;
 
@@ -26,18 +27,21 @@ class AuthForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      token: '',
       firstName: '',
       lastName: '',
-      userLocation: '',
+      email: '',
+      city: '',
+      state: '',
       username: '',
       password: '',
-      email: '',
       avatar: '',
       isValid: false,
       errorMsg: ''
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
+    this.handleSelectState = this.handleSelectState.bind(this);
     this.renderSignUpInputs = this.renderSignUpInputs.bind(this);
   }
 
@@ -45,11 +49,15 @@ class AuthForm extends React.Component {
     this.setState({ [field]: value });
   }
 
+  handleSelectState(e) {
+    this.setState({ state: e.target.value });
+  }
+
   handleSubmit(e) {
     e.preventDefault();
 
-    const { firstName, lastName, userLocation, username, password, avatar } = this.state;
-    const userInfo = { firstName, lastName, userLocation, username, password, avatar };
+    const { firstName, lastName, email, city, state, username, password, avatar } = this.state;
+    const userInfo = { firstName, lastName, email, city, state, username, password, avatar };
     if (!this.props.registered) {
       if (this.state.password.length === 0) {
         this.setState({ errorMsg: 'A password is required.' });
@@ -67,7 +75,10 @@ class AuthForm extends React.Component {
           body: JSON.stringify(userInfo)
         })
           .then(res => res.json())
-          .then(this.props.onAuthSubmit())
+          .then(obj => {
+            storeToken(obj.token);
+            this.props.onAuthSubmit(obj.token);
+          })
           .catch(err => console.error(err));
       }
     } else {
@@ -79,7 +90,9 @@ class AuthForm extends React.Component {
         body: JSON.stringify(userInfo)
       })
         .then(res => res.json(username, password))
-        .then(this.props.onAuthSubmit())
+        .then(obj => {
+          this.props.onAuthSubmit(obj.token);
+        })
         .catch(err => console.error(err));
     }
   }
@@ -103,12 +116,13 @@ class AuthForm extends React.Component {
           inputValue={this.state.email}
           onInputChange={this.onInputChange}/>
         <Input
-          field="userLocation"
+          field="city"
           text="City"
           inputValue={this.state.userLocation}
           onInputChange={this.onInputChange} />
         <label htmlFor="state">State</label>
-        <select name="state" id="state">
+        <select name="state" id="state"
+          onChange={this.handleSelectState}>
           <option value="">--Select--</option>
           <option value="AL">Alabama</option>
           <option value="AK">Alaska</option>

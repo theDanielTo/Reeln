@@ -17,16 +17,18 @@ export default class Tournaments extends React.Component {
     this.renderCards = this.renderCards.bind(this);
     this.handleCreateClick = this.handleCreateClick.bind(this);
     this.renderPage = this.renderPage.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
   componentDidMount() {
     this.setState({ page: 'open' });
-    // window.addEventListener('hashchange', event => {
-    //   this.setState({ route: parseRoute(window.location.hash) });
-    // });
     // fetch('/api/tournaments')
     //   .then(res => res.json())
     //   .then(tournaments => this.setState({ tournaments }));
+  }
+
+  componentDidUpdate() {
+    window.scrollTo(0, 0);
   }
 
   renderCards() {
@@ -53,13 +55,28 @@ export default class Tournaments extends React.Component {
     });
   }
 
+  handleFormSubmit(details) {
+    fetch('/api/tourney/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(details)
+    })
+      .then(res => res.json())
+      .then(obj => {
+        this.setState({ tournaments: [...this.state.tournaments, obj] });
+      })
+      .catch(err => console.error(err));
+  }
+
   renderPage() {
     const { route } = this.state;
     if (route.params.has('create')) {
       return (
         <>
           <ReelnBanner />
-          <TourneyForm />
+          <TourneyForm onFormSubmit={this.handleFormSubmit} />
         </>
       );
     }

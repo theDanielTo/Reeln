@@ -1,3 +1,4 @@
+/* Variables */
 :root {
   --main-color: #004445;
   --light-color: #fffdea;
@@ -5,6 +6,33 @@
   --alt-color: #2c7873;
   --selected-color: #ffd800;
   --brand-text: 'Cutive', serif;
+}
+
+/* Helpers */
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.selected {
+  color: var(--selected-color) !important;
+}
+
+.color-red {
+  color: red;
+}
+
+.border-none {
+  border: none;
+}
+
+.link-no-deco {
+  text-decoration: none;
+}
+
+.link-no-deco:visited {
+  text-decoration: none;
 }
 
 /* splash-page */
@@ -356,7 +384,8 @@ textarea {
   width: 100%;
 }
 
-.create-tourney-form button {
+.create-tourney-form button,
+.create-tourney-form > a {
   width: 100%;
   margin-top: 10px;
   padding: 10px;
@@ -364,6 +393,8 @@ textarea {
   border-radius: 5px;
   font-size: 16px;
   font-weight: bold;
+  text-align: center;
+  cursor: pointer;
 }
 
 .submit-tourney-btn {
@@ -374,27 +405,4 @@ textarea {
 .cancel-tourney-btn {
   background-color: rgb(195, 195, 195);
   color: rgb(51, 51, 51);
-}
-
-/* helpers */
-.flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.selected {
-  color: var(--selected-color) !important;
-}
-
-.color-red {
-  color: red;
-}
-
-a {
-  text-decoration: none;
-}
-
-.border-none {
-  border: none;
 }
