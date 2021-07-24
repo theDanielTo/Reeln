@@ -5,6 +5,7 @@ const clientPath = path.join(__dirname, 'client');
 const serverPublicPath = path.join(__dirname, 'server/public');
 
 module.exports = {
+  mode: 'development',
   resolve: {
     extensions: ['.js', '.jsx']
   },
