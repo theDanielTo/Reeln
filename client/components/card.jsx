@@ -17,7 +17,6 @@ export default function Card(props) {
     <div className="card">
       <img className="card-img" src={props.src} alt="Photo of fish" />
       <div className="card-details">
-        { /* {cardDetails()} */}
         <p className="card-text">Kicking Bass</p>
         <p className="card-text">Jul 16 - Aug 16</p>
         <p className="card-text">10 participants</p>

@@ -1,6 +1,7 @@
 import React from 'react';
 import Splash from './pages/splash';
 import Authenticator from './pages/authenticator';
+import AppDrawer from './components/app-drawer';
 import Header from './components/header';
 import NavBar from './components/nav-bar';
 import Home from './pages/home';
@@ -13,16 +14,15 @@ export default class App extends React.Component {
     this.state = {
       token: '',
       route: parseRoute(window.location.hash),
-      loading: true,
+      loading: false,
       registered: true,
-      authorized: true,
-      page: 'home'
+      authorized: true
     };
     this.handleAuthSubmit = this.handleAuthSubmit.bind(this);
-    this.handleNavClick = this.handleNavClick.bind(this);
   }
 
   componentDidUpdate() {
+    window.scrollTo(0, 0);
   }
 
   componentDidMount() {
@@ -52,32 +52,25 @@ export default class App extends React.Component {
     }
   }
 
-  handleNavClick(page) {
-    this.setState({ page: page });
-  }
-
   renderPage() {
     const { route } = this.state;
     if (route.path === '') {
       return (
-      <>
-        <Home />
-        <NavBar onNavClick={this.handleNavClick} page={this.state.page}/>
-      </>
+        <div className="page">
+          <Home />
+        </div>
       );
     }
     if (route.path === 'tournaments') {
       return (
-        <>
+        <div className="page">
           <Tournaments />;
-          <NavBar onNavClick={this.handleNavClick} page={this.state.page} />
-        </>
+        </div>
       );
     }
   }
 
   render() {
-    // console.log('token:', this.state.token);
     if (this.state.loading) return <Splash />;
     if (!this.state.authorized) {
       return (
@@ -87,10 +80,14 @@ export default class App extends React.Component {
       );
     }
     return (
-        <>
-          <Header title="Reel'n"/>
+      <>
+        <AppDrawer />
+        <Header title="Reel'n" />
+        <div className="container">
           {this.renderPage()}
-        </>
+        </div>
+        <NavBar onNavClick={this.handleNavClick}/>
+      </>
     );
   }
 

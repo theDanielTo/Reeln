@@ -1,4 +1,5 @@
 import React from 'react';
+import { parseRoute } from '../lib';
 
 const navIcons = [
   {
@@ -33,42 +34,35 @@ const navIcons = [
   }
 ];
 
-function NavIcon(props) {
-  return (
-    <a href={props.href}
-      id={props.id}
-      className="nav-icon"
-      onClick={props.onClick} >
-      <i className={'fas ' + props.icon + props.selected} />
-      <span className={props.selected}>{props.text}</span>
-    </a>
-  );
-}
 export default class NavBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      page: 'home'
+      route: parseRoute(window.location.hash)
     };
     this.handleClick = this.handleClick.bind(this);
     this.fillNavIcons = this.fillNavIcons.bind(this);
   }
 
+  componentDidMount() {
+    window.addEventListener('hashchange', event => {
+      this.setState({ route: parseRoute(window.location.hash) });
+    });
+  }
+
   handleClick(e) {
     this.setState({ page: e.target.closest('.nav-icon').id });
-    this.props.onNavClick(e.target.closest('.nav-icon').id);
   }
 
   fillNavIcons() {
     return navIcons.map(nav => {
-      const selected = (this.state.page === nav.id)
+      const selected = ('#' + this.state.route.path === nav.href)
         ? ' selected'
         : '';
       return (
         <NavIcon
           href={nav.href}
           key={nav.id}
-          id={nav.id}
           onClick={this.handleClick}
           icon={nav.icon}
           selected={selected}
@@ -84,4 +78,16 @@ export default class NavBar extends React.Component {
       </nav>
     );
   }
+}
+
+function NavIcon(props) {
+  return (
+    <a href={props.href}
+      id={props.id}
+      className="nav-icon link-no-deco"
+      onClick={props.onClick} >
+      <i className={'fas ' + props.icon + props.selected} />
+      <span className={props.selected}>{props.text}</span>
+    </a>
+  );
 }

@@ -8,7 +8,7 @@ export default class TourneyForm extends React.Component {
       tourneyImg: '',
       startDate: '',
       endDate: '',
-      closed: 'true',
+      closed: 'false',
       minWeight: 0,
       maxWeight: 0,
       heaviestFive: 'false',
@@ -55,20 +55,20 @@ export default class TourneyForm extends React.Component {
           value={this.state.tourneyName}
           onChange={this.handleChange} />
 
-        <div className="input-group">
+        <div className="form-group">
           <label htmlFor="tourneyImg">Choose a tourney picture</label>
           <input type="file" name="tourneyImg" id="tourneyImg"
             />
         </div>
 
-        <div className="inline-inputs">
-          <div className="inline-input">
+        <div className="inline-groups">
+          <div className="inline-group">
             <label htmlFor="startDate">Start Date</label>
             <input type="date" name="startDate" id="startDate"
               value={this.state.startDate}
               onChange={this.handleChange} />
           </div>
-          <div className="inline-input">
+          <div className="inline-group">
             <label htmlFor="endDate">End Date</label>
             <input type="date" name="endDate" id="endDate"
               value={this.state.endDate}
@@ -76,34 +76,37 @@ export default class TourneyForm extends React.Component {
           </div>
         </div>
 
-        <div className="input-group">
+        <div className="form-group">
           <label htmlFor="type">Type of tourney</label>
-          <div>
-            <input type="radio" name="public" id="public"
+          <div className="inline-input">
+            <input type="radio" name="closed" id="public"
               value={false}
               onChange={this.handleChange}
-              checked={this.state.public === 'false'} />
-            <label htmlFor="public">Public</label>
+              checked={this.state.closed === 'false'} />
+            <label htmlFor="public">Public<span>(Anyone can join)</span></label>
           </div>
-          <div>
-            <input type="radio" name="public" id="closed"
+          <div className="inline-input">
+            <input type="radio" name="closed" id="closed"
               value={true}
               onChange={this.handleChange} />
-            <label htmlFor="closed">Closed / Invitational</label>
+            <label htmlFor="closed">
+              Closed / Invitational
+              <span>(Only those who are invited may participate)</span>
+            </label>
           </div>
         </div>
 
-        <div className="inline-inputs">
-          <div className="inline-input">
+        <div className="inline-groups">
+          <div className="inline-group">
             <label htmlFor="minWeight">Minimum Weight <span>(0 if not applicable)</span></label>
-            <input type="number" name="minWeight" id="minWeight"
+            <input type="number" name="minWeight" id="minWeight" min={0}
               placeholder="0 lbs"
               value={this.state.minWeight}
               onChange={this.handleChange} />
           </div>
-          <div className="inline-input">
+          <div className="inline-group">
             <label htmlFor="maxWeight">Maximum Weight <span>(0 if not applicable)</span></label>
-            <input type="number" name="maxWeight" id="maxWeight"
+            <input type="number" name="maxWeight" id="maxWeight" min={0}
               placeholder="0 lbs."
               value={this.state.maxWeight}
               onChange={this.handleChange} />
@@ -111,17 +114,17 @@ export default class TourneyForm extends React.Component {
         </div>
 
         <h4>Point System</h4>
-        <div>
+        <div className="inline-input">
           <input type="checkbox" name="heaviestFive" id="heaviestFive"
             value={this.state.heaviestFive}
             onChange={this.handleCheckboxChange} />
           <label htmlFor="heaviestFive">Heaviest 5</label>
         </div>
-        <div>
+        <div className="inline-input">
           <input type="checkbox" name="perPound" id="perPound"
           value={this.state.perPound}
             onChange={this.handleCheckboxChange} />
-          <label htmlFor="perPound">Per Pound (1-10)</label>
+          <label htmlFor="perPound">Per Pound</label>
         </div>
         <input min="1" max="10" step="1" list="tickmarks-1"
           type="range"
@@ -130,10 +133,10 @@ export default class TourneyForm extends React.Component {
           value={this.state.pointsPerPound}
           onChange={this.handleChange}
           disabled={this.state.perPound === 'false'} />
-          <span className="flex-center">{this.state.pointsPerPound} points</span>
+        <span className="flex-center">{this.state.pointsPerPound} point(s)</span>
 
         <h4>BONUS</h4>
-        <div>
+        <div className="inline-input">
           <input type="checkbox" name="heaviest" id="heaviest"
             value={this.state.heaviest}
             onChange={this.handleCheckboxChange} />
@@ -146,8 +149,8 @@ export default class TourneyForm extends React.Component {
           value={this.state.pointsHeaviest}
           onChange={this.handleChange}
           disabled={this.state.heaviest === 'false'} />
-        <span className="flex-center">{this.state.pointsHeaviest} points</span>
-        <div>
+        <span className="flex-center">{this.state.pointsHeaviest} point(s)</span>
+        <div className="inline-input">
           <input type="checkbox" name="longest" id="longest"
             value={this.state.longest}
             onChange={this.handleCheckboxChange} />
@@ -160,8 +163,8 @@ export default class TourneyForm extends React.Component {
           value={this.state.pointsLongest}
           onChange={this.handleChange}
           disabled={this.state.longest === 'false'} />
-        <span className="flex-center">{this.state.pointsLongest} points</span>
-        <div>
+        <span className="flex-center">{this.state.pointsLongest} point(s)</span>
+        <div className="inline-input">
           <input type="checkbox" name="mostCaught" id="mostCaught"
           value={this.state.mostCaught}
           onChange={this.handleCheckboxChange} />
@@ -174,11 +177,12 @@ export default class TourneyForm extends React.Component {
           value={this.state.pointsMostCaught}
           onChange={this.handleChange}
           disabled={this.state.mostCaught === 'false'} />
-        <span className="flex-center">{this.state.pointsMostCaught} points</span>
+        <span className="flex-center">{this.state.pointsMostCaught} point(s)</span>
 
-        <div className="input-group">
+        <div className="form-group">
           <label htmlFor="additionalRules">Additional Rules / Notes</label>
           <textarea name="additionalRules" id="additionalRules" cols="30" rows="10"
+            className="additional-rules"
             value={this.state.additionalRules}
             onChange={this.handleChange} />
         </div>
@@ -197,6 +201,7 @@ export default class TourneyForm extends React.Component {
           <option value="10"></option>
         </datalist>
         <datalist id="tickmarks-10">
+
           <option value="0"></option>
           <option value="10"></option>
           <option value="20"></option>
@@ -212,10 +217,10 @@ export default class TourneyForm extends React.Component {
 
         <a href="#tournaments" className="link-no-deco">
           <button type="submit" className="border-none submit-tourney-btn">
-            Create Tournament
+              Create Tournament
           </button>
         </a>
-        <a href="#tournaments" className="border-none cancel-tourney-btn">
+        <a href="#tournaments" className="border-none cancel-tourney-btn link-no-deco">
           Cancel
         </a>
       </form>

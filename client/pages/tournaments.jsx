@@ -11,8 +11,7 @@ export default class Tournaments extends React.Component {
     super(props);
     this.state = {
       route: parseRoute(window.location.hash),
-      tournaments: [],
-      page: 'open'
+      tournaments: []
     };
     this.renderCards = this.renderCards.bind(this);
     this.handleCreateClick = this.handleCreateClick.bind(this);
@@ -21,10 +20,9 @@ export default class Tournaments extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({ page: 'open' });
-    // fetch('/api/tournaments')
-    //   .then(res => res.json())
-    //   .then(tournaments => this.setState({ tournaments }));
+    window.addEventListener('hashchange', event => {
+      this.setState({ route: parseRoute(window.location.hash) });
+    });
   }
 
   componentDidUpdate() {
@@ -34,16 +32,13 @@ export default class Tournaments extends React.Component {
   renderCards() {
     return (
       <>
-        <TourneySlider />
-        <SubHeader text="Open Tournaments" />
         <div className="cards-container">
           {/* {
             this.state.tournaments.map(tournament => (
               <Card key="1"/>
             ))
           } */}
-          <Card src="https://cdn.arstechnica.net/wp-content/uploads/2020/02/Screen-Shot-2020-02-21-at-11.22.14-AM-800x526.png" />
-          <CreateTourneyBtn onCreateClick={this.handleCreateClick} />
+          <Card src="./images/hero-banner.jpg" />
         </div>
       </>
     );
@@ -83,7 +78,10 @@ export default class Tournaments extends React.Component {
     if (route.path === 'tournaments') {
       return (
         <>
+          <TourneySlider />
+          <SubHeader text="Open Tournaments" />
           {this.renderCards()}
+          <CreateTourneyBtn onCreateClick={this.handleCreateClick} />
         </>
       );
     }
@@ -102,7 +100,7 @@ function CreateTourneyBtn(props) {
   return (
     <div className="t-btn-container flex-center">
       <a href="#tournaments?create=tourney"
-        className="create-tourney-btn border-none"
+        className="create-tourney-btn border-none link-no-deco"
         onClick={props.onCreateClick}>
         Create Tournament
       </a>
