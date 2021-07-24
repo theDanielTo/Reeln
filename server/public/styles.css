@@ -412,7 +412,7 @@ iframe {
   border-radius: 5px;
 }
 
-.create-tourney-form button,
+.create-tourney-form > button,
 .create-tourney-form > a {
   width: 100%;
   margin-top: 10px;
@@ -701,7 +701,7 @@ iframe {
     font-size: 20px;
   }
 
-  .create-tourney-form > a > button,
+  .create-tourney-form > button,
   .create-tourney-form > a {
     border-radius: 15px;
     font-size: 24px;

@@ -44,6 +44,7 @@ export default class TourneyForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    window.location.href = '#tournaments';
     this.props.onFormSubmit(this.state);
   }
 
@@ -215,11 +216,9 @@ export default class TourneyForm extends React.Component {
           <option value="100"></option>
         </datalist>
 
-        <a href="#tournaments" className="link-no-deco">
-          <button type="submit" className="border-none submit-tourney-btn">
-              Create Tournament
-          </button>
-        </a>
+        <button type="submit" className="border-none submit-tourney-btn">
+            Create Tournament
+        </button>
         <a href="#tournaments" className="border-none cancel-tourney-btn link-no-deco">
           Cancel
         </a>
