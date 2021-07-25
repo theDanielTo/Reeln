@@ -19,8 +19,27 @@ body {
   background-color: var(--light-color);
 }
 
+.home-page {
+  padding-bottom: 80px;
+}
+
+.tournaments-page {
+  padding-top: 40px;
+  padding-bottom: 160px;
+  min-height: 97vh;
+}
+
 @media (min-width: 1200px) {
   .page {
     max-width: 1200px;
+  }
+
+  .home-page {
+    padding-bottom: 0;
+  }
+
+  .tournaments-page {
+    width: 1200px;
+    padding-top: 60px;
   }
 }

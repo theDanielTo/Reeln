@@ -11,7 +11,7 @@ export default class Tournaments extends React.Component {
     super(props);
     this.state = {
       route: parseRoute(window.location.hash),
-      tournaments: []
+      tourneys: []
     };
     this.renderCards = this.renderCards.bind(this);
     this.handleCreateClick = this.handleCreateClick.bind(this);
@@ -20,6 +20,9 @@ export default class Tournaments extends React.Component {
   }
 
   componentDidMount() {
+    fetch('/api/tourneys')
+      .then(res => res.json())
+      .then(tourneys => this.setState({ tourneys }));
     window.addEventListener('hashchange', event => {
       this.setState({ route: parseRoute(window.location.hash) });
     });
@@ -31,16 +34,21 @@ export default class Tournaments extends React.Component {
 
   renderCards() {
     return (
-      <>
-        <div className="cards-container">
-          {/* {
-            this.state.tournaments.map(tournament => (
-              <Card key="1"/>
-            ))
-          } */}
-          <Card src="./images/hero-banner.jpg" />
-        </div>
-      </>
+      <div className="cards-container">
+        {
+          this.state.tourneys.map(tourney => {
+            if (!tourney.closed) {
+              return (
+                <Card key={tourney.tourneyId}
+                  tourney={tourney}
+                  src="./images/hero-banner.jpg" />
+              );
+            } else {
+              return <></>;
+            }
+          })
+        }
+      </div>
     );
   }
 
@@ -60,7 +68,7 @@ export default class Tournaments extends React.Component {
     })
       .then(res => res.json())
       .then(obj => {
-        this.setState({ tournaments: [...this.state.tournaments, obj] });
+        this.setState({ tournaments: [...this.state.tourneys, obj] });
       })
       .catch(err => console.error(err));
   }

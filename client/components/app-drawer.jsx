@@ -83,7 +83,7 @@ export default class AppDrawer extends React.Component {
         <nav className={drawerVisible + ' app-drawer'}>
           <div className={menuVisible + ' drawer'}>
             <div className="user-avatar">
-              <img src="./images/daniel-avatar.jpg" alt="Avatar" />
+              <img src="./images/userAvatar/daniel-avatar.jpg" alt="Avatar" />
             </div>
             <h1>Daniel To</h1>
             {this.fillNavLinks()}

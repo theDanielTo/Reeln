@@ -66,6 +66,18 @@ app.post('/api/auth/sign-in', (req, res, next) => {
 
 // app.use(authorizationMiddleware);
 
+app.get('/api/tourneys', (req, res, next) => {
+  const sql = `
+    SELECT "tourneyId", "tourneyName", "closed",
+            TO_CHAR("startDate", 'Mon DD, YYYY') as "startDate",
+            TO_CHAR("endDate", 'Mon DD, YYYY')as "endDate"
+      FROM "tourneyDetails"
+  `;
+  db.query(sql)
+    .then(result => res.json(result.rows))
+    .catch(err => next(err));
+});
+
 app.post('/api/tourney/create', (req, res, next) => {
   const {
     userId = 1, tourneyName, tourneyImg,
