@@ -39,13 +39,23 @@ export default class AppDrawer extends React.Component {
     super(props);
     this.state = {
       route: parseRoute(window.location.hash),
+      avatarUrl: './images/default-avatar.jpg',
+      fileName: 'No File Selected',
       isOpen: false
     };
     this.handleClick = this.handleClick.bind(this);
+    this.handleFileChange = this.handleFileChange.bind(this);
+    this.editAvatar = this.editAvatar.bind(this);
     this.fillNavLinks = this.fillNavLinks.bind(this);
   }
 
   componentDidMount() {
+    fetch('/api/users/avatar')
+      .then(res => res.json())
+      .then(res => {
+        this.setState({ avatarUrl: './images/' + res.avatar });
+      })
+      .catch(err => console.error(err));
     window.addEventListener('hashchange', event => {
       this.setState({ route: parseRoute(window.location.hash) });
     });
@@ -53,6 +63,22 @@ export default class AppDrawer extends React.Component {
 
   handleClick() {
     this.setState({ isOpen: !this.state.isOpen });
+  }
+
+  handleFileChange(e) {
+    this.setState({ fileName: e.target.value });
+  }
+
+  editAvatar(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    fetch('/api/users/upload', {
+      method: 'POST',
+      body: formData
+    })
+      .then(res => res.json())
+      .then(this.setState({ fileName: e.target.value }))
+      .catch(err => console.error(err));
   }
 
   fillNavLinks() {
@@ -83,9 +109,20 @@ export default class AppDrawer extends React.Component {
         <nav className={drawerVisible + ' app-drawer'}>
           <div className={menuVisible + ' drawer'}>
             <div className="user-avatar">
-              <img src="./images/daniel-avatar.jpg" alt="Avatar" />
+              <img src={this.state.avatarUrl} alt="Avatar" />
+              <h1>Daniel To</h1>
+              <form onSubmit={this.editAvatar}>
+                <label htmlFor="image"
+                  className="custom-file-upload">
+                  <i className="fas fa-pen" />
+                  <span>  {this.state.fileName}</span>
+                </label>
+                <input required hidden
+                  type="file" name="image" id="image"
+                  onChange={this.handleFileChange} />
+                <button type="submit">Change Avatar</button>
+              </form>
             </div>
-            <h1>Daniel To</h1>
             {this.fillNavLinks()}
           </div>
           <div

@@ -7,13 +7,15 @@ const ClientError = require('./client-error');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 // const authorizationMiddleware = require('./authorization-middleware');
+const uploadsMiddleware = require('./uploads-middleware');
 
 const app = express();
 app.use(staticMiddleware);
 app.use(express.json());
 
-app.post('/api/auth/sign-up', (req, res, next) => {
+app.post('/api/auth/sign-up', uploadsMiddleware, (req, res, next) => {
   const { firstName, lastName, email, city, state, username, password } = req.body;
+  const url = '/images' + req.file.filename;
   if (!firstName || !lastName || !username || !password) {
     throw new ClientError(400, 'missing required fields');
   }
@@ -22,11 +24,13 @@ app.post('/api/auth/sign-up', (req, res, next) => {
     .then(hashedPw => {
       const sql = `
         INSERT into "users"
-          ("firstName", "lastName", "email", "city", "state", "username", "hashedPw")
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+          ("firstName", "lastName",
+          "email", "city", "state", "avatar",
+          "username", "hashedPw")
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         returning *
       `;
-      const params = [firstName, lastName, email, city, state, username, hashedPw];
+      const params = [firstName, lastName, email, city, state, url, username, hashedPw];
       db.query(sql, params)
         .then(result => res.status(201).json(result.rows))
         .catch(err => next(err));
@@ -34,12 +38,24 @@ app.post('/api/auth/sign-up', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// app.post('/api/auth/upload', uploadsMiddleware, (req, res, next) => {
+//   const url = req.file.filename;
+//   const sql = `
+//     UPDATE "users"
+//     SET "avatar" = $1
+//     WHERE "userId" = 1
+//   `;
+//   const param = [url];
+//   db.query(sql, param)
+//     .then(result => res.json(result.rows[0]))
+//     .catch(err => next(err));
+// });
+
 app.post('/api/auth/sign-in', (req, res, next) => {
   const { username, password } = req.body;
   if (!username || !password) {
     throw new ClientError(401, 'invalid login');
   }
-
   const sql = `
     SELECT "userId", "hashedPw"
       FROM "users"
@@ -65,6 +81,41 @@ app.post('/api/auth/sign-in', (req, res, next) => {
 });
 
 // app.use(authorizationMiddleware);
+
+app.get('/api/users/avatar', (req, res, next) => {
+  const sql = `
+    SELECT "avatar"
+      FROM "users"
+  `;
+  db.query(sql)
+    .then(result => res.status(201).json(result.rows[0]))
+    .catch(err => next(err));
+});
+
+app.post('/api/users/upload', uploadsMiddleware, (req, res, next) => {
+  const url = req.file.filename;
+  const sql = `
+    UPDATE "users"
+      SET "avatar" = $1
+    WHERE "userId" = 1
+  `;
+  const param = [url];
+  db.query(sql, param)
+    .then(result => res.status(201).json(result.rows[0]))
+    .catch(err => next(err));
+});
+
+app.get('/api/tourneys', (req, res, next) => {
+  const sql = `
+    SELECT "tourneyId", "tourneyName", "closed",
+            TO_CHAR("startDate", 'Mon DD, YYYY') as "startDate",
+            TO_CHAR("endDate", 'Mon DD, YYYY') as "endDate"
+      FROM "tourneyDetails"
+  `;
+  db.query(sql)
+    .then(result => res.status(201).json(result.rows))
+    .catch(err => next(err));
+});
 
 app.post('/api/tourney/create', (req, res, next) => {
   const {

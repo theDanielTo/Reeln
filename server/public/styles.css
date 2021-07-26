@@ -214,10 +214,6 @@ header {
 }
 
 /* Home Page */
-.home-page {
-  padding-bottom: 80px;
-}
-
 .home-page h2 {
   text-align: center;
 }
@@ -244,14 +240,6 @@ header {
 iframe {
   width: 100%;
   height: 400px;
-}
-
-/* Tournaments Page */
-.tournaments-page {
-  height: 100vh;
-  width: 100%;
-  background-color: var(--light-color);
-  padding-top: 40px;
 }
 
 /* Tourney Slider */
@@ -293,9 +281,10 @@ iframe {
   position: fixed;
   bottom: 90px;
   width: 100%;
-  height: 100px;
+  height: 120px;
   padding: 10px;
-  background-color: rgba(39, 97, 0, 0.2);
+  background-color: #fffdea50;
+  backdrop-filter: blur(3px);
 }
 
 .create-tourney-btn {
@@ -318,8 +307,9 @@ iframe {
 }
 
 .card {
-  width: 150px;
+  width: 160px;
   height: 250px;
+  margin-bottom: 40px;
 }
 
 .card-img {
@@ -328,6 +318,7 @@ iframe {
   object-fit: cover;
   border-radius: 20px 20px 0 0;
   vertical-align: middle;
+  box-shadow: 0.2rem 0.4rem 0.8rem 0 black;
 }
 
 .card-details {
@@ -337,14 +328,20 @@ iframe {
   height: 100px;
   background-color: var(--alt-color);
   border-radius: 0 0 20px 20px;
+  box-shadow: 0.2rem 0.4rem 0.8rem 0 black;
 }
 
 .card-text {
   color: var(--light-color);
-  font-size: 16px;
+  font-size: 12px;
   text-align: center;
   padding: 0;
   margin: 0;
+}
+
+.card-text-title {
+  color: #c9ffc3;
+  font-size: 18px;
 }
 
 /* Create Tourney Form */
@@ -526,16 +523,55 @@ iframe {
     z-index: 20;
   }
 
-  .drawer > h1 {
-    color: var(--light-color);
+  .user-avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 60px;
+    color: var(--light-color);
+  }
+
+  .user-avatar > h1 {
+    position: absolute;
+    top: 200px;
+    background-color: #00444599;
+    color: var(--light-color);
+    font-size: 30px;
   }
 
   .user-avatar > img {
+    padding-bottom: 20px;
     object-fit: cover;
     border-radius: 50%;
+    width: 220px;
+    height: 220px;
+  }
+
+  .drawer form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 200px;
-    height: 200px;
+  }
+
+  .custom-file-upload {
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+
+  .custom-file-upload:hover {
+    background-color: #2c7873;
+  }
+
+  .drawer form button {
+    color: var(--light-color);
+    width: 200px;
+    padding: 10px;
+    margin-top: 20px;
+    border: 1px solid var(--light-color);
+    background-color: var(--main-color);
+    cursor: pointer;
   }
 
   .drawer-link {
@@ -576,10 +612,6 @@ iframe {
   }
 
   /* Home Page */
-  .home-page {
-    padding-bottom: 0;
-  }
-
   .hero-banner {
     margin-top: 60px;
     height: 500px;
@@ -601,12 +633,6 @@ iframe {
   iframe {
     width: 100%;
     height: 800px;
-  }
-
-  /* Tournaments Page */
-  .tournaments-page {
-    width: 1200px;
-    padding-top: 60px;
   }
 
   /* Tourney slider */
@@ -654,18 +680,25 @@ iframe {
 
   .card {
     width: 300px;
+    margin: 0 20px 280px 20px;
   }
 
   .card-img {
     height: 300px;
+    box-shadow: 0.2rem 0.4rem 1.6rem 0 black;
   }
 
   .card-details {
     height: 150px;
+    box-shadow: 0.2rem 0.4rem 1.6rem 0 black;
   }
 
   .card-text {
-    font-size: 1.4em;
+    font-size: 1.2em;
+  }
+
+  .card-text-title {
+    font-size: 30px;
   }
 
   /* Create Tourney Form */
