@@ -7,14 +7,11 @@ function Input(props) {
   const handleChange = e => {
     props.onInputChange(e.target.id, e.target.value);
   };
-  const inputType = (props.field === 'password')
-    ? 'password'
-    : 'text';
   return (
     <>
       <label htmlFor={props.field}>{props.text}</label>
       <input
-        type={inputType}
+        type={props.type}
         name={props.field}
         id={props.field}
         value={props.inputValue}
@@ -35,7 +32,6 @@ class AuthForm extends React.Component {
       state: '',
       username: '',
       password: '',
-      avatar: '',
       isValid: false,
       errorMsg: ''
     };
@@ -56,8 +52,8 @@ class AuthForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    const { firstName, lastName, email, city, state, username, password, avatar } = this.state;
-    const userInfo = { firstName, lastName, email, city, state, username, password, avatar };
+    const { firstName, lastName, email, city, state, username, password } = this.state;
+    const userInfo = { firstName, lastName, email, city, state, username, password };
     if (!this.props.registered) {
       if (this.state.password.length === 0) {
         this.setState({ errorMsg: 'A password is required.' });
@@ -79,7 +75,7 @@ class AuthForm extends React.Component {
             storeToken(obj.token);
             this.props.onAuthSubmit(obj.token);
           })
-          .catch(err => console.error(err));
+          .catch(err => console.error('fetch err:', err));
       }
     } else {
       fetch('/api/auth/sign-in', {
@@ -103,21 +99,25 @@ class AuthForm extends React.Component {
         <Input
           field="firstName"
           text="First Name"
+          type="text"
           inputValue={this.state.firstName}
           onInputChange={this.onInputChange}/>
         <Input
           field="lastName"
           text="Last Name"
+          type="text"
           inputValue={this.state.lastName}
           onInputChange={this.onInputChange}/>
         <Input
           field="email"
           text="Email"
+          type="text"
           inputValue={this.state.email}
           onInputChange={this.onInputChange}/>
         <Input
           field="city"
           text="City"
+          type="text"
           inputValue={this.state.userLocation}
           onInputChange={this.onInputChange} />
         <label htmlFor="state">State</label>
@@ -195,11 +195,13 @@ class AuthForm extends React.Component {
         <Input
           field="username"
           text="Username"
+          type="text"
           inputValue={this.state.username}
           onInputChange={this.onInputChange}/>
         <Input
           field="password"
           text="Password (6 or more characters)"
+          type="password"
           inputValue={this.state.password}
           onInputChange={this.onInputChange}/>
         <span
