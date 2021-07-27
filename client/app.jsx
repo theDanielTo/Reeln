@@ -6,6 +6,7 @@ import Header from './components/header';
 import NavBar from './components/nav-bar';
 import Home from './pages/home';
 import Tournaments from './pages/tournaments';
+import Tourney from './pages/tourney';
 import { parseRoute } from './lib';
 
 export default class App extends React.Component {
@@ -62,6 +63,14 @@ export default class App extends React.Component {
       );
     }
     if (route.path === 'tournaments') {
+      const tourneyId = route.params.get('tourneyId');
+      if (tourneyId) {
+        return (
+          <div className="page">
+            <Tourney tourneyId={tourneyId} />
+          </div>
+        );
+      }
       return (
         <div className="page">
           <Tournaments />;

@@ -1,7 +1,7 @@
 /* Variables */
 :root {
   --main-color: #004445;
-  --light-color: #fffdea;
+  --light-color: #fffdf5;
   --secondary-color: #6fb98f;
   --alt-color: #2c7873;
   --selected-color: #ffd800;
@@ -41,6 +41,14 @@
 
 .hidden {
   display: none;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.line-through {
+  text-decoration: line-through;
 }
 
 /* splash-page */
@@ -99,7 +107,7 @@
 }
 
 /* Header */
-header {
+.main-header {
   position: fixed;
   top: 0;
   width: 100%;
@@ -345,11 +353,6 @@ iframe {
 }
 
 /* Create Tourney Form */
-.create-tourney-form {
-  padding: 100px 5%;
-  background-color: var(--light-color);
-}
-
 .input-group {
   margin-top: 20px;
 }
@@ -370,20 +373,8 @@ iframe {
   margin-bottom: 5px;
 }
 
-.inline-groups {
-  display: flex;
-  justify-content: space-between;
-}
-
 .form-group {
   margin-top: 20px;
-}
-
-.inline-group {
-  margin-top: 20px;
-  flex-basis: 48%;
-  display: flex;
-  flex-direction: column;
 }
 
 .inline-input {
@@ -392,6 +383,18 @@ iframe {
 
 .inline-input > input {
   flex-basis: 10%;
+}
+
+.inline-groups {
+  display: flex;
+  justify-content: space-between;
+}
+
+.inline-group {
+  margin-top: 20px;
+  flex-basis: 48%;
+  display: flex;
+  flex-direction: column;
 }
 
 .inline-group label > span,
@@ -441,9 +444,65 @@ iframe {
   background-color: rgb(126, 126, 126);
 }
 
+/* Tourney Page */
+.tourney-header {
+  padding-top: 70px;
+}
+
+.tourney-header > h1 {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  color: var(--light-color);
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.tourney-header > img {
+  width: 100%;
+}
+
+/* .leaderboard {
+
+} */
+
+.tabs-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 60px;
+}
+
+.tab {
+  flex-basis: calc(100% / 3);
+  padding: 20px;
+  height: 100%;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  background-color: var(--main-color);
+  color: var(--light-color);
+}
+
+.tab i {
+  font-size: 1.2rem;
+  margin-right: 5px;
+}
+
+.active {
+  height: 100%;
+  border-bottom: none;
+  border-top: 3px solid var(--selected-color);
+  color: var(--selected-color);
+}
+
+.detail-view {
+  padding: 0 20px;
+}
+
 @media (min-width: 1200px) {
   /* Header */
-  header {
+  .main-header {
     height: 60px;
     padding: 0 10px;
   }
@@ -702,11 +761,6 @@ iframe {
   }
 
   /* Create Tourney Form */
-  .create-tourney-form {
-    padding: 60px 5%;
-    font-size: 1.5em;
-  }
-
   .create-tourney-form label {
     margin-left: 10px;
   }
@@ -743,5 +797,32 @@ iframe {
   .submit-tourney-btn,
   .cancel-tourney-btn {
     padding: 15px;
+  }
+
+  /* Tourney Page */
+  .tourney-header {
+    padding-top: 0;
+  }
+
+  .tourney-header > h1 {
+    width: 1200px;
+  }
+
+  .tabs-container {
+    height: 80px;
+  }
+
+  .tab {
+    font-size: 16px;
+  }
+
+  .tab i {
+    font-size: 1.4rem;
+    margin-right: 10px;
+  }
+
+  .detail-view {
+    padding: 0 50px;
+    font-size: 1.5rem;
   }
 }
