@@ -9,6 +9,7 @@ export default class TourneyForm extends React.Component {
       startDate: '',
       endDate: '',
       closed: 'false',
+      maxParticipants: 2,
       minWeight: 0,
       maxWeight: 0,
       heaviestFive: 'false',
@@ -52,28 +53,30 @@ export default class TourneyForm extends React.Component {
     return (
       <form className="create-tourney-form" onSubmit={this.handleSubmit}>
         <label htmlFor="tourneyName">Name of tourney</label>
-        <input type="text" name="tourneyName" id="tourneyName"
+        <input required type="text" name="tourneyName" id="tourneyName"
           value={this.state.tourneyName}
           onChange={this.handleChange} />
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label htmlFor="tourneyImg">Choose a tourney picture</label>
           <input type="file" name="tourneyImg" id="tourneyImg"
             />
-        </div>
+        </div> */}
 
         <div className="inline-groups">
           <div className="inline-group">
             <label htmlFor="startDate">Start Date</label>
             <input type="date" name="startDate" id="startDate"
               value={this.state.startDate}
-              onChange={this.handleChange} />
+              onChange={this.handleChange}
+              required />
           </div>
           <div className="inline-group">
             <label htmlFor="endDate">End Date</label>
             <input type="date" name="endDate" id="endDate"
               value={this.state.endDate}
-              onChange={this.handleChange} />
+              onChange={this.handleChange}
+              required />
           </div>
         </div>
 
@@ -97,18 +100,24 @@ export default class TourneyForm extends React.Component {
           </div>
         </div>
 
+        <div className="form-group">
+          <label htmlFor="maxParticipants">Number of Participants (2-100)</label>
+          <input type="number" name="maxParticipants" id="maxParticipants"
+            required min={2} max={100}
+            value={this.state.maxParticipants}
+            onChange={this.handleChange} />
+        </div>
+
         <div className="inline-groups">
           <div className="inline-group">
             <label htmlFor="minWeight">Minimum Weight <span>(0 if not applicable)</span></label>
             <input type="number" name="minWeight" id="minWeight" min={0}
-              placeholder="0 lbs"
               value={this.state.minWeight}
               onChange={this.handleChange} />
           </div>
           <div className="inline-group">
             <label htmlFor="maxWeight">Maximum Weight <span>(0 if not applicable)</span></label>
             <input type="number" name="maxWeight" id="maxWeight" min={0}
-              placeholder="0 lbs."
               value={this.state.maxWeight}
               onChange={this.handleChange} />
           </div>
@@ -202,7 +211,6 @@ export default class TourneyForm extends React.Component {
           <option value="10"></option>
         </datalist>
         <datalist id="tickmarks-10">
-
           <option value="0"></option>
           <option value="10"></option>
           <option value="20"></option>

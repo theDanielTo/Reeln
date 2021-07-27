@@ -23,7 +23,13 @@ body {
   padding-bottom: 80px;
 }
 
-.tournaments-page {
+.create-tourney-form {
+  padding: 100px 5%;
+  background-color: var(--light-color);
+}
+
+.tournaments-page,
+.tourney-page {
   padding-top: 40px;
   padding-bottom: 160px;
   min-height: 97vh;
@@ -38,8 +44,14 @@ body {
     padding-bottom: 0;
   }
 
-  .tournaments-page {
+  .tournaments-page,
+  .tourney-page {
     width: 1200px;
     padding-top: 60px;
+  }
+
+  .create-tourney-form {
+    padding: 60px 5%;
+    font-size: 1.5em;
   }
 }

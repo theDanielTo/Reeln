@@ -15,7 +15,6 @@ app.use(express.json());
 
 app.post('/api/auth/sign-up', uploadsMiddleware, (req, res, next) => {
   const { firstName, lastName, email, city, state, username, password } = req.body;
-  const url = '/images' + req.file.filename;
   if (!firstName || !lastName || !username || !password) {
     throw new ClientError(400, 'missing required fields');
   }
@@ -37,19 +36,6 @@ app.post('/api/auth/sign-up', uploadsMiddleware, (req, res, next) => {
     })
     .catch(err => next(err));
 });
-
-// app.post('/api/auth/upload', uploadsMiddleware, (req, res, next) => {
-//   const url = req.file.filename;
-//   const sql = `
-//     UPDATE "users"
-//     SET "avatar" = $1
-//     WHERE "userId" = 1
-//   `;
-//   const param = [url];
-//   db.query(sql, param)
-//     .then(result => res.json(result.rows[0]))
-//     .catch(err => next(err));
-// });
 
 app.post('/api/auth/sign-in', (req, res, next) => {
   const { username, password } = req.body;
@@ -107,7 +93,7 @@ app.post('/api/users/upload', uploadsMiddleware, (req, res, next) => {
 
 app.get('/api/tourneys', (req, res, next) => {
   const sql = `
-    SELECT "tourneyId", "tourneyName", "closed",
+    SELECT "tourneyId", "tourneyName", "closed", "maxParticipants",
             TO_CHAR("startDate", 'Mon DD, YYYY') as "startDate",
             TO_CHAR("endDate", 'Mon DD, YYYY') as "endDate"
       FROM "tourneyDetails"
@@ -120,7 +106,7 @@ app.get('/api/tourneys', (req, res, next) => {
 app.post('/api/tourney/create', (req, res, next) => {
   const {
     userId = 1, tourneyName, tourneyImg,
-    startDate, endDate, closed,
+    startDate, endDate, closed, maxParticipants,
     minWeight, maxWeight,
     heaviestFive,
     perPound, pointsPerPound,
@@ -135,21 +121,21 @@ app.post('/api/tourney/create', (req, res, next) => {
   const sql = `
     INSERT into "tourneyDetails"
       ("userId", "tourneyName", "tourneyImg",
-      "startDate", "endDate", "closed",
+      "startDate", "endDate", "closed", "maxParticipants",
       "minWeight", "maxWeight",
       "heaviestFive",
       "perPound", "pointsPerPound",
       "heaviest", "pointsHeaviest",
-      "longest",  "pointsLongest",
+      "longest", "pointsLongest",
       "mostCaught", "pointsMostCaught",
       "additionalRules")
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-            $11, $12, $13, $14, $15, $16, $17, $18)
+            $11, $12, $13, $14, $15, $16, $17, $18, $19)
     returning *
   `;
   const params = [
     userId, tourneyName, tourneyImg,
-    startDate, endDate, closed,
+    startDate, endDate, closed, maxParticipants,
     minWeight, maxWeight,
     heaviestFive,
     perPound, pointsPerPound,
@@ -162,6 +148,30 @@ app.post('/api/tourney/create', (req, res, next) => {
     .then(result => {
       res.status(201).json(result.rows);
     })
+    .catch(err => next(err));
+});
+
+app.get('/api/tourneys/:tourneyId', (req, res, next) => {
+  const tourneyId = parseInt(req.params.tourneyId, 10);
+  const sql = `
+    SELECT "userId", "tourneyName", "tourneyImg",
+          TO_CHAR("startDate", 'Mon DD, YYYY') as "startDate",
+          TO_CHAR("endDate", 'Mon DD, YYYY') as "endDate",
+           "closed",
+           "minWeight", "maxWeight",
+           "heaviestFive",
+           "perPound", "pointsPerPound",
+           "heaviest", "pointsHeaviest",
+           "longest",  "pointsLongest",
+           "mostCaught", "pointsMostCaught",
+           "additionalRules"
+      FROM "tourneyDetails"
+     WHERE "tourneyId" = $1
+  `;
+
+  const param = [tourneyId];
+  db.query(sql, param)
+    .then(result => res.status(201).json(result.rows[0]))
     .catch(err => next(err));
 });
 

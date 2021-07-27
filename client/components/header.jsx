@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Header(props) {
   return (
-    <header>
+    <header className="main-header">
       <div className="header-item">
         {/* <i className="fas fa-angle-left"></i> */}
       </div>

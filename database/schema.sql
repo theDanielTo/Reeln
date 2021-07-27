@@ -31,6 +31,7 @@ CREATE TABLE "public"."tourneyDetails" (
 	"startDate" timestamptz NOT NULL,
 	"endDate" timestamptz NOT NULL,
 	"closed" BOOLEAN NOT NULL,
+  "maxParticipants" integer NOT NULL,
 	"minWeight" TEXT NOT NULL,
 	"maxWeight" TEXT NOT NULL,
 	"heaviestFive" BOOLEAN NOT NULL,
