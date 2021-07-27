@@ -4,6 +4,7 @@ export default class TourneyForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId: 1,
       tourneyName: '',
       tourneyImg: '',
       startDate: '',
@@ -26,6 +27,10 @@ export default class TourneyForm extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({ userId: this.props.user.userId });
   }
 
   handleChange(e) {

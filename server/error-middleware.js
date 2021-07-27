@@ -4,7 +4,7 @@ const { JsonWebTokenError } = require('jsonwebtoken');
 function errorMiddleware(err, req, res, next) {
   if (err instanceof ClientError) {
     res.status(err.status).json({
-      error: err.message
+      error: err.message + '!'
     });
   } else if (err instanceof JsonWebTokenError) {
     res.status(401).json({

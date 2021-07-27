@@ -79,7 +79,7 @@ export default class Tournaments extends React.Component {
       return (
         <>
           <ReelnBanner />
-          <TourneyForm onFormSubmit={this.handleFormSubmit} />
+          <TourneyForm user={this.props.user} onFormSubmit={this.handleFormSubmit} />
         </>
       );
     }

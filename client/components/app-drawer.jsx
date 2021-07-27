@@ -50,10 +50,12 @@ export default class AppDrawer extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/users/avatar')
+    fetch(`/api/users/avatar/${this.props.user.userId}`)
       .then(res => res.json())
       .then(res => {
-        this.setState({ avatarUrl: './images/' + res.avatar });
+        if (res.avatar) {
+          this.setState({ avatarUrl: './images/' + res.avatar });
+        }
       })
       .catch(err => console.error(err));
     window.addEventListener('hashchange', event => {
@@ -110,7 +112,7 @@ export default class AppDrawer extends React.Component {
           <div className={menuVisible + ' drawer'}>
             <div className="user-avatar">
               <img src={this.state.avatarUrl} alt="Avatar" />
-              <h1>Daniel To</h1>
+              <h1>{this.props.user.firstName} {this.props.user.lastName}</h1>
               <form onSubmit={this.editAvatar}>
                 <label htmlFor="image"
                   className="custom-file-upload">

@@ -289,7 +289,7 @@ iframe {
   position: fixed;
   bottom: 90px;
   width: 100%;
-  height: 120px;
+  height: 100px;
   padding: 10px;
   background-color: #fffdea50;
   backdrop-filter: blur(3px);
@@ -445,8 +445,19 @@ iframe {
 }
 
 /* Tourney Page */
+.join-tourney-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 10px;
+  background-color: var(--alt-color);
+  color: var(--light-color);
+}
+
 .tourney-header {
-  padding-top: 70px;
+  padding-top: 80px;
 }
 
 .tourney-header > h1 {
@@ -800,6 +811,12 @@ iframe {
   }
 
   /* Tourney Page */
+  .join-tourney-btn {
+    width: 50%;
+    padding: 20px;
+    font-size: 22px;
+  }
+
   .tourney-header {
     padding-top: 0;
   }

@@ -111,13 +111,16 @@ export default class Tourney extends React.Component {
 
   render() {
     if (!this.state.tourney) return null;
-    const {
-      // userId = 1,
-      tourneyName
-    } = this.state.tourney;
+    const { userId, tourneyName } = this.state.tourney;
+    const showBtn = (parseInt(userId) === this.props.user.userId)
+      ? ' hidden'
+      : '';
     return (
       <div className="tourney-page">
         <ReelnBanner />
+        <div className={'t-btn-container flex-center' + showBtn}>
+          <button className="join-tourney-btn border-none">JOIN</button>
+        </div>
         <div className="tourney-header text-center">
           <h1>{tourneyName}</h1>
           <img src="./images/hero-banner.jpg" alt="Tourney Pic" />

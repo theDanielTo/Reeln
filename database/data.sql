@@ -1,5 +1,8 @@
 INSERT into "users" ("firstName", "lastName", "email", "city", "state", "username", "hashedPw", "avatar")
-VALUES ('test', 'test', 'example@example.com', 'Garden Grove', 'CA', 'admin', '$argon2i$v=19$m=4096,t=3,p=1$FSfMYg30VYl2F4sPNNxJ6A$ngQrC66L9Fgs6cOOJKboBLs6FrMFt/oPMKsf0dyEA0Q', 'image-1627248763672.jpg');
+VALUES ('Daniel', 'To', 'example@example.com', 'Garden Grove', 'CA', 'admin', '$argon2i$v=19$m=4096,t=3,p=1$VCpYhsbEd62rWjeNtnCPcg$g9slSnGZG6K3dlqR7QX3VjmR/QWqg6wRWgQ+S5j81/U', 'image-1627248763672.jpg');
+
+INSERT into "users" ("firstName", "lastName", "email", "city", "state", "username", "hashedPw", "avatar")
+VALUES ('Test', 'Account', 'example2@example.com', 'Garden Grove', 'CA', 'test', '$argon2i$v=19$m=4096,t=3,p=1$Lpw+P5J0IyWRFFbTfDkOiw$Hs5ldXcybxfrfP959azkLQbRVlN3doe6vnQ/wrOo1Zk', 'image-1627248763672.jpg');
 
 INSERT into "tourneyDetails"
       ("userId", "tourneyName", "tourneyImg",
@@ -19,4 +22,24 @@ INSERT into "tourneyDetails"
       true, 60,
       true, 100,
       'Example Tourney'
+    );
+
+INSERT into "tourneyDetails"
+      ("userId", "tourneyName", "tourneyImg",
+      "startDate", "endDate", "closed", "maxParticipants",
+      "minWeight", "maxWeight", "heaviestFive",
+      "perPound", "pointsPerPound",
+      "heaviest", "pointsHeaviest",
+      "longest",  "pointsLongest",
+      "mostCaught", "pointsMostCaught",
+      "additionalRules")
+    VALUES (
+      2, 'Test Tourney', 'images/hero-banner.jpg',
+      '2021-07-04 00:00:00', '2021-07-05 00:00:00', false, 40,
+      2, 22, true,
+      true, 1,
+      true, 20,
+      true, 20,
+      true, 20,
+      'test'
     );

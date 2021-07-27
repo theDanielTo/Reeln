@@ -13,11 +13,11 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: '',
       route: parseRoute(window.location.hash),
       loading: false,
       registered: true,
-      authorized: true
+      signedIn: false,
+      user: {}
     };
     this.handleAuthSubmit = this.handleAuthSubmit.bind(this);
   }
@@ -33,7 +33,7 @@ export default class App extends React.Component {
       });
     }, 2000);
     // const localToken = window.localStorage.getItem('X-Access-Token');
-    // if (localToken === this.state.token) {
+    // if (localToken) {
     //   this.setState({ registered: true, authorized: true });
     // }
     window.addEventListener('hashchange', event => {
@@ -41,15 +41,15 @@ export default class App extends React.Component {
     });
   }
 
-  handleAuthSubmit(token) {
-    const localToken = window.localStorage.getItem('token-local-storage');
-    this.setState({ token: localToken });
-    if (localToken === token) {
-      this.setState({ registered: true, authorized: true });
-    } if (!this.state.registered) {
+  handleAuthSubmit(payload) {
+    // const localToken = window.localStorage.getItem('token-local-storage');
+    // if (localToken === payload.token) {
+    //   this.setState({ registered: true, signedIn: true });
+    // }
+    if (!this.state.registered) {
       this.setState({ registered: true });
     } else {
-      this.setState({ authorized: true });
+      this.setState({ signedIn: true, user: payload.user });
     }
   }
 
@@ -67,21 +67,22 @@ export default class App extends React.Component {
       if (tourneyId) {
         return (
           <div className="page">
-            <Tourney tourneyId={tourneyId} />
+            <Tourney user={this.state.user} tourneyId={tourneyId} />
           </div>
         );
       }
       return (
         <div className="page">
-          <Tournaments />;
+          <Tournaments user={this.state.user} />;
         </div>
       );
     }
   }
 
   render() {
+    // const localToken = window.localStorage.getItem('X-Access-Token');
     if (this.state.loading) return <Splash />;
-    if (!this.state.authorized) {
+    if (!this.state.signedIn) {
       return (
         <Authenticator
           registered={this.state.registered}
@@ -90,7 +91,7 @@ export default class App extends React.Component {
     }
     return (
       <>
-        <AppDrawer />
+        <AppDrawer user={this.state.user}/>
         <Header title="Reel'n" />
         <div className="container">
           {this.renderPage()}

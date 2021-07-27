@@ -32,7 +32,6 @@ class AuthForm extends React.Component {
       state: '',
       username: '',
       password: '',
-      isValid: false,
       errorMsg: ''
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -53,13 +52,20 @@ class AuthForm extends React.Component {
     e.preventDefault();
 
     const { firstName, lastName, email, city, state, username, password } = this.state;
-    const userInfo = { firstName, lastName, email, city, state, username, password };
+    const userInfo = {
+      firstName,
+      lastName,
+      email,
+      city,
+      state,
+      username,
+      password
+    };
     if (!this.props.registered) {
       if (this.state.password.length === 0) {
         this.setState({ errorMsg: 'A password is required.' });
       } else if (this.state.password.length < MIN_PASS_LEN) {
         this.setState({
-          isValid: false,
           errorMsg: 'Your password must be at least 6 characters.'
         });
       } else {
@@ -72,8 +78,8 @@ class AuthForm extends React.Component {
         })
           .then(res => res.json())
           .then(obj => {
-            storeToken(obj.token);
-            this.props.onAuthSubmit(obj.token);
+            this.setState({ errorMsg: '' });
+            this.props.onAuthSubmit(obj);
           })
           .catch(err => console.error('fetch err:', err));
       }
@@ -87,7 +93,8 @@ class AuthForm extends React.Component {
       })
         .then(res => res.json(username, password))
         .then(obj => {
-          this.props.onAuthSubmit(obj.token);
+          storeToken(obj.token);
+          this.props.onAuthSubmit(obj);
         })
         .catch(err => console.error(err));
     }

@@ -24,14 +24,14 @@ app.post('/api/auth/sign-up', uploadsMiddleware, (req, res, next) => {
       const sql = `
         INSERT into "users"
           ("firstName", "lastName",
-          "email", "city", "state", "avatar",
+          "email", "city", "state",
           "username", "hashedPw")
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
         returning *
       `;
-      const params = [firstName, lastName, email, city, state, url, username, hashedPw];
+      const params = [firstName, lastName, email, city, state, username, hashedPw];
       db.query(sql, params)
-        .then(result => res.status(201).json(result.rows))
+        .then(result => res.status(201).json(result.rows[0]))
         .catch(err => next(err));
     })
     .catch(err => next(err));
@@ -43,7 +43,9 @@ app.post('/api/auth/sign-in', (req, res, next) => {
     throw new ClientError(401, 'invalid login');
   }
   const sql = `
-    SELECT "userId", "hashedPw"
+    SELECT "userId", "firstName", "lastName",
+           "email", "city", "state",
+           "username", "hashedPw"
       FROM "users"
      WHERE "username" = $1
   `;
@@ -52,12 +54,17 @@ app.post('/api/auth/sign-in', (req, res, next) => {
     .then(result => {
       const [user] = result.rows;
       if (!user) throw new ClientError(401, 'invalid login');
-      const { userId, hashedPw } = user;
+      const {
+        userId, firstName, lastName, email,
+        city, state, username, hashedPw
+      } = user;
       argon2
         .verify(hashedPw, password)
         .then(isMatching => {
           if (!isMatching) throw new ClientError(401, 'invalid login');
-          const payload = { userId, username };
+          const payload = {
+            userId, firstName, lastName, email, city, state, username, hashedPw
+          };
           const token = jwt.sign(payload, process.env.TOKEN_SECRET);
           res.status(200).json({ token, user: payload });
         })
@@ -68,12 +75,15 @@ app.post('/api/auth/sign-in', (req, res, next) => {
 
 // app.use(authorizationMiddleware);
 
-app.get('/api/users/avatar', (req, res, next) => {
+app.get('/api/users/avatar/:userId', (req, res, next) => {
+  const userId = parseInt(req.params.userId, 10);
   const sql = `
     SELECT "avatar"
       FROM "users"
+     WHERE "userId" = $1
   `;
-  db.query(sql)
+  const param = [userId];
+  db.query(sql, param)
     .then(result => res.status(201).json(result.rows[0]))
     .catch(err => next(err));
 });
@@ -105,7 +115,7 @@ app.get('/api/tourneys', (req, res, next) => {
 
 app.post('/api/tourney/create', (req, res, next) => {
   const {
-    userId = 1, tourneyName, tourneyImg,
+    userId, tourneyName, tourneyImg,
     startDate, endDate, closed, maxParticipants,
     minWeight, maxWeight,
     heaviestFive,
@@ -168,7 +178,6 @@ app.get('/api/tourneys/:tourneyId', (req, res, next) => {
       FROM "tourneyDetails"
      WHERE "tourneyId" = $1
   `;
-
   const param = [tourneyId];
   db.query(sql, param)
     .then(result => res.status(201).json(result.rows[0]))
