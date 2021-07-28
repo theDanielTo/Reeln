@@ -22,7 +22,7 @@ CREATE TABLE "public"."users" (
 );
 
 
-CREATE TABLE "public"."tourneyDetails" (
+CREATE TABLE "public"."tournaments" (
 	"tourneyId" serial NOT NULL UNIQUE,
 	"userId" TEXT NOT NULL,
 	"tourneyName" TEXT NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE "public"."tourneyDetails" (
 	"mostCaught" BOOLEAN NOT NULL,
 	"pointsMostCaught" integer,
 	"additionalRules" TEXT,
-	CONSTRAINT "tourneyDetails_pk" PRIMARY KEY ("tourneyId")
+	CONSTRAINT "tournaments_pk" PRIMARY KEY ("tourneyId")
 ) WITH (
   OIDS=FALSE
 );
@@ -57,7 +57,6 @@ CREATE TABLE "public"."catches" (
 	"length" integer,
 	"location" TEXT NOT NULL,
 	"photo" TEXT NOT NULL,
-	"points" integer NOT NULL,
 	CONSTRAINT "catches_pk" PRIMARY KEY ("userId")
 ) WITH (
   OIDS=FALSE
@@ -88,10 +87,10 @@ CREATE TABLE "public"."participants" (
 
 
 ALTER TABLE "catches" ADD CONSTRAINT "catches_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
-ALTER TABLE "catches" ADD CONSTRAINT "catches_fk1" FOREIGN KEY ("tourneyId") REFERENCES "tourneyDetails"("tourneyId");
+ALTER TABLE "catches" ADD CONSTRAINT "catches_fk1" FOREIGN KEY ("tourneyId") REFERENCES "participants"("tourneyId");
 
-ALTER TABLE "chatLog" ADD CONSTRAINT "chatLog_fk0" FOREIGN KEY ("tourneyId") REFERENCES "tourneyDetails"("tourneyId");
+ALTER TABLE "chatLog" ADD CONSTRAINT "chatLog_fk0" FOREIGN KEY ("tourneyId") REFERENCES "tournaments"("tourneyId");
 ALTER TABLE "chatLog" ADD CONSTRAINT "chatLog_fk1" FOREIGN KEY ("userId") REFERENCES "users"("userId");
 
 ALTER TABLE "participants" ADD CONSTRAINT "participants_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
-ALTER TABLE "participants" ADD CONSTRAINT "participants_fk1" FOREIGN KEY ("tourneyId") REFERENCES "tourneyDetails"("tourneyId");
+ALTER TABLE "participants" ADD CONSTRAINT "participants_fk1" FOREIGN KEY ("tourneyId") REFERENCES "tournaments"("tourneyId");
