@@ -51,6 +51,10 @@
   text-decoration: line-through;
 }
 
+button {
+  cursor: pointer;
+}
+
 /* splash-page */
 .splash {
   background-image: linear-gradient(45deg, #ffd80060, var(--main-color));
@@ -289,7 +293,7 @@ iframe {
   position: fixed;
   bottom: 90px;
   width: 100%;
-  height: 120px;
+  height: 100px;
   padding: 10px;
   background-color: #fffdea50;
   backdrop-filter: blur(3px);
@@ -445,8 +449,69 @@ iframe {
 }
 
 /* Tourney Page */
+
+/* Modal */
+.modal-bg {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+}
+
+.modal-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: white;
+  height: 180px;
+  width: 250px;
+  text-align: center;
+}
+
+.modal-box h2 {
+  font-size: 1.5rem;
+}
+
+.modal-btns {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.modal-btn {
+  background-color: var(--alt-color);
+  color: var(--light-color);
+  border: none;
+  border-radius: 5px;
+  width: 80px;
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.modal-btn:active {
+  background-color: #0074c2;
+}
+
+.join-tourney-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 10px;
+  background-color: var(--alt-color);
+  color: var(--light-color);
+}
+
 .tourney-header {
-  padding-top: 70px;
+  padding-top: 80px;
 }
 
 .tourney-header > h1 {
@@ -537,137 +602,6 @@ iframe {
   .bottom-triangle {
     border-top: 60px solid transparent;
     border-right: 1200px solid var(--alt-color);
-  }
-
-  /* Nav */
-  .main-nav {
-    display: none;
-  }
-
-  /* App Drawer */
-  .drawer-icon {
-    display: block;
-    position: fixed;
-    color: var(--light-color);
-    font-size: 40px;
-    padding: 10px;
-    cursor: pointer;
-    z-index: 21;
-  }
-
-  .app-drawer {
-    display: block;
-    position: fixed;
-    height: 100vh;
-    width: 100%;
-    z-index: 20;
-  }
-
-  .drawer-minimized {
-    transform: translateX(-100%);
-  }
-
-  .drawer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 20%;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    padding: 80px 0;
-    background-color: #00444585;
-    box-shadow: 0.2rem 0 1rem 0.2rem black;
-    transition: transform 300ms;
-    z-index: 20;
-  }
-
-  .user-avatar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 60px;
-    color: var(--light-color);
-  }
-
-  .user-avatar > h1 {
-    position: absolute;
-    top: 200px;
-    background-color: #00444599;
-    color: var(--light-color);
-    font-size: 30px;
-  }
-
-  .user-avatar > img {
-    padding-bottom: 20px;
-    object-fit: cover;
-    border-radius: 50%;
-    width: 220px;
-    height: 220px;
-  }
-
-  .drawer form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 200px;
-  }
-
-  .custom-file-upload {
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
-  }
-
-  .custom-file-upload:hover {
-    background-color: #2c7873;
-  }
-
-  .drawer form button {
-    color: var(--light-color);
-    width: 200px;
-    padding: 10px;
-    margin-top: 20px;
-    border: 1px solid var(--light-color);
-    background-color: var(--main-color);
-    cursor: pointer;
-  }
-
-  .drawer-link {
-    display: flex;
-    align-items: center;
-    align-self: flex-start;
-    font-size: 14px;
-    width: 100%;
-    padding: 1rem;
-    text-decoration: none;
-    color: var(--light-color);
-  }
-
-  .drawer-link:hover {
-    background-color: #2c7873;
-  }
-
-  .drawer-link > i {
-    font-size: 32px;
-    margin-right: 4rem;
-  }
-
-  .hide-drawer {
-    transform: translateX(-200%);
-  }
-
-  .show-drawer {
-    transform: translateX(0%);
-  }
-
-  .page-dim {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.6);
   }
 
   /* Home Page */
@@ -800,6 +734,33 @@ iframe {
   }
 
   /* Tourney Page */
+
+  /* Modal */
+
+  .modal-box {
+    height: 240px;
+    width: 320px;
+  }
+
+  .modal-box h2 {
+    font-size: 2rem;
+  }
+
+  .modal-btns {
+    width: 100%;
+  }
+
+  .modal-btn {
+    width: 110px;
+    font-size: 1.4rem;
+  }
+
+  .join-tourney-btn {
+    width: 50%;
+    padding: 20px;
+    font-size: 22px;
+  }
+
   .tourney-header {
     padding-top: 0;
   }
@@ -824,5 +785,136 @@ iframe {
   .detail-view {
     padding: 0 50px;
     font-size: 1.5rem;
+  }
+
+  /* Nav */
+  .main-nav {
+    display: none;
+  }
+
+  /* App Drawer */
+  .drawer-icon {
+    display: block;
+    position: fixed;
+    color: var(--light-color);
+    font-size: 40px;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 21;
+  }
+
+  .app-drawer {
+    display: block;
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+    z-index: 20;
+  }
+
+  .drawer-minimized {
+    transform: translateX(-100%);
+  }
+
+  .drawer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    padding: 80px 0;
+    background-color: #00444585;
+    box-shadow: 0.2rem 0 1rem 0.2rem black;
+    transition: transform 300ms;
+    z-index: 20;
+  }
+
+  .user-avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 60px;
+    color: var(--light-color);
+  }
+
+  .user-avatar > h1 {
+    position: absolute;
+    top: 200px;
+    background-color: #00444599;
+    color: var(--light-color);
+    font-size: 30px;
+  }
+
+  .user-avatar > img {
+    padding-bottom: 20px;
+    object-fit: cover;
+    border-radius: 50%;
+    width: 220px;
+    height: 220px;
+  }
+
+  .drawer form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+  }
+
+  .custom-file-upload {
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+
+  .custom-file-upload:hover {
+    background-color: #2c7873;
+  }
+
+  .user-avatar form > button {
+    color: var(--light-color);
+    width: 200px;
+    padding: 10px;
+    margin-top: 20px;
+    border: 1px solid var(--light-color);
+    background-color: var(--main-color);
+    cursor: pointer;
+  }
+
+  .drawer-link {
+    display: flex;
+    align-items: center;
+    align-self: flex-start;
+    font-size: 14px;
+    width: 100%;
+    padding: 1rem;
+    text-decoration: none;
+    color: var(--light-color);
+  }
+
+  .drawer-link:hover {
+    background-color: #2c7873;
+  }
+
+  .drawer-link > i {
+    font-size: 32px;
+    margin-right: 4rem;
+  }
+
+  .hide-drawer {
+    transform: translateX(-200%);
+  }
+
+  .show-drawer {
+    transform: translateX(0%);
+  }
+
+  .page-dim {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
   }
 }

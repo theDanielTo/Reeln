@@ -1,5 +1,5 @@
 import React from 'react';
-import { parseRoute } from '../lib';
+import { parseRoute, getToken } from '../lib';
 import TourneySlider from '../components/tourney-slider';
 import SubHeader from '../components/sub-header';
 import Card from '../components/card';
@@ -11,18 +11,23 @@ export default class Tournaments extends React.Component {
     super(props);
     this.state = {
       route: parseRoute(window.location.hash),
-      tourneys: []
+      tourneys: [],
+      numParticipants: []
     };
-    this.renderCards = this.renderCards.bind(this);
     this.handleCreateClick = this.handleCreateClick.bind(this);
     this.renderPage = this.renderPage.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
   componentDidMount() {
-    fetch('/api/tourneys')
+    fetch('/api/tourneys', {
+      headers: {
+        'x-access-token': getToken()
+      }
+    })
       .then(res => res.json())
       .then(tourneys => this.setState({ tourneys }));
+
     window.addEventListener('hashchange', event => {
       this.setState({ route: parseRoute(window.location.hash) });
     });
@@ -30,26 +35,6 @@ export default class Tournaments extends React.Component {
 
   componentDidUpdate() {
     window.scrollTo(0, 0);
-  }
-
-  renderCards() {
-    return (
-      <div className="cards-container">
-        {
-          this.state.tourneys.map(tourney => {
-            if (!tourney.closed) {
-              return (
-                <Card key={tourney.tourneyId}
-                  tourney={tourney}
-                  src="./images/hero-banner.jpg" />
-              );
-            } else {
-              return <></>;
-            }
-          })
-        }
-      </div>
-    );
   }
 
   handleCreateClick() {
@@ -62,13 +47,21 @@ export default class Tournaments extends React.Component {
     fetch('/api/tourney/create', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token': getToken()
       },
       body: JSON.stringify(details)
     })
       .then(res => res.json())
-      .then(obj => {
-        this.setState({ tournaments: [...this.state.tourneys, obj] });
+      .then(result => {
+        this.setState({ tournaments: [...this.state.tourneys, result] });
+        fetch(`/api/tourneys/join/${parseInt(result.tourneyId)}`, {
+          method: 'POST',
+          headers: {
+            'x-access-token': getToken()
+          }
+        })
+          .then(res => res.json());
       })
       .catch(err => console.error(err));
   }
@@ -79,7 +72,7 @@ export default class Tournaments extends React.Component {
       return (
         <>
           <ReelnBanner />
-          <TourneyForm onFormSubmit={this.handleFormSubmit} />
+          <TourneyForm user={this.props.user} onFormSubmit={this.handleFormSubmit} />
         </>
       );
     }
@@ -88,7 +81,9 @@ export default class Tournaments extends React.Component {
         <>
           <TourneySlider />
           <SubHeader text="Open Tournaments" />
-          {this.renderCards()}
+          <Cards
+            tourneys={this.state.tourneys}
+            numParticipants={this.state.numParticipants} />
           <CreateTourneyBtn onCreateClick={this.handleCreateClick} />
         </>
       );
@@ -102,6 +97,27 @@ export default class Tournaments extends React.Component {
       </div>
     );
   }
+}
+
+function Cards(props) {
+  return (
+    <div className="cards-container">
+      {
+        props.tourneys.map(tourney => {
+          if (!tourney.closed) {
+            return (
+              <Card key={tourney.tourneyId}
+                id={tourney.tourneyId}
+                tourney={tourney}
+                src="./images/hero-banner.jpg" />
+            );
+          } else {
+            return <></>;
+          }
+        })
+      }
+    </div>
+  );
 }
 
 function CreateTourneyBtn(props) {

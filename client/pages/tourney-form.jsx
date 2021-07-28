@@ -4,12 +4,13 @@ export default class TourneyForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId: 1,
       tourneyName: '',
       tourneyImg: '',
       startDate: '',
       endDate: '',
       closed: 'false',
-      maxParticipants: 2,
+      maxParticipants: 1,
       minWeight: 0,
       maxWeight: 0,
       heaviestFive: 'false',
@@ -26,6 +27,10 @@ export default class TourneyForm extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({ userId: this.props.user.userId });
   }
 
   handleChange(e) {
@@ -101,9 +106,9 @@ export default class TourneyForm extends React.Component {
         </div>
 
         <div className="form-group">
-          <label htmlFor="maxParticipants">Number of Participants (2-100)</label>
+          <label htmlFor="maxParticipants">Number of Participants (1-100)</label>
           <input type="number" name="maxParticipants" id="maxParticipants"
-            required min={2} max={100}
+            required min={1} max={100}
             value={this.state.maxParticipants}
             onChange={this.handleChange} />
         </div>

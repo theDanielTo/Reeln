@@ -7,19 +7,20 @@ import NavBar from './components/nav-bar';
 import Home from './pages/home';
 import Tournaments from './pages/tournaments';
 import Tourney from './pages/tourney';
-import { parseRoute } from './lib';
+import { parseRoute, storeToken, decodeToken } from './lib';
+import AppContext from './lib/app-context';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: '',
       route: parseRoute(window.location.hash),
       loading: false,
-      registered: true,
-      authorized: true
+      isAuthorizing: true,
+      user: null
     };
     this.handleAuthSubmit = this.handleAuthSubmit.bind(this);
+    this.handleSignOut = this.handleSignOut.bind(this);
   }
 
   componentDidUpdate() {
@@ -32,25 +33,23 @@ export default class App extends React.Component {
         loading: false
       });
     }, 2000);
-    // const localToken = window.localStorage.getItem('X-Access-Token');
-    // if (localToken === this.state.token) {
-    //   this.setState({ registered: true, authorized: true });
-    // }
     window.addEventListener('hashchange', event => {
       this.setState({ route: parseRoute(window.location.hash) });
     });
+    const token = window.localStorage.getItem('X-Access-Token');
+    const user = token ? decodeToken(token) : null;
+    this.setState({ user, isAuthorizing: false });
   }
 
-  handleAuthSubmit(token) {
-    const localToken = window.localStorage.getItem('token-local-storage');
-    this.setState({ token: localToken });
-    if (localToken === token) {
-      this.setState({ registered: true, authorized: true });
-    } if (!this.state.registered) {
-      this.setState({ registered: true });
-    } else {
-      this.setState({ authorized: true });
-    }
+  handleAuthSubmit(result) {
+    const { user, token } = result;
+    storeToken(token);
+    this.setState({ user });
+  }
+
+  handleSignOut() {
+    window.localStorage.removeItem('X-Access-Token');
+    this.setState({ user: null });
   }
 
   renderPage() {
@@ -62,18 +61,23 @@ export default class App extends React.Component {
         </div>
       );
     }
+    if (route.path === 'sign-in' || route.path === 'sign-up') {
+      return (
+        <Authenticator onAuthSubmit={this.handleAuthSubmit} />
+      );
+    }
     if (route.path === 'tournaments') {
       const tourneyId = route.params.get('tourneyId');
       if (tourneyId) {
         return (
           <div className="page">
-            <Tourney tourneyId={tourneyId} />
+            <Tourney user={this.state.user} tourneyId={tourneyId} />
           </div>
         );
       }
       return (
         <div className="page">
-          <Tournaments />;
+          <Tournaments user={this.state.user} />;
         </div>
       );
     }
@@ -81,22 +85,21 @@ export default class App extends React.Component {
 
   render() {
     if (this.state.loading) return <Splash />;
-    if (!this.state.authorized) {
-      return (
-        <Authenticator
-          registered={this.state.registered}
-          onAuthSubmit={this.handleAuthSubmit} />
-      );
-    }
+    if (this.state.isAuthorizing) return null;
+
+    const { user, route } = this.state;
+    const { handleSignOut } = this;
+    const contextValue = { user, route, handleSignOut };
+
     return (
-      <>
-        <AppDrawer />
+      <AppContext.Provider value={contextValue}>
+        <AppDrawer user={this.state.user}/>
         <Header title="Reel'n" />
         <div className="container">
           {this.renderPage()}
         </div>
         <NavBar onNavClick={this.handleNavClick}/>
-      </>
+      </AppContext.Provider>
     );
   }
 
