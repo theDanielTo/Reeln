@@ -1,5 +1,6 @@
 import React from 'react';
-import { parseRoute } from '../lib';
+import AppContext from '../lib/app-context';
+import { parseRoute, getToken } from '../lib';
 
 const navLinks = [
   {
@@ -50,11 +51,15 @@ export default class AppDrawer extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`/api/users/avatar/${this.props.user.userId}`)
+    fetch('/api/users', {
+      headers: {
+        'x-access-token': getToken()
+      }
+    })
       .then(res => res.json())
-      .then(res => {
-        if (res.avatar) {
-          this.setState({ avatarUrl: './images/' + res.avatar });
+      .then(result => {
+        if (result.avatar) {
+          this.setState({ avatarUrl: './images/' + result.avatar });
         }
       })
       .catch(err => console.error(err));
@@ -76,6 +81,9 @@ export default class AppDrawer extends React.Component {
     const formData = new FormData(e.target);
     fetch('/api/users/upload', {
       method: 'POST',
+      headers: {
+        'x-access-token': getToken()
+      },
       body: formData
     })
       .then(res => res.json())
@@ -104,37 +112,50 @@ export default class AppDrawer extends React.Component {
     const drawerVisible = this.state.isOpen ? '' : 'drawer-minimized';
     const menuVisible = this.state.isOpen ? 'show-drawer' : 'hide-drawer';
     const dimVisible = this.state.isOpen ? '' : 'hidden';
-    return (
-      <>
-        <i className="fas fa-bars drawer-icon"
-          onClick={this.handleClick} />
-        <nav className={drawerVisible + ' app-drawer'}>
-          <div className={menuVisible + ' drawer'}>
-            <div className="user-avatar">
-              <img src={this.state.avatarUrl} alt="Avatar" />
-              <h1>{this.props.user.firstName} {this.props.user.lastName}</h1>
-              <form onSubmit={this.editAvatar}>
-                <label htmlFor="image"
-                  className="custom-file-upload">
-                  <i className="fas fa-pen" />
-                  <span>  {this.state.fileName}</span>
-                </label>
-                <input required hidden
-                  type="file" name="image" id="image"
-                  onChange={this.handleFileChange} />
-                <button type="submit">Change Avatar</button>
-              </form>
-            </div>
-            {this.fillNavLinks()}
-          </div>
-          <div
-            className={dimVisible + ' page-dim'}
+    const { user, handleSignOut } = this.context;
+    if (user) {
+      return (
+        <>
+          <i className="fas fa-bars drawer-icon"
             onClick={this.handleClick} />
-        </nav>
-      </>
-    );
+          <nav className={drawerVisible + ' app-drawer'}>
+            <div className={menuVisible + ' drawer'}>
+              <div className="user-avatar">
+                <img src={this.state.avatarUrl} alt="Avatar" />
+                <h1>{user.firstName} {user.lastName}</h1>
+                <form onSubmit={this.editAvatar}>
+                  <label htmlFor="image"
+                    className="custom-file-upload">
+                    <i className="fas fa-pen" />
+                    <span>  {this.state.fileName}</span>
+                  </label>
+                  <input required hidden
+                    type="file" name="image" id="image"
+                    onChange={this.handleFileChange} />
+                  <button type="submit">Change Avatar</button>
+                </form>
+                {user !== null &&
+                  <button onClick={handleSignOut}>
+                    Sign out
+                    <i className="fas fa-sign-out-alt" />
+                  </button>
+                }
+              </div>
+              {this.fillNavLinks()}
+            </div>
+            <div
+              className={dimVisible + ' page-dim'}
+              onClick={this.handleClick} />
+          </nav>
+        </>
+      );
+    } else {
+      return <></>;
+    }
   }
 }
+
+AppDrawer.contextType = AppContext;
 
 function DrawerLink(props) {
   return (

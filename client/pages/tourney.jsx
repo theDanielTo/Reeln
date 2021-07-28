@@ -1,5 +1,6 @@
 import React from 'react';
 import ReelnBanner from '../components/reeln-banner';
+import { getToken } from '../lib';
 
 const tabs = [
   {
@@ -23,11 +24,14 @@ export default class Tourney extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      modalActive: false,
       photoName: '',
       tourney: null,
       participants: [],
       tab: 'rules'
     };
+    this.handleJoinBtnClick = this.handleJoinBtnClick.bind(this);
+    this.handleModalClick = this.handleModalClick.bind(this);
     this.handlePhotoChange = this.handlePhotoChange.bind(this);
     this.renderLeaderboard = this.renderLeaderboard.bind(this);
     this.renderTabs = this.renderTabs.bind(this);
@@ -36,9 +40,40 @@ export default class Tourney extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`/api/tourneys/${this.props.tourneyId}`)
+    fetch(`/api/tourneys/${this.props.tourneyId}`, {
+      headers: {
+        'x-access-token': getToken()
+      }
+    })
       .then(res => res.json())
       .then(tourney => this.setState({ tourney }));
+
+    fetch(`/api/participants/${this.props.tourneyId}`, {
+      headers: {
+        'x-access-token': getToken()
+      }
+    })
+      .then(res => res.json())
+      .then(participants => this.setState({ participants }));
+  }
+
+  handleJoinBtnClick() {
+    this.setState({ modalActive: true });
+  }
+
+  handleModalClick(e) {
+    if (e.target.id === 'modal-yes') {
+      fetch(`/api/tourneys/join/${this.props.tourneyId}`, {
+        method: 'POST',
+        headers: {
+          'x-access-token': getToken()
+        }
+      })
+        .then(res => res.json())
+        .then(this.setState({ modalActive: false }));
+    } else if (e.target.id === 'modal-cancel') {
+      this.setState({ modalActive: false });
+    }
   }
 
   handlePhotoChange(e) {
@@ -117,9 +152,14 @@ export default class Tourney extends React.Component {
       : '';
     return (
       <div className="tourney-page">
+        <Modal hidden={this.state.modalActive}
+          onBtnClick={this.handleModalClick} />
         <ReelnBanner />
         <div className={'t-btn-container flex-center' + showBtn}>
-          <button className="join-tourney-btn border-none">JOIN</button>
+          <button className="join-tourney-btn border-none"
+            onClick={this.handleJoinBtnClick}>
+            JOIN
+          </button>
         </div>
         <div className="tourney-header text-center">
           <h1>{tourneyName}</h1>
@@ -155,6 +195,29 @@ export default class Tourney extends React.Component {
   }
 }
 
+function Modal(props) {
+  const modalVis = (props.hidden)
+    ? ''
+    : 'hidden';
+  return (
+    <div className={'modal-bg flex-center ' + modalVis}>
+      <div className="modal-box hidden">
+        <h2>Are you sure?</h2>
+        <div className="modal-btns">
+          <button id="modal-yes" className="modal-btn"
+            onClick={props.onBtnClick}>
+            Yes
+          </button>
+          <button id="modal-cancel" className="modal-btn"
+            onClick={props.onBtnClick}>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Tab(props) {
   const tabActive = (props.active)
     ? 'active'
@@ -181,8 +244,9 @@ function Details(props) {
   } = props.tourney;
   const rules = <>
     <h2 className="text-center">Rules Overview</h2>
-    <h2>Duration</h2>
-    {startDate} - {endDate}
+    <p className="text-center">{startDate} - {endDate}</p>
+    {/* <p>Hosted by {username} ({firstName} {lastName})</p> */}
+
     <h2>Point System</h2>
     <p>Minimum weight: {minWeight}</p>
     <p>Maximum weight: {maxWeight}</p>

@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken'); // eslint-disable-line
 const ClientError = require('./client-error');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
-// const authorizationMiddleware = require('./authorization-middleware');
+const authorizationMiddleware = require('./authorization-middleware');
 const uploadsMiddleware = require('./uploads-middleware');
 
 const app = express();
@@ -44,10 +44,10 @@ app.post('/api/auth/sign-in', (req, res, next) => {
   }
   const sql = `
     SELECT "userId", "firstName", "lastName",
-           "email", "city", "state",
-           "username", "hashedPw"
+          "email", "city", "state",
+          "username", "hashedPw"
       FROM "users"
-     WHERE "username" = $1
+    WHERE "username" = $1
   `;
   const param = [username];
   db.query(sql, param)
@@ -73,14 +73,14 @@ app.post('/api/auth/sign-in', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// app.use(authorizationMiddleware);
+app.use(authorizationMiddleware);
 
-app.get('/api/users/avatar/:userId', (req, res, next) => {
-  const userId = parseInt(req.params.userId, 10);
+app.get('/api/users', (req, res, next) => {
+  const { userId } = req.user;
   const sql = `
-    SELECT "avatar"
+    SELECT *
       FROM "users"
-     WHERE "userId" = $1
+    WHERE "userId" = $1
   `;
   const param = [userId];
   db.query(sql, param)
@@ -156,7 +156,7 @@ app.post('/api/tourney/create', (req, res, next) => {
   ];
   db.query(sql, params)
     .then(result => {
-      res.status(201).json(result.rows);
+      res.status(201).json(result.rows[0]);
     })
     .catch(err => next(err));
 });
@@ -167,20 +167,58 @@ app.get('/api/tourneys/:tourneyId', (req, res, next) => {
     SELECT "userId", "tourneyName", "tourneyImg",
           TO_CHAR("startDate", 'Mon DD, YYYY') as "startDate",
           TO_CHAR("endDate", 'Mon DD, YYYY') as "endDate",
-           "closed",
-           "minWeight", "maxWeight",
-           "heaviestFive",
-           "perPound", "pointsPerPound",
-           "heaviest", "pointsHeaviest",
-           "longest",  "pointsLongest",
-           "mostCaught", "pointsMostCaught",
-           "additionalRules"
+          "closed",
+          "minWeight", "maxWeight",
+          "heaviestFive",
+          "perPound", "pointsPerPound",
+          "heaviest", "pointsHeaviest",
+          "longest",  "pointsLongest",
+          "mostCaught", "pointsMostCaught",
+          "additionalRules"
       FROM "tourneyDetails"
-     WHERE "tourneyId" = $1
+    WHERE "tourneyId" = $1
   `;
   const param = [tourneyId];
   db.query(sql, param)
     .then(result => res.status(201).json(result.rows[0]))
+    .catch(err => next(err));
+});
+
+app.get('/api/participants/:tourneyId', (req, res, next) => {
+  const tourneyId = parseInt(req.params.tourneyId, 10);
+  const sql = `
+    SELECT *
+      FROM "participants"
+    WHERE "tourneyId" = $1
+  `;
+  const param = [tourneyId];
+  db.query(sql, param)
+    .then(result => res.status(201).json(result.rows))
+    .catch(err => next(err));
+});
+
+app.get('/api/count', (req, res, next) => {
+  const sql = `
+    SELECT "tourneyId" AS "tId", count("userId") AS "numParticipants"
+    FROM "participants"
+    GROUP BY "tourneyId"
+    ORDER BY "tourneyId";
+  `;
+  db.query(sql)
+    .then(result => res.status(201).json(result.rows))
+    .catch(err => next(err));
+});
+
+app.post('/api/tourneys/join/:tourneyId', (req, res, next) => {
+  const tourneyId = parseInt(req.params.tourneyId, 10);
+  const { userId } = req.user;
+  const sql = `
+    INSERT into "participants" ("userId", "tourneyId")
+    VALUES ($1, $2)
+  `;
+  const param = [userId, tourneyId];
+  db.query(sql, param)
+    .then(result => res.status(201).json(result.rows))
     .catch(err => next(err));
 });
 

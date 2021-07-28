@@ -1,5 +1,7 @@
 import React from 'react';
-import { storeToken } from '../lib';
+import Redirect from '../components/redirect';
+import AppContext from '../lib/app-context';
+// import { storeToken } from '../lib';
 
 const MIN_PASS_LEN = 6;
 
@@ -61,42 +63,33 @@ class AuthForm extends React.Component {
       username,
       password
     };
-    if (!this.props.registered) {
-      if (this.state.password.length === 0) {
-        this.setState({ errorMsg: 'A password is required.' });
-      } else if (this.state.password.length < MIN_PASS_LEN) {
-        this.setState({
-          errorMsg: 'Your password must be at least 6 characters.'
-        });
-      } else {
-        fetch('/api/auth/sign-up', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(userInfo)
-        })
-          .then(res => res.json())
-          .then(obj => {
-            this.setState({ errorMsg: '' });
-            this.props.onAuthSubmit(obj);
-          })
-          .catch(err => console.error('fetch err:', err));
-      }
+
+    const { action } = this.props;
+
+    if (action === 'sign-up' && this.state.password.length === 0) {
+      this.setState({ errorMsg: 'A password is required.' });
+    } else if (action === 'sign-up' && this.state.password.length < MIN_PASS_LEN) {
+      this.setState({
+        errorMsg: 'Your password must be at least 6 characters.'
+      });
     } else {
-      fetch('/api/auth/sign-in', {
+      fetch(`/api/auth/${action}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(userInfo)
       })
-        .then(res => res.json(username, password))
-        .then(obj => {
-          storeToken(obj.token);
-          this.props.onAuthSubmit(obj);
+        .then(res => res.json())
+        .then(result => {
+          this.setState({ errorMsg: '' });
+          if (action === 'sign-up') {
+            window.location.hash = 'sign-in';
+          } else if (result.user && result.token) {
+            this.props.onAuthSubmit(result);
+          }
         })
-        .catch(err => console.error(err));
+        .catch(err => console.error('fetch err:', err));
     }
   }
 
@@ -188,12 +181,18 @@ class AuthForm extends React.Component {
   }
 
   render() {
-    const signUpInputs = (this.props.registered)
+    const signUpInputs = (this.props.action === 'sign-in')
       ? <></>
       : this.renderSignUpInputs();
-    const btnText = (this.props.registered)
+    const btnText = (this.props.action === 'sign-in')
       ? 'Sign In'
       : 'Sign Up';
+    const message = (this.props.action === 'sign-in')
+      ? 'Not registered? Register '
+      : 'Registered? Sign in ';
+    const hereHref = (this.props.action === 'sign-in')
+      ? '#sign-up'
+      : '#sign-in';
     return (
       <form
         className="auth-form"
@@ -216,18 +215,25 @@ class AuthForm extends React.Component {
           {this.state.errorMsg}
         </span>
         <button type="submit">{btnText}</button>
+        <span>{message} <a href={hereHref}>here</a>.</span>
       </form>
     );
   }
 }
+export default class Authenticator extends React.Component {
+  render() {
+    const { user, route } = this.context;
+    if (user) return <Redirect to="" />;
 
-export default function Authenticator(props) {
-  return (
-    <div className="auth-page flex-center">
-      <h1>Reel&apos;n</h1>
-      <AuthForm
-        registered={props.registered}
-        onAuthSubmit={props.onAuthSubmit} />
-    </div>
-  );
+    return (
+      <div className="auth-page flex-center">
+        <h1>Reel&apos;n</h1>
+        <AuthForm
+          action={route.path}
+          onAuthSubmit={this.props.onAuthSubmit} />
+      </div>
+    );
+  }
 }
+
+Authenticator.contextType = AppContext;

@@ -43,3 +43,9 @@ INSERT into "tourneyDetails"
       true, 20,
       'test'
     );
+
+INSERT into "participants" ("userId", "tourneyId")
+    VALUES (1, 1);
+
+INSERT into "participants" ("userId", "tourneyId")
+    VALUES (2, 2);
