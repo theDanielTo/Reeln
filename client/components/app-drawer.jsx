@@ -87,7 +87,7 @@ export default class AppDrawer extends React.Component {
       body: formData
     })
       .then(res => res.json())
-      .then(this.setState({ fileName: e.target.value }))
+      .then(result => this.setState({ fileName: e.target.value }))
       .catch(err => console.error(err));
   }
 
@@ -135,10 +135,12 @@ export default class AppDrawer extends React.Component {
                   <button type="submit">Change Avatar</button>
                 </form>
                 {user !== null &&
+                <a href="#sign-in">
                   <button onClick={handleSignOut}>
                     Sign out
                     <i className="fas fa-sign-out-alt" />
                   </button>
+                </a>
                 }
               </div>
               {this.fillNavLinks()}

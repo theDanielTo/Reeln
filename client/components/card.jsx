@@ -29,8 +29,11 @@ export default class Card extends React.Component {
     const {
       tourneyId, tourneyName,
       startDate, endDate,
-      maxParticipants
+      maxParticipants, standing
     } = this.props.tourney;
+    const bottomTxt = maxParticipants
+      ? <>{this.state.participants} / {maxParticipants} participants</>
+      : <>Placed {standing}/{this.state.participants}</>;
     return (
       <a
         className="card link-no-deco"
@@ -39,7 +42,7 @@ export default class Card extends React.Component {
         <div className="card-details">
           <p className="card-text card-text-title">{tourneyName}</p>
           <p className="card-text">{startDate + ' - ' + endDate}</p>
-          <p className="card-text">{this.state.participants} / {maxParticipants} participants</p>
+          <p className="card-text">{bottomTxt}</p>
         </div>
       </a>
     );
