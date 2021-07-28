@@ -189,7 +189,7 @@ class AuthForm extends React.Component {
       : 'Sign Up';
     const message = (this.props.action === 'sign-in')
       ? 'Not registered? Register '
-      : 'Registered? Sign in ';
+      : 'Registered? Sign up ';
     const hereHref = (this.props.action === 'sign-in')
       ? '#sign-up'
       : '#sign-in';

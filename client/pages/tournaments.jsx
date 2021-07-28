@@ -11,16 +11,19 @@ export default class Tournaments extends React.Component {
     super(props);
     this.state = {
       route: parseRoute(window.location.hash),
+      slider: 'slider-open',
+      headerText: 'Open Tournaments',
       tourneys: [],
       numParticipants: []
     };
+    this.handleSliderClick = this.handleSliderClick.bind(this);
     this.handleCreateClick = this.handleCreateClick.bind(this);
     this.renderPage = this.renderPage.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
   componentDidMount() {
-    fetch('/api/tourneys', {
+    fetch('/api/tourneys/open', {
       headers: {
         'x-access-token': getToken()
       }
@@ -35,6 +38,35 @@ export default class Tournaments extends React.Component {
 
   componentDidUpdate() {
     window.scrollTo(0, 0);
+  }
+
+  handleSliderClick(e) {
+    const filter = e.target.id.split('-')[1];
+    fetch(`/api/tourneys/${filter}`, {
+      headers: {
+        'x-access-token': getToken()
+      }
+    })
+      .then(res => res.json())
+      .then(tourneys => {
+        if (filter === 'past') {
+          this.setState({
+            slider: 'slider-past',
+            headerText: 'Past Tournaments'
+          });
+        } else if (filter === 'current') {
+          this.setState({
+            slider: 'slider-current',
+            headerText: 'Current Tournaments'
+          });
+        } else {
+          this.setState({
+            slider: 'slider-open',
+            headerText: 'Open Tournaments'
+          });
+        }
+        this.setState({ tourneys });
+      });
   }
 
   handleCreateClick() {
@@ -79,11 +111,24 @@ export default class Tournaments extends React.Component {
     if (route.path === 'tournaments') {
       return (
         <>
-          <TourneySlider />
-          <SubHeader text="Open Tournaments" />
-          <Cards
-            tourneys={this.state.tourneys}
-            numParticipants={this.state.numParticipants} />
+          <TourneySlider sliderSelected={this.state.slider} onSliderClick={this.handleSliderClick}/>
+          <SubHeader text={this.state.headerText} />
+          <div className="cards-container">
+            {
+              this.state.tourneys.map(tourney => {
+                if (!tourney.closed) {
+                  return (
+                    <Card key={'card-' + tourney.tourneyId}
+                      id={tourney.tourneyId}
+                      tourney={tourney}
+                      src="./images/hero-banner.jpg" />
+                  );
+                } else {
+                  return <></>;
+                }
+              })
+            }
+          </div>
           <CreateTourneyBtn onCreateClick={this.handleCreateClick} />
         </>
       );
@@ -97,27 +142,6 @@ export default class Tournaments extends React.Component {
       </div>
     );
   }
-}
-
-function Cards(props) {
-  return (
-    <div className="cards-container">
-      {
-        props.tourneys.map(tourney => {
-          if (!tourney.closed) {
-            return (
-              <Card key={tourney.tourneyId}
-                id={tourney.tourneyId}
-                tourney={tourney}
-                src="./images/hero-banner.jpg" />
-            );
-          } else {
-            return <></>;
-          }
-        })
-      }
-    </div>
-  );
 }
 
 function CreateTourneyBtn(props) {

@@ -135,10 +135,12 @@ export default class AppDrawer extends React.Component {
                   <button type="submit">Change Avatar</button>
                 </form>
                 {user !== null &&
+                <a href="#sign-in">
                   <button onClick={handleSignOut}>
                     Sign out
                     <i className="fas fa-sign-out-alt" />
                   </button>
+                </a>
                 }
               </div>
               {this.fillNavLinks()}
