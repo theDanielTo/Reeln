@@ -4,7 +4,7 @@ VALUES ('Daniel', 'To', 'example@example.com', 'Garden Grove', 'CA', 'admin', '$
 INSERT into "users" ("firstName", "lastName", "email", "city", "state", "username", "hashedPw", "avatar")
 VALUES ('Test', 'Account', 'example2@example.com', 'Garden Grove', 'CA', 'test', '$argon2i$v=19$m=4096,t=3,p=1$Lpw+P5J0IyWRFFbTfDkOiw$Hs5ldXcybxfrfP959azkLQbRVlN3doe6vnQ/wrOo1Zk', 'image-1627248763672.jpg');
 
-INSERT into "tourneyDetails"
+INSERT into "tournaments"
       ("userId", "tourneyName", "tourneyImg",
       "startDate", "endDate", "closed", "maxParticipants",
       "minWeight", "maxWeight", "heaviestFive",
@@ -24,7 +24,7 @@ INSERT into "tourneyDetails"
       'Example Tourney'
     );
 
-INSERT into "tourneyDetails"
+INSERT into "tournaments"
       ("userId", "tourneyName", "tourneyImg",
       "startDate", "endDate", "closed", "maxParticipants",
       "minWeight", "maxWeight", "heaviestFive",
@@ -44,8 +44,8 @@ INSERT into "tourneyDetails"
       'test'
     );
 
-INSERT into "participants" ("userId", "tourneyId")
-    VALUES (1, 1);
+INSERT into "participants" ("userId", "tourneyId", "score", "standing")
+    VALUES (1, 1, 0, 1);
 
-INSERT into "participants" ("userId", "tourneyId")
-    VALUES (2, 2);
+INSERT into "participants" ("userId", "tourneyId", "score", "standing")
+    VALUES (2, 2, 0, 1);

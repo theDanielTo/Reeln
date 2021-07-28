@@ -35,7 +35,6 @@ export default class Tourney extends React.Component {
     this.handlePhotoChange = this.handlePhotoChange.bind(this);
     this.renderLeaderboard = this.renderLeaderboard.bind(this);
     this.renderTabs = this.renderTabs.bind(this);
-    this.renderRules = this.renderRules.bind(this);
     this.handleTabClick = this.handleTabClick.bind(this);
   }
 
@@ -107,47 +106,17 @@ export default class Tourney extends React.Component {
     });
   }
 
-  renderRules(tourney) {
-    return (
-      <>
-        <h2 className="text-center">Rules Overview</h2>
-        <h2>Duration</h2>
-        {tourney.startDate} - { tourney.endDate }
-        <h2> Point System</h2>
-        <p>Minimum weight: {tourney.minWeight}</p>
-        <p>Maximum weight: {tourney.maxWeight}</p>
-        <p className={(tourney.heaviestFive) ? '' : 'line-through'}>
-          Heaviest Five</p>
-        <p className={(tourney.perPound) ? '' : 'line-through'}>
-          Per Pound</p>
-        { tourney.pointsPerPound } points per pound
-        <h3> Bonus</h3>
-        <p>
-          <span className={(tourney.heaviest) ? '' : 'line-through'}>Heaviest</span>
-          : {tourney.pointsHeaviest} points
-        </p>
-        <p>
-          <span className={(tourney.longest) ? '' : 'line-through'}>Longest</span>
-          : {tourney.pointsLongest} points
-        </p>
-        <p>
-          <span className={(tourney.mostCaught) ? '' : 'line-through'}>Most Caught</span>
-          : {tourney.pointsMostCaught} points
-        </p>
-        <h2>Additional Rules / Notes</h2>
-        { tourney.additionalRules }
-      </>
-    );
-  }
-
   handleTabClick(e) {
     this.setState({ tab: e.target.closest('.tab').id });
   }
 
   render() {
     if (!this.state.tourney) return null;
-    const { userId, tourneyName } = this.state.tourney;
-    const showBtn = (parseInt(userId) === this.props.user.userId)
+    const { tourneyName, maxParticipants } = this.state.tourney;
+    const id = this.state.participants.find(participant => {
+      return participant.userId === this.props.user.userId;
+    });
+    const showBtn = (id !== undefined || this.state.participants.length >= maxParticipants)
       ? ' hidden'
       : '';
     return (

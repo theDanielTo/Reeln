@@ -24,7 +24,7 @@ CREATE TABLE "public"."users" (
 
 CREATE TABLE "public"."tournaments" (
 	"tourneyId" serial NOT NULL UNIQUE,
-	"userId" TEXT NOT NULL,
+	"userId" integer NOT NULL,
 	"tourneyName" TEXT NOT NULL,
 	"tourneyImg" TEXT NOT NULL,
 	"startDate" timestamptz NOT NULL,
@@ -77,6 +77,8 @@ CREATE TABLE "public"."chatLog" (
 CREATE TABLE "public"."participants" (
 	"userId" integer NOT NULL,
 	"tourneyId" integer NOT NULL,
+  "score" integer NOT NULL,
+  "standing" integer NOT NULL,
 	CONSTRAINT "participants_pk" PRIMARY KEY ("userId","tourneyId")
 ) WITH (
   OIDS=FALSE
