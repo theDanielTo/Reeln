@@ -87,7 +87,7 @@ export default class AppDrawer extends React.Component {
       body: formData
     })
       .then(res => res.json())
-      .then(this.setState({ fileName: e.target.value }))
+      .then(result => this.setState({ fileName: e.target.value }))
       .catch(err => console.error(err));
   }
 

@@ -89,14 +89,15 @@ app.get('/api/users', (req, res, next) => {
 });
 
 app.post('/api/users/upload', uploadsMiddleware, (req, res, next) => {
+  const { userId } = req.user;
   const url = req.file.filename;
   const sql = `
     UPDATE "users"
       SET "avatar" = $1
-    WHERE "userId" = 1
+    WHERE "userId" = $2
   `;
-  const param = [url];
-  db.query(sql, param)
+  const params = [url, userId];
+  db.query(sql, params)
     .then(result => res.status(201).json(result.rows[0]))
     .catch(err => next(err));
 });
@@ -104,13 +105,12 @@ app.post('/api/users/upload', uploadsMiddleware, (req, res, next) => {
 app.get('/api/tourneys/open', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-    SELECT "t"."tourneyId", "tourneyName",
-            "closed", "maxParticipants",
+    SELECT "t"."tourneyId", "tourneyName", "closed", "maxParticipants",
             TO_CHAR("startDate", 'Mon DD, YYYY') as "startDate",
             TO_CHAR("endDate", 'Mon DD, YYYY') as "endDate"
       FROM "participants" AS "p"
       JOIN "tournaments" AS "t" USING ("tourneyId")
-      WHERE "p"."userId" != $1 and "t"."userId" != $1
+      WHERE "p"."userId" != $1 AND "t"."userId" != $1
       ORDER BY "endDate"
   `;
   const param = [userId];
@@ -207,7 +207,7 @@ app.get('/api/tourneys/:tourneyId', (req, res, next) => {
     SELECT "userId", "tourneyName", "tourneyImg",
           TO_CHAR("startDate", 'Mon DD, YYYY') as "startDate",
           TO_CHAR("endDate", 'Mon DD, YYYY') as "endDate",
-          "closed",
+          "closed", "maxParticipants",
           "minWeight", "maxWeight",
           "heaviestFive",
           "perPound", "pointsPerPound",
