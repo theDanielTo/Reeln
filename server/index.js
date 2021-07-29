@@ -241,9 +241,11 @@ app.get('/api/tourneys/:tourneyId', (req, res, next) => {
 app.get('/api/participants/:tourneyId', (req, res, next) => {
   const tourneyId = parseInt(req.params.tourneyId, 10);
   const sql = `
-    SELECT *
+    SELECT "userId", "score", "firstName", "lastName", "avatar"
       FROM "participants"
+      JOIN "users" AS "u" USING ("userId")
     WHERE "tourneyId" = $1
+    ORDER BY "score" DESC
   `;
   const param = [tourneyId];
   db.query(sql, param)
@@ -276,11 +278,10 @@ app.post('/api/tourneys/join/:tourneyId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/catches/log', uploadsMiddleware, (req, res, next) => {
+app.post('/api/catches/log/:tourneyId', uploadsMiddleware, (req, res, next) => {
   const { userId } = req.user;
-  const {
-    tourneyId, dateCaught, weight, length
-  } = req.body;
+  const tourneyId = parseInt(req.params.tourneyId, 10);
+  const { dateCaught, weight, length } = req.body;
   const url = req.file.filename;
   const sql = `
     INSERT into "catches"
@@ -297,14 +298,14 @@ app.post('/api/catches/log', uploadsMiddleware, (req, res, next) => {
 
 app.patch('/api/participants/addScore', (req, res, next) => {
   const { userId } = req.user;
-  const { catchScore, tourneyId } = req.body;
+  const { score, tourneyId } = req.body;
   const sql = `
     UPDATE "participants"
       SET "score" = "score" + $1
     WHERE "userId" = $2 AND "tourneyId" = $3
     RETURNING *
   `;
-  const params = [catchScore, userId, tourneyId];
+  const params = [score, userId, tourneyId];
   db.query(sql, params)
     .then(result => res.status(201).json(result.rows[0]))
     .catch(err => next(err));

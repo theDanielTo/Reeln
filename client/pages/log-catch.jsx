@@ -1,34 +1,34 @@
 import React from 'react';
-import { calcScore, getToken } from '../lib';
+import SubHeader from '../components/sub-header';
+import { getToken, parseRoute } from '../lib';
 
 export default class LogCatch extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentTourneys: [],
+      route: parseRoute(window.location.hash),
+      tourney: {},
       dateCaught: '',
       weight: 0,
       length: 0,
-      tourneyId: 0,
       score: 0
     };
     this.handleFileChange = this.handleFileChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.insertOptions = this.insertOptions.bind(this);
-    this.handleTourneySelect = this.handleTourneySelect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
-    fetch('/api/tourneys/current', {
+    const tourneyId = this.state.route.params.get('tourneyId');
+    fetch(`/api/tourneys/${tourneyId}`, {
       headers: {
         'x-access-token': getToken()
       }
     })
       .then(res => res.json())
-      .then(currentTourneys => {
-        this.setState({ currentTourneys });
+      .then(results => {
+        this.setState({ tourney: results });
       });
   }
 
@@ -40,61 +40,45 @@ export default class LogCatch extends React.Component {
     const name = e.target.name;
     const value = e.target.value;
     this.setState({ [name]: value });
-    console.log('comp score:', calcScore(4, 3));
-  }
-
-  insertOptions() {
-    return this.state.currentTourneys.map(tourney => {
-      return (
-        <option key={tourney.tourneyId}
-          value={tourney.tourneyId}>
-          {tourney.tourneyName}
-        </option>
-      );
-    });
-  }
-
-  handleTourneySelect(e) {
-    this.setState({ tournament: e.target.value });
   }
 
   handleSubmit(e) {
-    // e.preventDefault();
+    e.preventDefault();
     const formData = new FormData(e.target);
+    const tourneyId = this.state.route.params.get('tourneyId');
 
-    // fetch('/api/catches/log', {
-    //   method: 'POST',
-    //   headers: {
-    //     'x-access-token': getToken()
-    //   },
-    //   body: formData
-    // })
-    //   .then(res => res.json())
-    //   .then(results => {
-    //     const { tourneyId, weight } = results;
-
-    //     // fetch('/api/participants/addScore', {
-    //     //   method: 'PATCH',
-    //     //   headers: {
-    //     //     'Content-Type': 'application/json',
-    //     //     'x-access-token': getToken(),
-    //     //     body: JSON.stringify({
-    //     //       catchScore: calcScore(parseInt(tourneyId), parseInt(weight)),
-    //     //       tourneyId: parseInt(tourneyId)
-    //     //     })
-    //     //   }
-    //     // })
-    //     //   .then(res => res.json())
-    //     //   .then(e.target.reset())
-    //     //   .catch(err => console.error(err));
-    //   })
-    //   .catch(err => console.error(err));
+    fetch(`/api/catches/log/${tourneyId}`, {
+      method: 'POST',
+      headers: {
+        'x-access-token': getToken()
+      },
+      body: formData
+    })
+      .then(res => res.json())
+      .then(results => {
+        fetch('/api/participants/addScore', {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': getToken()
+          },
+          body: JSON.stringify({
+            tourneyId: results.tourneyId,
+            score: this.state.weight * this.state.tourney.pointsPerPound
+          })
+        })
+          .then(res => res.json())
+          .then(e.target.reset())
+          .catch(err => console.error(err));
+      })
+      .catch(err => console.error(err));
   }
 
   render() {
-    // console.log('score:', this.state.score);
+    const tourneyId = this.state.tourney.tourneyId;
     return (
       <div className="log-catch-page">
+        <SubHeader text={'Tourney: ' + this.state.tourney.tourneyName}/>
         <form className="log-catch-form"
           onSubmit={this.handleSubmit}>
           <label htmlFor="image">
@@ -120,18 +104,10 @@ export default class LogCatch extends React.Component {
                 onChange={this.handleChange} />
             </div>
           </div>
-          <label htmlFor="tournament">Tournament</label>
-          <select name="tourneyId" id="tourneyId" required
-            value={this.state.tourneyId}
-            onChange={this.handleChange}>
-            <option value={0} disabled>--Select a tournament--</option>
-            {/* <option value={0}>--Add to personal album--</option> */}
-            {this.insertOptions()}
-          </select>
           <button type="submit" className="border-none submit-btn">
             Submit
           </button>
-          <a href="#tournaments" className="border-none cancel-btn link-no-deco">
+          <a href={`#tournaments?tourneyId=${tourneyId}`} className="border-none cancel-btn link-no-deco">
             Cancel
           </a>
         </form>

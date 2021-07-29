@@ -1,5 +1,6 @@
 import React from 'react';
 import ReelnBanner from '../components/reeln-banner';
+import ScoreCard from '../components/ScoreCard';
 import { getToken } from '../lib';
 
 const tabs = [
@@ -87,8 +88,18 @@ export default class Tourney extends React.Component {
     }
   }
 
-  renderLeaderboard() {
-
+  renderLeaderboard(participants) {
+    const leaderboard = [];
+    for (let i = 0; i < participants.length; i++) {
+      leaderboard.push(
+        <ScoreCard key={i} place={i + 1}
+          score={participants[i].score}
+          firstName={participants[i].firstName}
+          lastName={participants[i].lastName}
+          src={participants[i].avatar} />
+      );
+    }
+    return leaderboard;
   }
 
   renderTabs() {
@@ -108,7 +119,7 @@ export default class Tourney extends React.Component {
 
   render() {
     if (!this.state.tourney) return null;
-    const { tourneyName, maxParticipants, tourneyImg } = this.state.tourney;
+    const { tourneyId, tourneyName, maxParticipants, tourneyImg } = this.state.tourney;
     const id = this.state.participants.find(participant => {
       return participant.userId === this.props.user.userId;
     });
@@ -120,20 +131,25 @@ export default class Tourney extends React.Component {
         <Modal hidden={this.state.modalActive}
           onBtnClick={this.handleModalClick} />
         <ReelnBanner />
-        <div className={'t-btn-container flex-center' + showBtn}>
-          <button className="join-tourney-btn border-none"
+        <div className={'t-btn-container flex-center'}>
+          <a href={`#logcatch?tourneyId=${tourneyId}`}
+            className={'join-tourney-btn border-none link-no-deco'}
+            onClick={this.handleJoinBtnClick}>
+            LOG CATCH
+          </a>
+          <button className={'join-tourney-btn border-none' + showBtn}
             onClick={this.handleJoinBtnClick}>
             JOIN
           </button>
         </div>
         <div className="tourney-header text-center">
-          <h1>{tourneyName}</h1>
+          <h2>{tourneyName}</h2>
           <img src={'./images/' + tourneyImg} alt="Tourney Pic" />
         </div>
 
         <div className="leaderboard">
           <h1 className="text-center">Standings</h1>
-          {this.renderLeaderboard()}
+          {this.renderLeaderboard(this.state.participants)}
         </div>
 
         <div className="tourney-details">

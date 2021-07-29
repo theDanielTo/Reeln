@@ -512,7 +512,7 @@ iframe {
   padding-top: 80px;
 }
 
-.tourney-header > h1 {
+.tourney-header > h2 {
   position: absolute;
   width: 100%;
   height: 40px;
@@ -524,9 +524,63 @@ iframe {
   width: 100%;
 }
 
-/* .leaderboard {
+/* Leaderboard */
 
-} */
+.leaderboard {
+  margin-bottom: 30px;
+}
+
+.score-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--secondary-color);
+  color: var(--main-color);
+  height: 80px;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.score-card:nth-child(odd) {
+  background-color: var(--main-color);
+  color: var(--light-color);
+}
+
+.left-col,
+.right-col {
+  flex-basis: 20%;
+}
+
+.left-col > img {
+  object-fit: cover;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+}
+
+.middle-col {
+  flex-basis: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score-card-score,
+.score-card-place {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.score-card-score {
+  margin-top: 5px;
+}
+
+.score-card-place {
+  float: right;
+}
+
+/* Tourney Details */
 
 .tabs-container {
   display: flex;
@@ -798,7 +852,7 @@ iframe {
     padding-top: 0;
   }
 
-  .tourney-header > h1 {
+  .tourney-header > h2 {
     width: 1200px;
   }
 
@@ -818,6 +872,28 @@ iframe {
   .detail-view {
     padding: 0 50px;
     font-size: 1.5rem;
+  }
+
+  /* Leaderboard */
+  .leaderboard {
+    margin-bottom: 60px;
+  }
+
+  .score-card {
+    height: 120px;
+    padding: 20px;
+    margin-bottom: 10px;
+    font-size: 24px;
+  }
+
+  .left-col > img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .score-card-score,
+  .score-card-place {
+    font-size: 48px;
   }
 
   /* Nav */

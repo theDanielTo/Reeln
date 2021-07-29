@@ -90,7 +90,7 @@ export default class Tournaments extends React.Component {
       .catch(err => console.error(err));
   }
 
-  renderPage() {
+  renderPage(tournaments) {
     const { route } = this.state;
     if (route.params.has('create')) {
       return (
@@ -107,7 +107,7 @@ export default class Tournaments extends React.Component {
           <SubHeader text={this.state.headerText} />
           <div className="cards-container">
             {
-              this.state.tourneys.map(tourney => {
+              tournaments.map(tourney => {
                 if (!tourney.closed) {
                   return (
                     <Card key={'card-' + tourney.tourneyId}
@@ -135,7 +135,7 @@ export default class Tournaments extends React.Component {
   render() {
     return (
       <div className="tournaments-page">
-        {this.renderPage()}
+        {this.renderPage(this.state.tourneys)}
       </div>
     );
   }
