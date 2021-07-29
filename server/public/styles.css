@@ -51,8 +51,29 @@
   text-decoration: line-through;
 }
 
-button {
+button,
+a {
   cursor: pointer;
+}
+
+.submit-btn {
+  padding: 10px;
+  background-color: var(--main-color);
+  color: var(--light-color);
+}
+
+.submit-btn:hover {
+  background-color: var(--alt-color);
+}
+
+.cancel-btn {
+  padding: 10px;
+  background-color: rgb(195, 195, 195);
+  color: rgb(51, 51, 51);
+}
+
+.cancel-btn:hover {
+  background-color: rgb(126, 126, 126);
 }
 
 /* splash-page */
@@ -204,7 +225,6 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
   width: 80px;
 }
 
@@ -307,7 +327,6 @@ iframe {
   border-radius: 10px;
   font-size: 18px;
   text-align: center;
-  cursor: pointer;
 }
 
 /* Card */
@@ -425,27 +444,6 @@ iframe {
   font-size: 16px;
   font-weight: bold;
   text-align: center;
-  cursor: pointer;
-}
-
-.submit-tourney-btn {
-  padding: 10px;
-  background-color: var(--main-color);
-  color: var(--light-color);
-}
-
-.submit-tourney-btn:hover {
-  background-color: var(--alt-color);
-}
-
-.cancel-tourney-btn {
-  padding: 10px;
-  background-color: rgb(195, 195, 195);
-  color: rgb(51, 51, 51);
-}
-
-.cancel-tourney-btn:hover {
-  background-color: rgb(126, 126, 126);
 }
 
 /* Tourney Page */
@@ -563,6 +561,41 @@ iframe {
 
 .detail-view {
   padding: 0 20px;
+}
+
+/* Log Catch Page */
+.log-catch-form {
+  padding: 10px;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.log-catch-form > label,
+.log-catch-form .inline-group input,
+.log-catch-form > select {
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.log-catch-form .inline-group input {
+  margin-top: 5px;
+  width: 100%;
+}
+
+.log-catch-form > label {
+  margin-top: 15px;
+}
+
+.log-catch-form > button,
+.log-catch-form > a {
+  width: 100%;
+  margin-top: 10px;
+  display: block;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
 }
 
 @media (min-width: 1200px) {
@@ -728,8 +761,8 @@ iframe {
     font-size: 24px;
   }
 
-  .submit-tourney-btn,
-  .cancel-tourney-btn {
+  .submit-btn,
+  .cancel-btn {
     padding: 15px;
   }
 

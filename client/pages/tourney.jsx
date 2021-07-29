@@ -24,6 +24,7 @@ export default class Tourney extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      fileName: 'No File Selected',
       modalActive: false,
       photoName: '',
       tourney: null,
@@ -32,6 +33,7 @@ export default class Tourney extends React.Component {
     };
     this.handleJoinBtnClick = this.handleJoinBtnClick.bind(this);
     this.handleModalClick = this.handleModalClick.bind(this);
+    this.handleFileChange = this.handleFileChange.bind(this);
     this.handlePhotoChange = this.handlePhotoChange.bind(this);
     this.renderLeaderboard = this.renderLeaderboard.bind(this);
     this.renderTabs = this.renderTabs.bind(this);
@@ -75,20 +77,20 @@ export default class Tourney extends React.Component {
     }
   }
 
-  handlePhotoChange(e) {
+  handleFileChange(e) {
     this.setState({ fileName: e.target.value });
   }
 
-  changePhoto() {
-    // e.preventDefault();
-    // const formData = new FormData(e.target);
-    // fetch('/api/users/upload', {
-    //   method: 'POST',
-    //   body: formData
-    // })
-    //   .then(res => res.json())
-    //   .then(this.setState({ fileName: e.target.value }))
-    //   .catch(err => console.error(err));
+  handlePhotoChange(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    fetch(`/api/tourney/upload/${this.props.tourneyId}`, {
+      method: 'POST',
+      body: formData
+    })
+      .then(res => res.json())
+      .then(this.setState({ fileName: 'No File Selected' }))
+      .catch(err => console.error(err));
   }
 
   renderLeaderboard() {
@@ -133,22 +135,23 @@ export default class Tourney extends React.Component {
         <div className="tourney-header text-center">
           <h1>{tourneyName}</h1>
           <img src="./images/hero-banner.jpg" alt="Tourney Pic" />
-          {/* <form onSubmit={this.handlePhotoChange}>
+          <form onSubmit={this.handlePhotoChange}>
             <label htmlFor="image"
               className="custom-file-upload">
-              <i className="fas fa-pen" />
-              <span>  {this.state.photoName}</span>
+              <p>Click HERE <i className="fas fa-pen" /> to choose a new tournament photo.</p>
+              <p>{this.state.fileName}</p>
             </label>
             <input required hidden
               type="file" name="image" id="image"
               onChange={this.handleFileChange} />
             <button type="submit">Change Photo</button>
-          </form> */}
+
+          </form>
         </div>
 
         <div className="leaderboard">
           <h1 className="text-center">Standings</h1>
-          {this.renderLeaderboard}
+          {this.renderLeaderboard()}
         </div>
 
         <div className="tourney-details">

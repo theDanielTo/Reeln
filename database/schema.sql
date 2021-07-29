@@ -50,14 +50,14 @@ CREATE TABLE "public"."tournaments" (
 
 
 CREATE TABLE "public"."catches" (
+  "catchId" serial NOT NULL,
 	"userId" integer NOT NULL,
-	"tourneyId" integer UNIQUE,
+	"tourneyId" integer NOT NULL,
 	"dateCaught" timestamptz NOT NULL,
 	"weight" integer,
 	"length" integer,
-	"location" TEXT NOT NULL,
 	"photo" TEXT NOT NULL,
-	CONSTRAINT "catches_pk" PRIMARY KEY ("userId")
+	CONSTRAINT "catches_pk" PRIMARY KEY ("userId","tourneyId","catchId")
 ) WITH (
   OIDS=FALSE
 );
@@ -85,11 +85,8 @@ CREATE TABLE "public"."participants" (
 );
 
 
-
-
-
 ALTER TABLE "catches" ADD CONSTRAINT "catches_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
-ALTER TABLE "catches" ADD CONSTRAINT "catches_fk1" FOREIGN KEY ("tourneyId") REFERENCES "participants"("tourneyId");
+ALTER TABLE "catches" ADD CONSTRAINT "catches_fk1" FOREIGN KEY ("tourneyId") REFERENCES "tournaments"("tourneyId");
 
 ALTER TABLE "chatLog" ADD CONSTRAINT "chatLog_fk0" FOREIGN KEY ("tourneyId") REFERENCES "tournaments"("tourneyId");
 ALTER TABLE "chatLog" ADD CONSTRAINT "chatLog_fk1" FOREIGN KEY ("userId") REFERENCES "users"("userId");

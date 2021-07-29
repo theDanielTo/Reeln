@@ -75,14 +75,13 @@ export default class Tournaments extends React.Component {
     });
   }
 
-  handleFormSubmit(details) {
+  handleFormSubmit(formData) {
     fetch('/api/tourney/create', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'x-access-token': getToken()
       },
-      body: JSON.stringify(details)
+      body: formData
     })
       .then(res => res.json())
       .then(result => {
@@ -124,7 +123,7 @@ export default class Tournaments extends React.Component {
                       src="./images/hero-banner.jpg" />
                   );
                 } else {
-                  return <></>;
+                  return null;
                 }
               })
             }
