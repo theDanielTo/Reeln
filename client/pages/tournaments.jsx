@@ -17,7 +17,6 @@ export default class Tournaments extends React.Component {
       numParticipants: []
     };
     this.handleSliderClick = this.handleSliderClick.bind(this);
-    this.handleCreateClick = this.handleCreateClick.bind(this);
     this.renderPage = this.renderPage.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
@@ -69,20 +68,13 @@ export default class Tournaments extends React.Component {
       });
   }
 
-  handleCreateClick() {
-    window.addEventListener('hashchange', event => {
-      this.setState({ route: parseRoute(window.location.hash) });
-    });
-  }
-
-  handleFormSubmit(details) {
+  handleFormSubmit(formData) {
     fetch('/api/tourney/create', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'x-access-token': getToken()
       },
-      body: JSON.stringify(details)
+      body: formData
     })
       .then(res => res.json())
       .then(result => {
@@ -98,7 +90,7 @@ export default class Tournaments extends React.Component {
       .catch(err => console.error(err));
   }
 
-  renderPage() {
+  renderPage(tournaments) {
     const { route } = this.state;
     if (route.params.has('create')) {
       return (
@@ -115,7 +107,7 @@ export default class Tournaments extends React.Component {
           <SubHeader text={this.state.headerText} />
           <div className="cards-container">
             {
-              this.state.tourneys.map(tourney => {
+              tournaments.map(tourney => {
                 if (!tourney.closed) {
                   return (
                     <Card key={'card-' + tourney.tourneyId}
@@ -124,12 +116,17 @@ export default class Tournaments extends React.Component {
                       src="./images/hero-banner.jpg" />
                   );
                 } else {
-                  return <></>;
+                  return null;
                 }
               })
             }
           </div>
-          <CreateTourneyBtn onCreateClick={this.handleCreateClick} />
+          <div className="t-btn-container flex-center">
+            <a href="#tournaments?create=tourney"
+              className="create-tourney-btn border-none link-no-deco">
+              Create Tournament
+            </a>
+          </div>
         </>
       );
     }
@@ -138,20 +135,8 @@ export default class Tournaments extends React.Component {
   render() {
     return (
       <div className="tournaments-page">
-        {this.renderPage()}
+        {this.renderPage(this.state.tourneys)}
       </div>
     );
   }
-}
-
-function CreateTourneyBtn(props) {
-  return (
-    <div className="t-btn-container flex-center">
-      <a href="#tournaments?create=tourney"
-        className="create-tourney-btn border-none link-no-deco"
-        onClick={props.onCreateClick}>
-        Create Tournament
-      </a>
-    </div>
-  );
 }

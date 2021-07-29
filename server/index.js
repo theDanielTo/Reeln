@@ -43,9 +43,7 @@ app.post('/api/auth/sign-in', (req, res, next) => {
     throw new ClientError(401, 'invalid login');
   }
   const sql = `
-    SELECT "userId", "firstName", "lastName",
-          "email", "city", "state",
-          "username", "hashedPw"
+    SELECT *
       FROM "users"
     WHERE "username" = $1
   `;
@@ -88,6 +86,19 @@ app.get('/api/users', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/users/:userId', (req, res, next) => {
+  const userId = parseInt(req.params.userId, 10);
+  const sql = `
+    SELECT *
+      FROM "users"
+    WHERE "userId" = $1
+  `;
+  const param = [userId];
+  db.query(sql, param)
+    .then(result => res.status(201).json(result.rows[0]))
+    .catch(err => next(err));
+});
+
 app.post('/api/users/upload', uploadsMiddleware, (req, res, next) => {
   const { userId } = req.user;
   const url = req.file.filename;
@@ -110,7 +121,7 @@ app.get('/api/tourneys/open', (req, res, next) => {
             TO_CHAR("endDate", 'Mon DD, YYYY') as "endDate"
       FROM "participants" AS "p"
       JOIN "tournaments" AS "t" USING ("tourneyId")
-      WHERE "p"."userId" != $1 AND "t"."userId" != $1
+      WHERE "p"."userId" != $1 AND "t"."userId" != $1 AND "endDate" > now()
       ORDER BY "endDate"
   `;
   const param = [userId];
@@ -153,10 +164,11 @@ app.get('/api/tourneys/current', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/tourney/create', (req, res, next) => {
+app.post('/api/tourney/create', uploadsMiddleware, (req, res, next) => {
+  const { userId } = req.user;
   const {
-    userId, tourneyName, tourneyImg,
-    startDate, endDate, closed, maxParticipants,
+    tourneyName, startDate, endDate,
+    closed, maxParticipants,
     minWeight, maxWeight,
     heaviestFive,
     perPound, pointsPerPound,
@@ -168,6 +180,7 @@ app.post('/api/tourney/create', (req, res, next) => {
   if (!tourneyName || !startDate || !endDate || !closed) {
     throw new ClientError(400, 'missing required fields');
   }
+  const url = req.file.filename;
   const sql = `
     INSERT into "tournaments"
       ("userId", "tourneyName", "tourneyImg",
@@ -184,14 +197,14 @@ app.post('/api/tourney/create', (req, res, next) => {
     returning *
   `;
   const params = [
-    userId, tourneyName, tourneyImg,
+    userId, tourneyName, url,
     startDate, endDate, closed, maxParticipants,
     minWeight, maxWeight,
-    heaviestFive,
-    perPound, pointsPerPound,
-    heaviest, pointsHeaviest,
-    longest, pointsLongest,
-    mostCaught, pointsMostCaught,
+    heaviestFive === 'false',
+    perPound === 'false', pointsPerPound,
+    heaviest === 'false', pointsHeaviest,
+    longest === 'false', pointsLongest,
+    mostCaught === 'false', pointsMostCaught,
     additionalRules
   ];
   db.query(sql, params)
@@ -204,7 +217,8 @@ app.post('/api/tourney/create', (req, res, next) => {
 app.get('/api/tourneys/:tourneyId', (req, res, next) => {
   const tourneyId = parseInt(req.params.tourneyId, 10);
   const sql = `
-    SELECT "userId", "tourneyName", "tourneyImg",
+    SELECT "tourneyId", "userId",
+          "tourneyName", "tourneyImg",
           TO_CHAR("startDate", 'Mon DD, YYYY') as "startDate",
           TO_CHAR("endDate", 'Mon DD, YYYY') as "endDate",
           "closed", "maxParticipants",
@@ -212,7 +226,7 @@ app.get('/api/tourneys/:tourneyId', (req, res, next) => {
           "heaviestFive",
           "perPound", "pointsPerPound",
           "heaviest", "pointsHeaviest",
-          "longest",  "pointsLongest",
+          "longest", "pointsLongest",
           "mostCaught", "pointsMostCaught",
           "additionalRules"
       FROM "tournaments"
@@ -227,9 +241,11 @@ app.get('/api/tourneys/:tourneyId', (req, res, next) => {
 app.get('/api/participants/:tourneyId', (req, res, next) => {
   const tourneyId = parseInt(req.params.tourneyId, 10);
   const sql = `
-    SELECT *
+    SELECT "userId", "score", "firstName", "lastName", "avatar"
       FROM "participants"
+      JOIN "users" AS "u" USING ("userId")
     WHERE "tourneyId" = $1
+    ORDER BY "score" DESC
   `;
   const param = [tourneyId];
   db.query(sql, param)
@@ -259,6 +275,39 @@ app.post('/api/tourneys/join/:tourneyId', (req, res, next) => {
   const param = [userId, tourneyId];
   db.query(sql, param)
     .then(result => res.status(201).json(result.rows))
+    .catch(err => next(err));
+});
+
+app.post('/api/catches/log/:tourneyId', uploadsMiddleware, (req, res, next) => {
+  const { userId } = req.user;
+  const tourneyId = parseInt(req.params.tourneyId, 10);
+  const { dateCaught, weight, length } = req.body;
+  const url = req.file.filename;
+  const sql = `
+    INSERT into "catches"
+          ("userId", "tourneyId", "dateCaught",
+          "weight", "length", "photo")
+    VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING *
+  `;
+  const params = [userId, tourneyId, dateCaught, parseFloat(weight), length, url];
+  db.query(sql, params)
+    .then(result => res.status(201).json(result.rows[0]))
+    .catch(err => next(err));
+});
+
+app.patch('/api/participants/addScore', (req, res, next) => {
+  const { userId } = req.user;
+  const { score, tourneyId } = req.body;
+  const sql = `
+    UPDATE "participants"
+      SET "score" = "score" + $1
+    WHERE "userId" = $2 AND "tourneyId" = $3
+    RETURNING *
+  `;
+  const params = [score, userId, tourneyId];
+  db.query(sql, params)
+    .then(result => res.status(201).json(result.rows[0]))
     .catch(err => next(err));
 });
 

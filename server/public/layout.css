@@ -29,10 +29,16 @@ body {
 }
 
 .tournaments-page,
-.tourney-page {
+.tourney-page,
+.log-catch-page {
   padding-top: 40px;
   padding-bottom: 400px;
-  min-height: 97vh;
+  min-height: 100vh;
+}
+
+.log-catch-page {
+  display: flex;
+  flex-direction: column;
 }
 
 @media (min-width: 1200px) {
@@ -45,7 +51,8 @@ body {
   }
 
   .tournaments-page,
-  .tourney-page {
+  .tourney-page,
+  .log-catch-page {
     width: 1200px;
     padding-top: 60px;
   }

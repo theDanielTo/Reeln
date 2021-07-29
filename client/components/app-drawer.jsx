@@ -152,7 +152,7 @@ export default class AppDrawer extends React.Component {
         </>
       );
     } else {
-      return <></>;
+      return null;
     }
   }
 }

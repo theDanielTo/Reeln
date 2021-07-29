@@ -1,7 +1,6 @@
 import React from 'react';
 import Redirect from '../components/redirect';
 import AppContext from '../lib/app-context';
-// import { storeToken } from '../lib';
 
 const MIN_PASS_LEN = 6;
 
@@ -182,7 +181,7 @@ class AuthForm extends React.Component {
 
   render() {
     const signUpInputs = (this.props.action === 'sign-in')
-      ? <></>
+      ? null
       : this.renderSignUpInputs();
     const btnText = (this.props.action === 'sign-in')
       ? 'Sign In'

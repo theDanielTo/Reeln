@@ -7,6 +7,7 @@ import NavBar from './components/nav-bar';
 import Home from './pages/home';
 import Tournaments from './pages/tournaments';
 import Tourney from './pages/tourney';
+import LogCatch from './pages/log-catch';
 import { parseRoute, storeToken, decodeToken } from './lib';
 import AppContext from './lib/app-context';
 
@@ -78,6 +79,13 @@ export default class App extends React.Component {
       return (
         <div className="page">
           <Tournaments user={this.state.user} />;
+        </div>
+      );
+    }
+    if (route.path === 'logcatch') {
+      return (
+        <div className="page">
+          <LogCatch />
         </div>
       );
     }
