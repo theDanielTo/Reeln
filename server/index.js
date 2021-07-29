@@ -295,7 +295,7 @@ app.post('/api/catches/log', uploadsMiddleware, (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.patch('/api/participants', (req, res, next) => {
+app.patch('/api/participants/addScore', (req, res, next) => {
   const { userId } = req.user;
   const { catchScore, tourneyId } = req.body;
   const sql = `

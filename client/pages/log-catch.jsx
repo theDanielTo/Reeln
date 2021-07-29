@@ -1,5 +1,5 @@
 import React from 'react';
-import { getToken, calcScore } from '../lib';
+import { calcScore, getToken } from '../lib';
 
 export default class LogCatch extends React.Component {
   constructor(props) {
@@ -40,6 +40,7 @@ export default class LogCatch extends React.Component {
     const name = e.target.name;
     const value = e.target.value;
     this.setState({ [name]: value });
+    console.log('comp score:', calcScore(4, 3));
   }
 
   insertOptions() {
@@ -58,40 +59,40 @@ export default class LogCatch extends React.Component {
   }
 
   handleSubmit(e) {
-    e.preventDefault();
+    // e.preventDefault();
     const formData = new FormData(e.target);
 
-    fetch('/api/catches/log', {
-      method: 'POST',
-      headers: {
-        'x-access-token': getToken()
-      },
-      body: formData
-    })
-      .then(res => res.json())
-      .then(results => {
-        this.setState({ results });
-      })
-      .catch(err => console.error(err));
+    // fetch('/api/catches/log', {
+    //   method: 'POST',
+    //   headers: {
+    //     'x-access-token': getToken()
+    //   },
+    //   body: formData
+    // })
+    //   .then(res => res.json())
+    //   .then(results => {
+    //     const { tourneyId, weight } = results;
 
-    const { tourneyId, weight } = this.state.results;
-    fetch('/api/participants', {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': getToken(),
-        body: JSON.stringify({
-          catchScore: calcScore(tourneyId, weight),
-          tourneyId: tourneyId
-        })
-      }
-    })
-      .then(res => res.json())
-      .then(e.target.reset())
-      .catch(err => console.error(err));
+    //     // fetch('/api/participants/addScore', {
+    //     //   method: 'PATCH',
+    //     //   headers: {
+    //     //     'Content-Type': 'application/json',
+    //     //     'x-access-token': getToken(),
+    //     //     body: JSON.stringify({
+    //     //       catchScore: calcScore(parseInt(tourneyId), parseInt(weight)),
+    //     //       tourneyId: parseInt(tourneyId)
+    //     //     })
+    //     //   }
+    //     // })
+    //     //   .then(res => res.json())
+    //     //   .then(e.target.reset())
+    //     //   .catch(err => console.error(err));
+    //   })
+    //   .catch(err => console.error(err));
   }
 
   render() {
+    // console.log('score:', this.state.score);
     return (
       <div className="log-catch-page">
         <form className="log-catch-form"

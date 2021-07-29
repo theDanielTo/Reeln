@@ -8,6 +8,7 @@ export default function calcScore(tId, weight) {
   })
     .then(res => res.json())
     .then(results => {
+      console.log('fn score:', weight * results.pointsPerPound);
       return weight * results.pointsPerPound;
     });
 }
