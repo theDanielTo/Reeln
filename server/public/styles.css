@@ -164,6 +164,10 @@ a {
   height: 40px;
 }
 
+.sub-header > span {
+  text-align: center;
+}
+
 .sub-header span,
 .banner-text {
   font-weight: bold;
@@ -525,7 +529,6 @@ iframe {
 }
 
 /* Leaderboard */
-
 .leaderboard {
   margin-bottom: 30px;
 }
@@ -581,7 +584,6 @@ iframe {
 }
 
 /* Tourney Details */
-
 .tabs-container {
   display: flex;
   align-items: center;
@@ -630,6 +632,17 @@ iframe {
 .log-catch-form > select {
   border-radius: 5px;
   padding: 5px;
+}
+
+.file-select {
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.file-select:active {
+  background-color: var(--secondary-color);
 }
 
 .log-catch-form .inline-group input {
@@ -894,6 +907,33 @@ iframe {
   .score-card-score,
   .score-card-place {
     font-size: 48px;
+  }
+
+  /* Log Catch Page */
+  .log-catch-form {
+    padding-top: 20px;
+  }
+
+  .file-select {
+    margin-top: 15px;
+    padding: 10px;
+  }
+
+  .log-catch-form > label,
+  .log-catch-form .inline-group input,
+  .log-catch-form > select {
+    font-size: 24;
+    padding: 10px;
+  }
+
+  .log-catch-form .inline-group input {
+    margin-top: 10px;
+  }
+
+  .log-catch-form > button,
+  .log-catch-form > a {
+    margin-top: 20px;
+    font-size: 24px;
   }
 
   /* Nav */

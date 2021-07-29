@@ -9,6 +9,7 @@ export default class LogCatch extends React.Component {
     this.state = {
       route: parseRoute(window.location.hash),
       tourney: {},
+      fileName: 'Click here to select a photo',
       dateCaught: '',
       weight: 0,
       length: 0,
@@ -78,18 +79,31 @@ export default class LogCatch extends React.Component {
     const tourneyId = this.state.tourney.tourneyId;
     return (
       <div className="log-catch-page">
-        <SubHeader text={'Tourney: ' + this.state.tourney.tourneyName}/>
+        <SubHeader text={'Submit a catch for <' + this.state.tourney.tourneyName + '>'} />
         <form className="log-catch-form"
           onSubmit={this.handleSubmit}>
-          <label htmlFor="image">
-            Upload a photo of your fish
-          </label>
-          <input required type="file" name="image" />
-          <label htmlFor="dateCaught">Date of catch</label>
-          <input type="date" name="dateCaught" id="dateCaught"
-            value={this.state.dateCaught}
-            onChange={this.handleChange}
-            required />
+
+          <div className="inline-groups">
+            <div className="inline-group">
+              <label htmlFor="image-catch">
+                Upload a photo:
+                <div className="file-select">
+                  <i className="fas fa-edit" />
+                  <span>{this.state.fileName}</span>
+                </div>
+              </label>
+              <input required hidden type="file" name="image" id="image-catch"
+                onChange={this.handleFileChange} />
+            </div>
+            <div className="inline-group">
+              <label htmlFor="dateCaught">Date of catch</label>
+              <input type="date" name="dateCaught" id="dateCaught"
+                value={this.state.dateCaught}
+                onChange={this.handleChange}
+                required />
+            </div>
+          </div>
+
           <div className="inline-groups">
             <div className="inline-group">
               <label htmlFor="weight">Weight (pounds)<span>(Leave blank if not applicable)</span></label>
@@ -104,11 +118,12 @@ export default class LogCatch extends React.Component {
                 onChange={this.handleChange} />
             </div>
           </div>
+
           <button type="submit" className="border-none submit-btn">
             Submit
           </button>
           <a href={`#tournaments?tourneyId=${tourneyId}`} className="border-none cancel-btn link-no-deco">
-            Cancel
+            Go Back
           </a>
         </form>
       </div>

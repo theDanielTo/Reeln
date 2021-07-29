@@ -123,9 +123,10 @@ export default class Tourney extends React.Component {
     const id = this.state.participants.find(participant => {
       return participant.userId === this.props.user.userId;
     });
-    const showBtn = (id !== undefined || this.state.participants.length >= maxParticipants)
+    const showJoinBtn = (id || this.state.participants.length >= maxParticipants)
       ? ' hidden'
       : '';
+    const showLogBtn = !id ? ' hidden' : '';
     return (
       <div className="tourney-page">
         <Modal hidden={this.state.modalActive}
@@ -133,11 +134,11 @@ export default class Tourney extends React.Component {
         <ReelnBanner />
         <div className={'t-btn-container flex-center'}>
           <a href={`#logcatch?tourneyId=${tourneyId}`}
-            className={'join-tourney-btn border-none link-no-deco'}
+            className={'join-tourney-btn border-none link-no-deco' + showLogBtn}
             onClick={this.handleJoinBtnClick}>
             LOG CATCH
           </a>
-          <button className={'join-tourney-btn border-none' + showBtn}
+          <button className={'join-tourney-btn border-none' + showJoinBtn}
             onClick={this.handleJoinBtnClick}>
             JOIN
           </button>
