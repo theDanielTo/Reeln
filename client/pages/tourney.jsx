@@ -27,14 +27,13 @@ export default class Tourney extends React.Component {
       fileName: 'No File Selected',
       modalActive: false,
       photoName: '',
-      tourney: null,
+      tourney: {},
+      host: {},
       participants: [],
       tab: 'rules'
     };
     this.handleJoinBtnClick = this.handleJoinBtnClick.bind(this);
     this.handleModalClick = this.handleModalClick.bind(this);
-    this.handleFileChange = this.handleFileChange.bind(this);
-    this.handlePhotoChange = this.handlePhotoChange.bind(this);
     this.renderLeaderboard = this.renderLeaderboard.bind(this);
     this.renderTabs = this.renderTabs.bind(this);
     this.handleTabClick = this.handleTabClick.bind(this);
@@ -47,7 +46,18 @@ export default class Tourney extends React.Component {
       }
     })
       .then(res => res.json())
-      .then(tourney => this.setState({ tourney }));
+      .then(tourney => {
+        this.setState({ tourney });
+        fetch(`/api/users/${tourney.userId}`, {
+          headers: {
+            'x-access-token': getToken()
+          }
+        })
+          .then(res => res.json())
+          .then(result => {
+            this.setState({ host: result });
+          });
+      });
 
     fetch(`/api/participants/${this.props.tourneyId}`, {
       headers: {
@@ -77,22 +87,6 @@ export default class Tourney extends React.Component {
     }
   }
 
-  handleFileChange(e) {
-    this.setState({ fileName: e.target.value });
-  }
-
-  handlePhotoChange(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    fetch(`/api/tourney/upload/${this.props.tourneyId}`, {
-      method: 'POST',
-      body: formData
-    })
-      .then(res => res.json())
-      .then(this.setState({ fileName: 'No File Selected' }))
-      .catch(err => console.error(err));
-  }
-
   renderLeaderboard() {
 
   }
@@ -114,7 +108,7 @@ export default class Tourney extends React.Component {
 
   render() {
     if (!this.state.tourney) return null;
-    const { tourneyName, maxParticipants } = this.state.tourney;
+    const { tourneyName, maxParticipants, tourneyImg } = this.state.tourney;
     const id = this.state.participants.find(participant => {
       return participant.userId === this.props.user.userId;
     });
@@ -134,19 +128,7 @@ export default class Tourney extends React.Component {
         </div>
         <div className="tourney-header text-center">
           <h1>{tourneyName}</h1>
-          <img src="./images/hero-banner.jpg" alt="Tourney Pic" />
-          <form onSubmit={this.handlePhotoChange}>
-            <label htmlFor="image"
-              className="custom-file-upload">
-              <p>Click HERE <i className="fas fa-pen" /> to choose a new tournament photo.</p>
-              <p>{this.state.fileName}</p>
-            </label>
-            <input required hidden
-              type="file" name="image" id="image"
-              onChange={this.handleFileChange} />
-            <button type="submit">Change Photo</button>
-
-          </form>
+          <img src={'./images/' + tourneyImg} alt="Tourney Pic" />
         </div>
 
         <div className="leaderboard">
@@ -160,7 +142,8 @@ export default class Tourney extends React.Component {
           </div>
           <Details
             tourney={this.state.tourney}
-            tab={this.state.tab} />
+            tab={this.state.tab}
+            host={this.state.host} />
         </div>
       </div>
     );
@@ -214,10 +197,13 @@ function Details(props) {
     mostCaught, pointsMostCaught,
     additionalRules
   } = props.tourney;
+  const {
+    firstName, lastName, username
+  } = props.host;
   const rules = <>
     <h2 className="text-center">Rules Overview</h2>
     <p className="text-center">{startDate} - {endDate}</p>
-    {/* <p>Hosted by {username} ({firstName} {lastName})</p> */}
+    <p className="text-center">Hosted by: {username} ({firstName} {lastName})</p>
 
     <h2>Point System</h2>
     <p>Minimum weight: {minWeight}</p>

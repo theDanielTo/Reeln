@@ -17,7 +17,6 @@ export default class Tournaments extends React.Component {
       numParticipants: []
     };
     this.handleSliderClick = this.handleSliderClick.bind(this);
-    this.handleCreateClick = this.handleCreateClick.bind(this);
     this.renderPage = this.renderPage.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
@@ -67,12 +66,6 @@ export default class Tournaments extends React.Component {
         }
         this.setState({ tourneys });
       });
-  }
-
-  handleCreateClick() {
-    window.addEventListener('hashchange', event => {
-      this.setState({ route: parseRoute(window.location.hash) });
-    });
   }
 
   handleFormSubmit(formData) {
@@ -128,7 +121,12 @@ export default class Tournaments extends React.Component {
               })
             }
           </div>
-          <CreateTourneyBtn onCreateClick={this.handleCreateClick} />
+          <div className="t-btn-container flex-center">
+            <a href="#tournaments?create=tourney"
+              className="create-tourney-btn border-none link-no-deco">
+              Create Tournament
+            </a>
+          </div>
         </>
       );
     }
@@ -141,16 +139,4 @@ export default class Tournaments extends React.Component {
       </div>
     );
   }
-}
-
-function CreateTourneyBtn(props) {
-  return (
-    <div className="t-btn-container flex-center">
-      <a href="#tournaments?create=tourney"
-        className="create-tourney-btn border-none link-no-deco"
-        onClick={props.onCreateClick}>
-        Create Tournament
-      </a>
-    </div>
-  );
 }

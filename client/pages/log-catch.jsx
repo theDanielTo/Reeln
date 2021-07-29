@@ -1,5 +1,5 @@
 import React from 'react';
-import { getToken } from '../lib';
+import { getToken, calcScore } from '../lib';
 
 export default class LogCatch extends React.Component {
   constructor(props) {
@@ -7,11 +7,11 @@ export default class LogCatch extends React.Component {
 
     this.state = {
       currentTourneys: [],
-      // tourneyImg: '',
       dateCaught: '',
       weight: 0,
       length: 0,
-      tourneyId: 0
+      tourneyId: 0,
+      score: 0
     };
     this.handleFileChange = this.handleFileChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -68,7 +68,26 @@ export default class LogCatch extends React.Component {
       },
       body: formData
     })
-      .then(window.location.href = '#tournaments')
+      .then(res => res.json())
+      .then(results => {
+        this.setState({ results });
+      })
+      .catch(err => console.error(err));
+
+    const { tourneyId, weight } = this.state.results;
+    fetch('/api/participants', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': getToken(),
+        body: JSON.stringify({
+          catchScore: calcScore(tourneyId, weight),
+          tourneyId: tourneyId
+        })
+      }
+    })
+      .then(res => res.json())
+      .then(e.target.reset())
       .catch(err => console.error(err));
   }
 
@@ -88,13 +107,13 @@ export default class LogCatch extends React.Component {
             required />
           <div className="inline-groups">
             <div className="inline-group">
-              <label htmlFor="weight">Weight <span>(Leave blank if not applicable)</span></label>
+              <label htmlFor="weight">Weight (pounds)<span>(Leave blank if not applicable)</span></label>
               <input type="number" name="weight" id="weight" min={0}
                 value={this.state.weight}
                 onChange={this.handleChange} />
             </div>
             <div className="inline-group">
-              <label htmlFor="length">Length <span>(Leave blank if not applicable)</span></label>
+              <label htmlFor="length">Length (inches)<span>(Leave blank if not applicable)</span></label>
               <input type="number" name="length" id="length" min={0}
                 value={this.state.length}
                 onChange={this.handleChange} />
@@ -102,8 +121,10 @@ export default class LogCatch extends React.Component {
           </div>
           <label htmlFor="tournament">Tournament</label>
           <select name="tourneyId" id="tourneyId" required
+            value={this.state.tourneyId}
             onChange={this.handleChange}>
-            <option value="">--Select a tournament--</option>
+            <option value={0} disabled>--Select a tournament--</option>
+            {/* <option value={0}>--Add to personal album--</option> */}
             {this.insertOptions()}
           </select>
           <button type="submit" className="border-none submit-btn">
