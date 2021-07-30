@@ -116,12 +116,15 @@ app.post('/api/users/upload', uploadsMiddleware, (req, res, next) => {
 app.get('/api/tourneys/open', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-    SELECT "t"."tourneyId", "tourneyName", "closed", "maxParticipants",
-            TO_CHAR("startDate", 'Mon DD, YYYY') as "startDate",
-            TO_CHAR("endDate", 'Mon DD, YYYY') as "endDate"
+    SELECT "t"."tourneyId", "tourneyName", "tourneyImg",
+            "closed", "maxParticipants",
+            count("p"."userId") AS "numParticipants",
+            TO_CHAR("startDate", 'Mon DD, YYYY') AS "startDate",
+            TO_CHAR("endDate", 'Mon DD, YYYY') AS "endDate"
       FROM "participants" AS "p"
       JOIN "tournaments" AS "t" USING ("tourneyId")
       WHERE "p"."userId" != $1 AND "t"."userId" != $1 AND "endDate" > now()
+      GROUP BY "t"."tourneyId"
       ORDER BY "endDate"
   `;
   const param = [userId];
@@ -133,12 +136,14 @@ app.get('/api/tourneys/open', (req, res, next) => {
 app.get('/api/tourneys/past', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-    SELECT "t"."tourneyId", "tourneyName", "closed", "p"."standing",
-            TO_CHAR("startDate", 'Mon DD, YYYY') as "startDate",
-            TO_CHAR("endDate", 'Mon DD, YYYY') as "endDate"
+    SELECT "t"."tourneyId", "tourneyName", "tourneyImg", "closed",
+            count("p"."userId") AS "numParticipants",
+            TO_CHAR("startDate", 'Mon DD, YYYY') AS "startDate",
+            TO_CHAR("endDate", 'Mon DD, YYYY') AS "endDate"
       FROM "participants" AS "p"
       JOIN "tournaments" AS "t" USING ("tourneyId")
       WHERE "endDate" < now() AND "p"."userId" = $1
+      GROUP BY "t"."tourneyId"
       ORDER BY "endDate"
   `;
   const param = [userId];
@@ -150,12 +155,15 @@ app.get('/api/tourneys/past', (req, res, next) => {
 app.get('/api/tourneys/current', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-    SELECT "t"."tourneyId", "tourneyName", "closed", "maxParticipants",
-            TO_CHAR("startDate", 'Mon DD, YYYY') as "startDate",
-            TO_CHAR("endDate", 'Mon DD, YYYY') as "endDate"
+    SELECT "t"."tourneyId", "tourneyName", "tourneyImg",
+            "closed", "maxParticipants",
+            count("p"."userId") AS "numParticipants",
+            TO_CHAR("startDate", 'Mon DD, YYYY') AS "startDate",
+            TO_CHAR("endDate", 'Mon DD, YYYY') AS "endDate"
       FROM "participants" AS "p"
       JOIN "tournaments" AS "t" USING ("tourneyId")
       WHERE "endDate" > now() AND "p"."userId" = $1
+      GROUP BY "t"."tourneyId"
       ORDER BY "endDate"
   `;
   const param = [userId];
@@ -253,14 +261,20 @@ app.get('/api/participants/:tourneyId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('/api/count', (req, res, next) => {
+app.get('/api/catches/:tourneyId', (req, res, next) => {
+  const tourneyId = parseInt(req.params.tourneyId, 10);
   const sql = `
-    SELECT "tourneyId" AS "tId", count("userId") AS "numParticipants"
-    FROM "participants"
-    GROUP BY "tourneyId"
-    ORDER BY "tourneyId";
+    SELECT "userId", "firstName", "lastName",
+          "catchId", "photo", "weight",
+          TO_CHAR("dateCaught", 'Mon DD, YYYY') as "dateCaught"
+      FROM "catches"
+      JOIN "users" AS "u" USING ("userId")
+    WHERE "tourneyId" = $1
+    ORDER BY "dateCaught" DESC
+    LIMIT 12
   `;
-  db.query(sql)
+  const param = [tourneyId];
+  db.query(sql, param)
     .then(result => res.status(201).json(result.rows))
     .catch(err => next(err));
 });

@@ -1,5 +1,7 @@
 import React from 'react';
 import ReelnBanner from '../components/reeln-banner';
+import RulesOverview from '../components/rules-overview';
+import RecentCatches from '../components/recent-catches';
 import ScoreCard from '../components/ScoreCard';
 import { getToken } from '../lib';
 
@@ -31,6 +33,7 @@ export default class Tourney extends React.Component {
       tourney: {},
       host: {},
       participants: [],
+      recentCatches: [],
       tab: 'rules'
     };
     this.handleJoinBtnClick = this.handleJoinBtnClick.bind(this);
@@ -67,6 +70,14 @@ export default class Tourney extends React.Component {
     })
       .then(res => res.json())
       .then(participants => this.setState({ participants }));
+
+    fetch(`/api/catches/${this.props.tourneyId}`, {
+      headers: {
+        'x-access-token': getToken()
+      }
+    })
+      .then(res => res.json())
+      .then(recentCatches => this.setState({ recentCatches }));
   }
 
   handleJoinBtnClick() {
@@ -120,7 +131,8 @@ export default class Tourney extends React.Component {
   render() {
     if (!this.state.tourney) return null;
     const { tourneyId, tourneyName, maxParticipants, tourneyImg } = this.state.tourney;
-    const id = this.state.participants.find(participant => {
+    const { participants } = this.state;
+    const id = participants.find(participant => {
       return participant.userId === this.props.user.userId;
     });
     const showJoinBtn = (id || this.state.participants.length >= maxParticipants)
@@ -158,9 +170,10 @@ export default class Tourney extends React.Component {
             {this.renderTabs()}
           </div>
           <Details
-            tourney={this.state.tourney}
             tab={this.state.tab}
-            host={this.state.host} />
+            tourney={this.state.tourney}
+            host={this.state.host}
+            recentCatches={this.state.recentCatches} />
         </div>
       </div>
     );
@@ -204,51 +217,8 @@ function Tab(props) {
 }
 
 function Details(props) {
-  const {
-    startDate, endDate,
-    minWeight, maxWeight,
-    heaviestFive,
-    perPound, pointsPerPound,
-    heaviest, pointsHeaviest,
-    longest, pointsLongest,
-    mostCaught, pointsMostCaught,
-    additionalRules
-  } = props.tourney;
-  const {
-    firstName, lastName, username
-  } = props.host;
-  const rules = <>
-    <h2 className="text-center">Rules Overview</h2>
-    <p className="text-center">{startDate} - {endDate}</p>
-    <p className="text-center">Hosted by: {username} ({firstName} {lastName})</p>
-
-    <h2>Point System</h2>
-    <p>Minimum weight: {minWeight}</p>
-    <p>Maximum weight: {maxWeight}</p>
-    <p className={(heaviestFive) ? '' : 'line-through'}>
-      Heaviest Five</p>
-    <p className={(perPound) ? '' : 'line-through'}>
-      Per Pound</p>
-    {pointsPerPound} points per pound
-    <h3>Bonus</h3>
-    <p>
-      <span className={(heaviest) ? '' : 'line-through'}>Heaviest</span>
-      : {pointsHeaviest} points
-    </p>
-    <p>
-      <span className={(longest) ? '' : 'line-through'}>Longest</span>
-      : {pointsLongest} points
-    </p>
-    <p>
-      <span className={(mostCaught) ? '' : 'line-through'}>Most Caught</span>
-      : {pointsMostCaught} points
-    </p>
-    <h2>Additional Rules / Notes</h2>
-    {additionalRules}
-  </>;
-  const catches = <>
-    &quot;Photos of recent catches&quot;
-  </>;
+  const rules = <RulesOverview tourney={props.tourney} host={props.host} />;
+  const catches = <RecentCatches recentCatches={props.recentCatches} />;
   const chat = <>
     &quot;Chatbox&quot;
   </>;
