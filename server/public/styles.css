@@ -88,11 +88,6 @@ a {
 }
 
 /* authentication-pages */
-.auth-page {
-  background-color: var(--alt-color);
-  height: 100vh;
-  flex-direction: column;
-}
 
 .auth-page h1 {
   margin: 0 0 20px 0;
@@ -338,6 +333,7 @@ iframe {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
+  padding-bottom: 200px;
   margin-top: 25px;
 }
 
@@ -526,6 +522,8 @@ iframe {
 
 .tourney-header > img {
   width: 100%;
+  height: 200px;
+  object-fit: cover;
 }
 
 /* Leaderboard */
@@ -621,7 +619,7 @@ iframe {
 
 .rules-overview-container {
   height: 100%;
-  padding: 0 20px;
+  padding: 0 20px 200px;
   background-image: url(./images/browser-bg.svg);
   background-size: cover;
   background-repeat: no-repeat;
@@ -636,7 +634,7 @@ iframe {
 }
 
 .rules-overview-section > h2 {
-  margin: 0;
+  margin: 0 0 10px;
 }
 
 /* Log Catch Page */
@@ -655,6 +653,7 @@ iframe {
 }
 
 .file-select {
+  background-color: var(--light-color);
   border: 1px solid black;
   border-radius: 5px;
   padding: 5px;
@@ -722,6 +721,12 @@ iframe {
   .bottom-triangle {
     border-top: 60px solid transparent;
     border-right: 1200px solid var(--alt-color);
+  }
+
+  /* Authenticator */
+  .auth-form {
+    width: 40%;
+    padding: 40px 20px;
   }
 
   /* Home Page */
@@ -889,6 +894,10 @@ iframe {
     width: 1200px;
   }
 
+  .tourney-header > img {
+    height: 600px;
+  }
+
   .tabs-container {
     height: 80px;
   }
@@ -903,7 +912,7 @@ iframe {
   }
 
   .rules-overview-container {
-    padding: 0 50px;
+    padding: 0 50px 300px;
     font-size: 1.5rem;
   }
 

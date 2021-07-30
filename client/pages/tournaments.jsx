@@ -17,7 +17,6 @@ export default class Tournaments extends React.Component {
     };
     this.handleSliderClick = this.handleSliderClick.bind(this);
     this.renderPage = this.renderPage.bind(this);
-    this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -67,31 +66,9 @@ export default class Tournaments extends React.Component {
       });
   }
 
-  handleFormSubmit(formData) {
-    fetch('/api/tourney/create', {
-      method: 'POST',
-      headers: {
-        'x-access-token': getToken()
-      },
-      body: formData
-    })
-      .then(res => res.json())
-      .then(result => {
-        this.setState({ tournaments: [...this.state.tourneys, result] });
-        fetch(`/api/tourneys/join/${parseInt(result.tourneyId)}`, {
-          method: 'POST',
-          headers: {
-            'x-access-token': getToken()
-          }
-        })
-          .then(res => res.json());
-      })
-      .catch(err => console.error(err));
-  }
-
   renderPage(tournaments) {
     const { route } = this.state;
-    if (route.params.has('create')) {
+    if (route.params.has('createtourney')) {
       return (
         <>
           <ReelnBanner />
@@ -107,6 +84,7 @@ export default class Tournaments extends React.Component {
           <div className="cards-container">
             {
               tournaments.map(tourney => {
+                console.log(tourney);
                 if (!tourney.closed) {
                   const line3 = tourney.maxParticipants
                     ? <>{tourney.numParticipants} / {tourney.maxParticipants} participants</>
@@ -126,7 +104,7 @@ export default class Tournaments extends React.Component {
             }
           </div>
           <div className="t-btn-container flex-center">
-            <a href="#tournaments?create=tourney"
+            <a href="#tournaments?createtourney"
               className="create-tourney-btn border-none link-no-deco">
               Create Tournament
             </a>

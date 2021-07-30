@@ -23,13 +23,15 @@ app.post('/api/auth/sign-up', uploadsMiddleware, (req, res, next) => {
     .then(hashedPw => {
       const sql = `
         INSERT into "users"
-          ("firstName", "lastName",
-          "email", "city", "state",
-          "username", "hashedPw")
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+          ("firstName", "lastName", "email", "city", "state",
+          "username", "hashedPw", "avatar")
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         returning *
       `;
-      const params = [firstName, lastName, email, city, state, username, hashedPw];
+      const params = [
+        firstName, lastName, email, city, state,
+        username, hashedPw, 'default-avatar.jpg'
+      ];
       db.query(sql, params)
         .then(result => res.status(201).json(result.rows[0]))
         .catch(err => next(err));
@@ -75,6 +77,7 @@ app.use(authorizationMiddleware);
 
 app.get('/api/users', (req, res, next) => {
   const { userId } = req.user;
+  if (!userId) throw new ClientError(401, 'no user with that userId');
   const sql = `
     SELECT *
       FROM "users"
@@ -123,8 +126,8 @@ app.get('/api/tourneys/open', (req, res, next) => {
             TO_CHAR("endDate", 'Mon DD, YYYY') AS "endDate"
       FROM "participants" AS "p"
       JOIN "tournaments" AS "t" USING ("tourneyId")
-      WHERE "p"."userId" != $1 AND "t"."userId" != $1 AND "endDate" > now()
-      GROUP BY "t"."tourneyId"
+      WHERE "endDate" > now() AND "p"."userId" != $1 AND "t"."userId" != $1
+      GROUP BY "t"."tourneyId", "p"."tourneyId"
       ORDER BY "endDate"
   `;
   const param = [userId];
@@ -143,8 +146,8 @@ app.get('/api/tourneys/past', (req, res, next) => {
       FROM "participants" AS "p"
       JOIN "tournaments" AS "t" USING ("tourneyId")
       WHERE "endDate" < now() AND "p"."userId" = $1
-      GROUP BY "t"."tourneyId"
-      ORDER BY "endDate"
+      GROUP BY "t"."tourneyId", "p"."tourneyId"
+      ORDER BY "endDate" DESC
   `;
   const param = [userId];
   db.query(sql, param)
@@ -224,6 +227,8 @@ app.post('/api/tourney/create', uploadsMiddleware, (req, res, next) => {
 
 app.get('/api/tourneys/:tourneyId', (req, res, next) => {
   const tourneyId = parseInt(req.params.tourneyId, 10);
+  if (!tourneyId) throw new ClientError(401, 'no tourney with that tourneyId');
+
   const sql = `
     SELECT "tourneyId", "userId",
           "tourneyName", "tourneyImg",
@@ -248,6 +253,8 @@ app.get('/api/tourneys/:tourneyId', (req, res, next) => {
 
 app.get('/api/participants/:tourneyId', (req, res, next) => {
   const tourneyId = parseInt(req.params.tourneyId, 10);
+  if (!tourneyId) throw new ClientError(401, 'no tourney with that tourneyId');
+
   const sql = `
     SELECT "userId", "score", "firstName", "lastName", "avatar"
       FROM "participants"
@@ -263,6 +270,8 @@ app.get('/api/participants/:tourneyId', (req, res, next) => {
 
 app.get('/api/catches/:tourneyId', (req, res, next) => {
   const tourneyId = parseInt(req.params.tourneyId, 10);
+  if (!tourneyId) throw new ClientError(401, 'no tourney with that tourneyId');
+
   const sql = `
     SELECT "userId", "firstName", "lastName",
           "catchId", "photo", "weight",
@@ -281,6 +290,8 @@ app.get('/api/catches/:tourneyId', (req, res, next) => {
 
 app.post('/api/tourneys/join/:tourneyId', (req, res, next) => {
   const tourneyId = parseInt(req.params.tourneyId, 10);
+  if (!tourneyId) throw new ClientError(401, 'no tourney with that tourneyId');
+
   const { userId } = req.user;
   const sql = `
     INSERT into "participants" ("userId", "tourneyId", "score", "standing")
@@ -295,8 +306,14 @@ app.post('/api/tourneys/join/:tourneyId', (req, res, next) => {
 app.post('/api/catches/log/:tourneyId', uploadsMiddleware, (req, res, next) => {
   const { userId } = req.user;
   const tourneyId = parseInt(req.params.tourneyId, 10);
+  if (!tourneyId) throw new ClientError(401, 'no tourney with that tourneyId');
+
   const { dateCaught, weight, length } = req.body;
+  if (!dateCaught) {
+    throw new ClientError(400, 'dateCaught is a required field');
+  }
   const url = req.file.filename;
+
   const sql = `
     INSERT into "catches"
           ("userId", "tourneyId", "dateCaught",

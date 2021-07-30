@@ -93,7 +93,10 @@ export default class Tourney extends React.Component {
         }
       })
         .then(res => res.json())
-        .then(this.setState({ modalActive: false }));
+        .then(result => {
+          this.setState({ modalActive: false });
+          window.location.reload(true);
+        });
     } else if (e.target.id === 'modal-cancel') {
       this.setState({ modalActive: false });
     }

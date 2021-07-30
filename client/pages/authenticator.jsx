@@ -20,7 +20,6 @@ function Input(props) {
     </>
   );
 }
-
 class AuthForm extends React.Component {
   constructor(props) {
     super(props);
@@ -35,10 +34,15 @@ class AuthForm extends React.Component {
       password: '',
       errorMsg: ''
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.clearForm = this.clearForm.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
     this.handleSelectState = this.handleSelectState.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.renderSignUpInputs = this.renderSignUpInputs.bind(this);
+  }
+
+  clearForm(e) {
+    e.target.closest('form').reset();
   }
 
   onInputChange(field, value) {
@@ -214,7 +218,13 @@ class AuthForm extends React.Component {
           {this.state.errorMsg}
         </span>
         <button type="submit">{btnText}</button>
-        <span>{message} <a href={hereHref}>here</a>.</span>
+        <span>
+          {message}
+          <a href={hereHref}
+            onClick={this.clearForm}>
+            here
+          </a>.
+        </span>
       </form>
     );
   }
