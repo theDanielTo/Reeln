@@ -11,7 +11,6 @@ export default function Card(props) {
         <p className="card-text card-text-title">{line1}</p>
         <p className="card-text">{line2}</p>
         <p className="card-text">{line3}</p>
-        {/* {renderDetails(this.props)} */}
       </div>
     </a>
   );

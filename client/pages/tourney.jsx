@@ -220,7 +220,7 @@ function Details(props) {
   const rules = <RulesOverview tourney={props.tourney} host={props.host} />;
   const catches = <RecentCatches recentCatches={props.recentCatches} />;
   const chat = <>
-    &quot;Chatbox&quot;
+    &quot;Chatbox coming SOON&trade;&quot;
   </>;
   let view = rules;
   if (props.tab === 'rules') view = rules;

@@ -12,7 +12,7 @@ export default function RecentCatches(props) {
               id={c.catchId}
               line1={c.firstName + ' ' + c.lastName}
               line2={'Caught on: ' + c.dateCaught }
-              line3={'Weight: ' + c.weight}
+              line3={'Weight: ' + c.weight + ' pounds'}
               src={'./images/' + c.photo} />
           );
         })

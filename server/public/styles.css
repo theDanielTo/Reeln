@@ -584,6 +584,10 @@ iframe {
 }
 
 /* Tourney Details */
+.tourney-details {
+  height: 100%;
+}
+
 .tabs-container {
   display: flex;
   align-items: center;
@@ -615,8 +619,24 @@ iframe {
   color: var(--selected-color);
 }
 
-.detail-view {
+.rules-overview-container {
+  height: 100%;
   padding: 0 20px;
+  background-image: url(./images/browser-bg.svg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.rules-overview-section {
+  background-color: #fffdea50;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.rules-overview-section > h2 {
+  margin: 0;
 }
 
 /* Log Catch Page */
@@ -882,7 +902,7 @@ iframe {
     margin-right: 10px;
   }
 
-  .detail-view {
+  .rules-overview-container {
     padding: 0 50px;
     font-size: 1.5rem;
   }

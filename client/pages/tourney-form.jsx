@@ -55,11 +55,11 @@ export default class TourneyForm extends React.Component {
   }
 
   render() {
-    // console.log(this.state);
     return (
       <form className="create-tourney-form" onSubmit={this.handleSubmit}>
         <label htmlFor="tourneyName">Name of tourney</label>
         <input required type="text" name="tourneyName" id="tourneyName"
+          autoComplete="off"
           value={this.state.tourneyName}
           onChange={this.handleChange} />
 
