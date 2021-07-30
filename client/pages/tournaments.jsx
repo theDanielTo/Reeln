@@ -13,8 +13,7 @@ export default class Tournaments extends React.Component {
       route: parseRoute(window.location.hash),
       slider: 'slider-open',
       headerText: 'Open Tournaments',
-      tourneys: [],
-      numParticipants: []
+      tourneys: []
     };
     this.handleSliderClick = this.handleSliderClick.bind(this);
     this.renderPage = this.renderPage.bind(this);
@@ -109,11 +108,16 @@ export default class Tournaments extends React.Component {
             {
               tournaments.map(tourney => {
                 if (!tourney.closed) {
+                  const line3 = tourney.maxParticipants
+                    ? <>{tourney.numParticipants} / {tourney.maxParticipants} participants</>
+                    : <>Placed {tourney.standing}/{tourney.numParticipants}</>;
                   return (
                     <Card key={'card-' + tourney.tourneyId}
-                      id={tourney.tourneyId}
-                      tourney={tourney}
-                      src="./images/hero-banner.jpg" />
+                      url={`#tournaments?tourneyId=${tourney.tourneyId}`}
+                      line1={tourney.tourneyName}
+                      line2={tourney.startDate + ' - ' + tourney.endDate}
+                      line3={line3}
+                      src={'./images/' + tourney.tourneyImg} />
                   );
                 } else {
                   return null;

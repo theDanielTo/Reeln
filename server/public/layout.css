@@ -16,7 +16,10 @@ body {
 .page {
   height: 100%;
   width: 100%;
-  background-color: var(--light-color);
+  background-image: url(./images/browser-bg.svg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .home-page {
@@ -44,6 +47,8 @@ body {
 @media (min-width: 1200px) {
   .page {
     max-width: 1200px;
+
+    /* background-color: var(--light-color); */
   }
 
   .home-page {
