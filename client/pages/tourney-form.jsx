@@ -1,7 +1,6 @@
 import React from 'react';
-import { getToken } from '../lib';
 
-const defaultAdditional = '--Example Rules--<br>' +
+const defaultAdditional = '--Example Rules--\n' +
 'Please feel free to change or omit these rules!\n\n' +
 '1. Have fun!\n\n' +
 '2. Entry Fee: $0\n\n' +
@@ -22,14 +21,14 @@ export default class TourneyForm extends React.Component {
       maxParticipants: 1,
       minWeight: 0,
       maxWeight: 0,
-      heaviestFive: false,
-      perPound: false,
+      heaviestFive: 'false',
+      perPound: 'false',
       pointsPerPound: 1,
-      heaviest: false,
+      heaviest: 'false',
       pointsHeaviest: 0,
-      longest: false,
+      longest: 'false',
       pointsLongest: 0,
-      mostCaught: false,
+      mostCaught: 'false',
       pointsMostCaught: 0,
       additionalRules: defaultAdditional
     };
@@ -41,6 +40,11 @@ export default class TourneyForm extends React.Component {
 
   componentDidMount() {
     this.setState({ userId: this.props.user.userId });
+  }
+
+  test(e) {
+    const formData = new FormData(e.target);
+    formData.get(e.target);
   }
 
   handleInputChange(e) {
@@ -60,33 +64,18 @@ export default class TourneyForm extends React.Component {
 
   handleCheckboxChange(e) {
     const name = e.target.name;
-    const checked = e.target.checked;
-    this.setState({ [name]: checked });
+    if (e.target.checked) {
+      this.setState({ [name]: 'true' });
+    } else {
+      this.setState({ [name]: 'false' });
+    }
   }
 
   handleSubmit(e) {
     e.preventDefault();
     window.location.href = '#tournaments';
     const formData = new FormData(e.target);
-    fetch('/api/tourney/create', {
-      method: 'POST',
-      headers: {
-        'x-access-token': getToken()
-      },
-      body: formData
-    })
-      .then(res => res.json())
-      .then(result => {
-        this.setState({ tournaments: [...this.state.tourneys, result] });
-        fetch(`/api/tourneys/join/${parseInt(result.tourneyId)}`, {
-          method: 'POST',
-          headers: {
-            'x-access-token': getToken()
-          }
-        })
-          .then(res => res.json());
-      })
-      .catch(err => console.error(err));
+    this.props.onFormSubmit(formData);
   }
 
   render() {
@@ -146,7 +135,7 @@ export default class TourneyForm extends React.Component {
         <div className="form-group">
           <label htmlFor="maxParticipants">Number of Participants (1-99)</label>
           <input type="number" name="maxParticipants" id="maxParticipants"
-            required min={1} max={99} maxLength={2}
+            required min={1} max={99}
             value={this.state.maxParticipants}
             onChange={this.handleInputChange} />
         </div>
@@ -171,7 +160,7 @@ export default class TourneyForm extends React.Component {
         <div className="inline-input">
           <input type="checkbox" name="heaviestFive" id="heaviestFive"
             value={this.state.heaviestFive}
-            checked={this.state.heaviestFive}
+            checked={this.state.heaviestFive === 'true'}
             onChange={this.handleCheckboxChange} />
           <label htmlFor="heaviestFive">
             Heaviest 5
@@ -182,6 +171,7 @@ export default class TourneyForm extends React.Component {
         <div className="inline-input">
           <input type="checkbox" name="perPound" id="perPound"
             value={this.state.perPound}
+            checked={this.state.perPound === 'true'}
             onChange={this.handleCheckboxChange} />
           <label htmlFor="perPound">
             Per Pound (1 - 10)
@@ -194,7 +184,7 @@ export default class TourneyForm extends React.Component {
           id="pointsPerPound"
           value={this.state.pointsPerPound}
           onChange={this.handleInputChange}
-          disabled={!this.state.perPound} />
+          disabled={this.state.perPound === 'false'} />
         <span className="flex-center">{this.state.pointsPerPound} point(s)</span>
 
         <h4>BONUS</h4>
@@ -202,6 +192,7 @@ export default class TourneyForm extends React.Component {
         <div className="inline-input">
           <input type="checkbox" name="heaviest" id="heaviest"
             value={this.state.heaviest}
+            checked={this.state.heaviest === 'true'}
             onChange={this.handleCheckboxChange} />
           <label htmlFor="heaviest">
             Heaviest (0-100)
@@ -214,12 +205,13 @@ export default class TourneyForm extends React.Component {
           id="pointsHeaviest"
           value={this.state.pointsHeaviest}
           onChange={this.handleInputChange}
-          disabled={!this.state.heaviest} />
+          disabled={this.state.heaviest === 'false'} />
         <span className="flex-center">{this.state.pointsHeaviest} point(s)</span>
 
         <div className="inline-input">
           <input type="checkbox" name="longest" id="longest"
             value={this.state.longest}
+            checked={this.state.longest === 'true'}
             onChange={this.handleCheckboxChange} />
           <label htmlFor="longest">
             Longest (0-100)
@@ -232,12 +224,13 @@ export default class TourneyForm extends React.Component {
           id="pointsLongest"
           value={this.state.pointsLongest}
           onChange={this.handleInputChange}
-          disabled={!this.state.longest} />
+          disabled={this.state.longest === 'false'} />
         <span className="flex-center">{this.state.pointsLongest} point(s)</span>
 
         <div className="inline-input">
           <input type="checkbox" name="mostCaught" id="mostCaught"
           value={this.state.mostCaught}
+          checked={this.state.mostCaught === 'true'}
           onChange={this.handleCheckboxChange} />
           <label htmlFor="mostCaught">
             Most Caught (0-100)
@@ -250,7 +243,7 @@ export default class TourneyForm extends React.Component {
           id="pointsMostCaught"
           value={this.state.pointsMostCaught}
           onChange={this.handleInputChange}
-          disabled={!this.state.mostCaught} />
+          disabled={this.state.mostCaught === 'false'} />
         <span className="flex-center">{this.state.pointsMostCaught} point(s)</span>
 
         <div className="form-group">

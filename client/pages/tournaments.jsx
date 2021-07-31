@@ -11,16 +11,17 @@ export default class Tournaments extends React.Component {
     super(props);
     this.state = {
       route: parseRoute(window.location.hash),
-      slider: 'slider-open',
-      headerText: 'Open Tournaments',
+      slider: 'slider-current',
+      headerText: 'Current Tournaments',
       tourneys: []
     };
     this.handleSliderClick = this.handleSliderClick.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.renderPage = this.renderPage.bind(this);
   }
 
   componentDidMount() {
-    fetch('/api/tourneys/open', {
+    fetch('/api/tourneys/current', {
       headers: {
         'x-access-token': getToken()
       }
@@ -66,6 +67,28 @@ export default class Tournaments extends React.Component {
       });
   }
 
+  handleFormSubmit(formData) {
+    fetch('/api/tourney/create', {
+      method: 'POST',
+      headers: {
+        'x-access-token': getToken()
+      },
+      body: formData
+    })
+      .then(res => res.json())
+      .then(result => {
+        this.setState({ tournaments: [...this.state.tourneys, result] });
+        fetch(`/api/tourneys/join/${parseInt(result.tourneyId)}`, {
+          method: 'POST',
+          headers: {
+            'x-access-token': getToken()
+          }
+        })
+          .then(res => res.json());
+      })
+      .catch(err => console.error(err));
+  }
+
   renderPage(tournaments) {
     const { route } = this.state;
     if (route.params.has('createtourney')) {
@@ -84,7 +107,6 @@ export default class Tournaments extends React.Component {
           <div className="cards-container">
             {
               tournaments.map(tourney => {
-                console.log(tourney);
                 if (!tourney.closed) {
                   const line3 = tourney.maxParticipants
                     ? <>{tourney.numParticipants} / {tourney.maxParticipants} participants</>

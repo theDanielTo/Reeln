@@ -14,6 +14,10 @@ export default function RulesOverview(props) {
   const {
     firstName, lastName, username
   } = props.host;
+  const pPP = (pointsPerPound) || 0;
+  const pH = (pointsHeaviest) || 0;
+  const pL = (pointsLongest) || 0;
+  const pMC = (pointsMostCaught) || 0;
   return (
     <div className="rules-overview-container">
       <h2 className="text-center">Rules Overview</h2>
@@ -28,22 +32,22 @@ export default function RulesOverview(props) {
           Heaviest Five</p>
         <p className={(perPound) ? '' : 'line-through'}>
           Per Pound</p>
-        {pointsPerPound} points per pound
+        {pPP} points per pound
       </div>
 
       <div className="rules-overview-section">
         <h2>Bonus</h2>
         <p>
           <span className={(heaviest) ? '' : 'line-through'}>Heaviest</span>
-          : {pointsHeaviest} points
+          : {pH} points
         </p>
         <p>
           <span className={(longest) ? '' : 'line-through'}>Longest</span>
-          : {pointsLongest} points
+          : {pL} points
         </p>
         <p>
           <span className={(mostCaught) ? '' : 'line-through'}>Most Caught</span>
-          : {pointsMostCaught} points
+          : {pMC} points
         </p>
       </div>
 

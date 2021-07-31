@@ -119,7 +119,7 @@ app.post('/api/users/upload', uploadsMiddleware, (req, res, next) => {
 app.get('/api/tourneys/open', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-    SELECT "t"."tourneyId", "tourneyName", "tourneyImg",
+    SELECT  "p"."tourneyId", "tourneyName", "tourneyImg",
             "closed", "maxParticipants",
             count("p"."userId") AS "numParticipants",
             TO_CHAR("startDate", 'Mon DD, YYYY') AS "startDate",
@@ -127,7 +127,7 @@ app.get('/api/tourneys/open', (req, res, next) => {
       FROM "participants" AS "p"
       JOIN "tournaments" AS "t" USING ("tourneyId")
       WHERE "endDate" > now() AND "p"."userId" != $1 AND "t"."userId" != $1
-      GROUP BY "t"."tourneyId", "p"."tourneyId"
+      GROUP BY "p"."tourneyId", "t"."tourneyId"
       ORDER BY "endDate"
   `;
   const param = [userId];
@@ -139,14 +139,14 @@ app.get('/api/tourneys/open', (req, res, next) => {
 app.get('/api/tourneys/past', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-    SELECT "t"."tourneyId", "tourneyName", "tourneyImg", "closed",
-            count("p"."userId") AS "numParticipants",
+    SELECT  count("p"."userId") AS "numParticipants",
+            "t"."tourneyId", "tourneyName", "tourneyImg", "closed",
             TO_CHAR("startDate", 'Mon DD, YYYY') AS "startDate",
             TO_CHAR("endDate", 'Mon DD, YYYY') AS "endDate"
       FROM "participants" AS "p"
       JOIN "tournaments" AS "t" USING ("tourneyId")
       WHERE "endDate" < now() AND "p"."userId" = $1
-      GROUP BY "t"."tourneyId", "p"."tourneyId"
+      GROUP BY "p"."tourneyId", "t"."tourneyId"
       ORDER BY "endDate" DESC
   `;
   const param = [userId];
@@ -158,9 +158,9 @@ app.get('/api/tourneys/past', (req, res, next) => {
 app.get('/api/tourneys/current', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-    SELECT "t"."tourneyId", "tourneyName", "tourneyImg",
-            "closed", "maxParticipants",
+    SELECT  "t"."tourneyId", "tourneyName", "tourneyImg",
             count("p"."userId") AS "numParticipants",
+            "closed", "maxParticipants",
             TO_CHAR("startDate", 'Mon DD, YYYY') AS "startDate",
             TO_CHAR("endDate", 'Mon DD, YYYY') AS "endDate"
       FROM "participants" AS "p"
@@ -211,11 +211,11 @@ app.post('/api/tourney/create', uploadsMiddleware, (req, res, next) => {
     userId, tourneyName, url,
     startDate, endDate, closed, maxParticipants,
     minWeight, maxWeight,
-    heaviestFive === 'false',
-    perPound === 'false', pointsPerPound,
-    heaviest === 'false', pointsHeaviest,
-    longest === 'false', pointsLongest,
-    mostCaught === 'false', pointsMostCaught,
+    heaviestFive === 'true',
+    perPound === 'true', pointsPerPound,
+    heaviest === 'true', pointsHeaviest,
+    longest === 'true', pointsLongest,
+    mostCaught === 'true', pointsMostCaught,
     additionalRules
   ];
   db.query(sql, params)
