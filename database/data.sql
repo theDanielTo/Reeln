@@ -217,62 +217,62 @@ INSERT into "participants" ("userId", "tourneyId", "score", "standing")
 
 
 
-INSERT into "catches" ("catchId", "userId", "tourneyId",
+INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (1111, 1, 1, '2021-07-01 00:00:00', 2.1, 0,
+  VALUES (1, 1, '2021-07-01 00:00:00', 2.1, 0,
           'presentation-images/fish/bass-1.jpg');
 
-INSERT into "catches" ("catchId", "userId", "tourneyId",
+INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (2222, 2, 1, '2021-07-02 00:00:00', 2.3, 0,
+  VALUES (2, 1, '2021-07-02 00:00:00', 2.3, 0,
           'presentation-images/fish/bass-2.jpg');
 
-INSERT into "catches" ("catchId", "userId", "tourneyId",
+INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (3333, 3, 1, '2021-07-03 00:00:00', 3.9, 0,
+  VALUES (3, 1, '2021-07-03 00:00:00', 3.9, 0,
           'presentation-images/fish/bass-3.jpg');
 
-INSERT into "catches" ("catchId", "userId", "tourneyId",
+INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (4444, 4, 1, '2021-07-04 00:00:00', 2.2, 0,
+  VALUES (4, 1, '2021-07-04 00:00:00', 2.2, 0,
           'presentation-images/fish/fish-1.jpg');
 
-INSERT into "catches" ("catchId", "userId", "tourneyId",
+INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (5555, 5, 1, '2021-07-05 00:00:00', 1, 0,
+  VALUES (5, 1, '2021-07-05 00:00:00', 1, 0,
           'presentation-images/fish/flounder.jpg');
 
-INSERT into "catches" ("catchId", "userId", "tourneyId",
+INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (6666, 6, 1, '2021-07-06 00:00:00', 1.5, 0,
+  VALUES (6, 1, '2021-07-06 00:00:00', 1.5, 0,
           'presentation-images/fish/fred.jpg');
 
-INSERT into "catches" ("catchId", "userId", "tourneyId",
+INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (7777, 7, 1, '2021-07-07 00:00:00', 1.4, 0,
+  VALUES (7, 1, '2021-07-07 00:00:00', 1.4, 0,
           'presentation-images/fish/futurama.jpg');
 
-INSERT into "catches" ("catchId", "userId", "tourneyId",
+INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (8888, 8, 1, '2021-07-08 00:00:00', 0.9, 0,
+  VALUES (8, 1, '2021-07-08 00:00:00', 0.9, 0,
           'presentation-images/fish/trout-1.jpg');
 
-INSERT into "catches" ("catchId", "userId", "tourneyId",
+INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (9999, 9, 1, '2021-07-09 00:00:00', 1.1, 0,
+  VALUES (9, 1, '2021-07-09 00:00:00', 1.1, 0,
           'presentation-images/fish/trout-2.jpg');
 
-INSERT into "catches" ("catchId", "userId", "tourneyId",
+INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (10000, 10, 1, '2021-07-10 00:00:00', 0.8, 0,
+  VALUES (10, 1, '2021-07-10 00:00:00', 0.8, 0,
           'presentation-images/fish/trout-3.jpg');
 
-INSERT into "catches" ("catchId", "userId", "tourneyId",
+INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (11111, 1, 1, '2021-07-11 00:00:00', 1.4, 0,
+  VALUES (1, 1, '2021-07-11 00:00:00', 1.4, 0,
           'presentation-images/fish/trout-4.jpg');
 
-INSERT into "catches" ("catchId", "userId", "tourneyId",
+INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (12222, 2, 1, '2021-07-12 00:00:00', 3.6, 0,
+  VALUES (2, 1, '2021-07-12 00:00:00', 3.6, 0,
           'presentation-images/fish/uninterested.jpg');

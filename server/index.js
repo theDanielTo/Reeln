@@ -281,15 +281,16 @@ app.get('/api/catches/:tourneyId', (req, res, next) => {
   if (!tourneyId) throw new ClientError(401, 'no tourney with that tourneyId');
 
   const sql = `
-    SELECT "userId", "firstName", "lastName",
+    SELECT "firstName", "lastName",
           "catchId", "photo", "weight",
           TO_CHAR("dateCaught", 'Mon DD, YYYY') as "dateCaught"
       FROM "catches"
-      JOIN "users" AS "u" USING ("userId")
+      JOIN "users" USING ("userId")
     WHERE "tourneyId" = $1
-    ORDER BY "dateCaught" DESC
-    LIMIT 12
+
   `;
+  // ORDER BY "dateCaught" DESC
+  // LIMIT 12
   const param = [tourneyId];
   db.query(sql, param)
     .then(result => res.status(201).json(result.rows))
