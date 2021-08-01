@@ -87,12 +87,12 @@ export default class LogCatch extends React.Component {
             <div className="inline-group">
               <label htmlFor="image-catch">
                 Upload a photo:
-                <div className="file-select">
+                {/* <div className="file-select">
                   <i className="fas fa-edit" />
                   <span>{this.state.fileName}</span>
-                </div>
+                </div> */}
               </label>
-              <input required hidden type="file" name="image" id="image-catch"
+              <input required type="file" name="image" id="image-catch"
                 onChange={this.handleFileChange} />
             </div>
             <div className="inline-group">

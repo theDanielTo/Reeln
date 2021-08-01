@@ -2,13 +2,13 @@ import React from 'react';
 import Splash from './pages/splash';
 import NotAuth from './pages/not-auth';
 import Authenticator from './pages/authenticator';
-import AppDrawer from './components/app-drawer';
-import Header from './components/header';
-import NavBar from './components/nav-bar';
 import Home from './pages/home';
 import Tournaments from './pages/tournaments';
 import Tourney from './pages/tourney';
 import LogCatch from './pages/log-catch';
+import AppDrawer from './components/app-drawer';
+import Header from './components/header';
+import NavBar from './components/nav-bar';
 import { parseRoute, storeToken, decodeToken } from './lib';
 import AppContext from './lib/app-context';
 

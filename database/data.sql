@@ -4,7 +4,7 @@ INSERT into "users"
 VALUES
       ('Daniel', 'To', 'example@example.com', 'Garden Grove', 'CA', 'admin',
       '$argon2i$v=19$m=4096,t=3,p=1$VCpYhsbEd62rWjeNtnCPcg$g9slSnGZG6K3dlqR7QX3VjmR/QWqg6wRWgQ+S5j81/U',
-      '/presentation-images/user/daniel.jpg');
+      'presentation-images/user/daniel.jpg');
 
 
 INSERT into "users"
@@ -13,7 +13,7 @@ INSERT into "users"
 VALUES
       ('Scott', 'Bowler', 'email', 'City', 'CA', 'scottbowler',
       '$argon2i$v=19$m=4096,t=3,p=1$tEBfrt9mUnEJ5zIVOlfIYg$5J4fmOFXPfSRaMhI3erzlFKPyy3kvhu52aSTK5nZVRY',
-      '/presentation-images/user/nigel.jpg');
+      'presentation-images/user/nigel.jpg');
 
 
 INSERT into "users"
@@ -22,7 +22,7 @@ INSERT into "users"
 VALUES
       ('Brett', 'Albright', 'email', 'City', 'CA', 'brettalbright',
       '$argon2i$v=19$m=4096,t=3,p=1$RRPaS829ZSMbyYQkRVNaxQ$rphkYvK1HX3Nk6vJ1SSY5GwZ1I73Y2022jjOZmPSKjQ',
-      '/presentation-images/user/spongebob.gif');
+      'presentation-images/user/spongebob.gif');
 
 
 INSERT into "users"
@@ -31,7 +31,7 @@ INSERT into "users"
 VALUES
       ('Alessandra', 'Gutierrez', 'email', 'City', 'CA', 'alessandragutierrez',
       '$argon2i$v=19$m=4096,t=3,p=1$mXR5mOoWlpHOSbawEC2g3A$/IsY/eiyXchpCMllVT2B4iIm/aoSPNnXe6sAFJv4zIs',
-      '/presentation-images/user/patrick.png');
+      'presentation-images/user/patrick.png');
 
 
 INSERT into "users"
@@ -40,7 +40,7 @@ INSERT into "users"
 VALUES
       ('BrianAlexander', 'Bozigian', 'email', 'City', 'CA', 'brianalexanderbozigian',
       '$argon2i$v=19$m=4096,t=3,p=1$jTv0mSi9oe6MuxOdzrRnjA$BVwK7mWtzg/Si/bd0GqvyUIygbybE8MFKkc92m+aN5Y',
-      '/presentation-images/user/homer.gif');
+      'presentation-images/user/homer.gif');
 
 
 INSERT into "users"
@@ -49,7 +49,7 @@ INSERT into "users"
 VALUES
       ('Chris', 'Kim', 'email', 'City', 'CA', 'chriskim',
       '$argon2i$v=19$m=4096,t=3,p=1$IeEySb9b1hKR/8Gjh6OlCA$5JespvjHsfBRqrFowj/cCft6M27OJSg5LH11C+dk9EU',
-      '/presentation-images/user/nic-cage-1.jpg');
+      'presentation-images/user/nic-cage-1.jpg');
 
 
 INSERT into "users"
@@ -58,7 +58,7 @@ INSERT into "users"
 VALUES
       ('Danny', 'Andreev', 'email', 'City', 'CA', 'dannyadreev',
       '$argon2i$v=19$m=4096,t=3,p=1$6QhKjBrBqiMJRqjplf6vqg$QfAe7JWYXeloRzTZIAHewhCAt7sVLvZKo1Y550yamZE',
-      '/presentation-images/user/hankhill.png');
+      'presentation-images/user/hankhill.png');
 
 
 INSERT into "users"
@@ -67,7 +67,7 @@ INSERT into "users"
 VALUES
       ('Michael', 'Aguilar', 'email', 'City', 'CA', 'michaelaguilar',
       '$argon2i$v=19$m=4096,t=3,p=1$7T+GriNzllpRXlwOa0MGCw$eDqK5zKBPwH71kHYVd+v0s+d7sITAcXHgXkNRFwpyx4',
-      '/presentation-images/user/spongebob-user.jpg');
+      'presentation-images/user/spongebob-user.jpg');
 
 
 INSERT into "users"
@@ -76,7 +76,7 @@ INSERT into "users"
 VALUES
       ('John', 'Hwang', 'email', 'City', 'CA', 'johnhwang',
       '$argon2i$v=19$m=4096,t=3,p=1$qwj4OLBktjo6jkIkKbGO6A$D5yVuS8xUEU8wozcrMIYKXAdKnxzEfupoFaceAKFbgc',
-      '/presentation-images/user/user-1.gif');
+      'presentation-images/user/user-1.gif');
 
 
 INSERT into "users"
@@ -85,7 +85,7 @@ INSERT into "users"
 VALUES
       ('Stefan', 'Carrera', 'email', 'City', 'CA', 'stefancarrera',
       '$argon2i$v=19$m=4096,t=3,p=1$K0Bb48ymmZcmcwx8n53oGg$85+mvG7TZN67wP0q7hgidqmiSS3Rwx2/4p3i8RlmlbU',
-      '/presentation-images/user/nic-cage-5.jpeg');
+      'presentation-images/user/nic-cage-5.jpeg');
 
 
 
@@ -105,7 +105,7 @@ INSERT into "tournaments"
       "mostCaught", "pointsMostCaught",
       "additionalRules")
     VALUES (
-      1, 'rc-0521 FISHTRAVAGANZA', '/presentation-images/tourney/fish-beer.gif',
+      1, 'rc-0521 FISHTRAVAGANZA', 'presentation-images/tourney/fish-beer.gif',
       '2021-07-01 00:00:00', '2022-07-01 00:00:00', false, 10,
       0, 0, false,
       true, 10,
@@ -116,37 +116,37 @@ INSERT into "tournaments"
     );
 
 INSERT into "tournaments"("userId", "tourneyName", "tourneyImg","startDate", "endDate", "closed", "maxParticipants", "minWeight", "maxWeight", "heaviestFive", "perPound", "pointsPerPound", "heaviest", "pointsHeaviest", "longest",  "pointsLongest", "mostCaught", "pointsMostCaught", "additionalRules")
-VALUES (2, 'Carp(e) diem', '/presentation-images/tourney/tourney-1.jpg',
+VALUES (2, 'Carp(e) diem', 'presentation-images/tourney/tourney-1.jpg',
 '2021-04-24 00:00:00', '2021-09-05 00:00:00',
 false, 20, 0, 0, true, true, 1, true, 0, true, 0, true, 0, 'additional');
 
 INSERT into "tournaments"("userId", "tourneyName", "tourneyImg","startDate", "endDate", "closed", "maxParticipants", "minWeight", "maxWeight", "heaviestFive", "perPound", "pointsPerPound", "heaviest", "pointsHeaviest", "longest",  "pointsLongest", "mostCaught", "pointsMostCaught", "additionalRules")
-VALUES (3, 'Roe-mantic Get-away', '/presentation-images/tourney/tourney-2.jpg',
+VALUES (3, 'Roe-mantic Get-away', 'presentation-images/tourney/tourney-2.jpg',
 '2021-06-04 00:00:00', '2021-09-06 00:00:00',
 false, 30, 0, 0, true, true, 1, true, 0, true, 0, true, 0, 'additional');
 
 INSERT into "tournaments"("userId", "tourneyName", "tourneyImg","startDate", "endDate", "closed", "maxParticipants", "minWeight", "maxWeight", "heaviestFive", "perPound", "pointsPerPound", "heaviest", "pointsHeaviest", "longest",  "pointsLongest", "mostCaught", "pointsMostCaught", "additionalRules")
-VALUES (4, 'Oh-fish-ial tournament', '/presentation-images/tourney/kid-fishing.gif',
+VALUES (4, 'Oh-fish-ial tournament', 'presentation-images/tourney/kid-fishing.gif',
 '2021-05-04 00:00:00', '2021-09-19 00:00:00',
 false, 40, 0, 0, true, true, 1, true, 0, true, 0, true, 0, 'additional');
 
 INSERT into "tournaments"("userId", "tourneyName", "tourneyImg","startDate", "endDate", "closed", "maxParticipants", "minWeight", "maxWeight", "heaviestFive", "perPound", "pointsPerPound", "heaviest", "pointsHeaviest", "longest",  "pointsLongest", "mostCaught", "pointsMostCaught", "additionalRules")
-VALUES (5, 'Holy Mackerel!', '/presentation-images/tourney/bigcat.gif',
+VALUES (5, 'Holy Mackerel!', 'presentation-images/tourney/bigcat.gif',
 '2020-03-04 00:00:00', '2020-12-31 00:00:00',
 false, 50, 0, 0, true, true, 1, true, 0, true, 0, true, 0, 'additional');
 
 INSERT into "tournaments"("userId", "tourneyName", "tourneyImg","startDate", "endDate", "closed", "maxParticipants", "minWeight", "maxWeight", "heaviestFive", "perPound", "pointsPerPound", "heaviest", "pointsHeaviest", "longest",  "pointsLongest", "mostCaught", "pointsMostCaught", "additionalRules")
-VALUES (6, 'Fishing for compliments', '/presentation-images/tourney/tourney-3.jpg',
+VALUES (6, 'Fishing for compliments', 'presentation-images/tourney/tourney-3.jpg',
 '2021-07-04 00:00:00', '2022-07-05 00:00:00',
 false, 60, 0, 0, true, true, 1, true, 0, true, 0, true, 0, 'additional');
 
 INSERT into "tournaments"("userId", "tourneyName", "tourneyImg","startDate", "endDate", "closed", "maxParticipants", "minWeight", "maxWeight", "heaviestFive", "perPound", "pointsPerPound", "heaviest", "pointsHeaviest", "longest",  "pointsLongest", "mostCaught", "pointsMostCaught", "additionalRules")
-VALUES (7, 'Quit being shellfish', '/presentation-images/tourney/flapper.gif',
+VALUES (7, 'Quit being shellfish', 'presentation-images/tourney/flapper.gif',
 '2021-07-04 00:00:00', '2021-11-05 00:00:00',
 false, 70, 0, 0, true, true, 1, true, 0, true, 0, true, 0, 'additional');
 
 INSERT into "tournaments"("userId", "tourneyName", "tourneyImg","startDate", "endDate", "closed", "maxParticipants", "minWeight", "maxWeight", "heaviestFive", "perPound", "pointsPerPound", "heaviest", "pointsHeaviest", "longest",  "pointsLongest", "mostCaught", "pointsMostCaught", "additionalRules")
-VALUES (8, 'Minecwaft', '/presentation-images/tourney/minecraft.gif',
+VALUES (8, 'Minecwaft', 'presentation-images/tourney/minecraft.gif',
 '2021-01-01 00:00:00', '2021-03-21 00:00:00',
 false, 80, 0, 0, true, true, 1, true, 0, true, 0, true, 0, 'additional');
 
@@ -219,60 +219,60 @@ INSERT into "participants" ("userId", "tourneyId", "score", "standing")
 
 INSERT into "catches" ("catchId", "userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (1, 1, 1, '2021-07-01 00:00:00', 2.1, 0,
-          '/presentation-images/fish/bass-1.jpg');
+  VALUES (1111, 1, 1, '2021-07-01 00:00:00', 2.1, 0,
+          'presentation-images/fish/bass-1.jpg');
 
 INSERT into "catches" ("catchId", "userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (2, 2, 1, '2021-07-02 00:00:00', 2.3, 0,
-          '/presentation-images/fish/bass-2.jpg');
+  VALUES (2222, 2, 1, '2021-07-02 00:00:00', 2.3, 0,
+          'presentation-images/fish/bass-2.jpg');
 
 INSERT into "catches" ("catchId", "userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (3, 3, 1, '2021-07-03 00:00:00', 3.9, 0,
-          '/presentation-images/fish/bass-3.jpg');
+  VALUES (3333, 3, 1, '2021-07-03 00:00:00', 3.9, 0,
+          'presentation-images/fish/bass-3.jpg');
 
 INSERT into "catches" ("catchId", "userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (4, 4, 1, '2021-07-04 00:00:00', 2.2, 0,
-          '/presentation-images/fish/fish-1.jpg');
+  VALUES (4444, 4, 1, '2021-07-04 00:00:00', 2.2, 0,
+          'presentation-images/fish/fish-1.jpg');
 
 INSERT into "catches" ("catchId", "userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (5, 5, 1, '2021-07-05 00:00:00', 1, 0,
-          '/presentation-images/fish/flounder.jpg');
+  VALUES (5555, 5, 1, '2021-07-05 00:00:00', 1, 0,
+          'presentation-images/fish/flounder.jpg');
 
 INSERT into "catches" ("catchId", "userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (6, 6, 1, '2021-07-06 00:00:00', 1.5, 0,
-          '/presentation-images/fish/fred.jpg');
+  VALUES (6666, 6, 1, '2021-07-06 00:00:00', 1.5, 0,
+          'presentation-images/fish/fred.jpg');
 
 INSERT into "catches" ("catchId", "userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (7, 7, 1, '2021-07-07 00:00:00', 1.4, 0,
-          '/presentation-images/fish/futurama.jpg');
+  VALUES (7777, 7, 1, '2021-07-07 00:00:00', 1.4, 0,
+          'presentation-images/fish/futurama.jpg');
 
 INSERT into "catches" ("catchId", "userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (8, 8, 1, '2021-07-08 00:00:00', 0.9, 0,
-          '/presentation-images/fish/trout-1.jpg');
+  VALUES (8888, 8, 1, '2021-07-08 00:00:00', 0.9, 0,
+          'presentation-images/fish/trout-1.jpg');
 
 INSERT into "catches" ("catchId", "userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (9, 9, 1, '2021-07-09 00:00:00', 1.1, 0,
-          '/presentation-images/fish/trout-2.jpg');
+  VALUES (9999, 9, 1, '2021-07-09 00:00:00', 1.1, 0,
+          'presentation-images/fish/trout-2.jpg');
 
 INSERT into "catches" ("catchId", "userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (10, 10, 1, '2021-07-10 00:00:00', 0.8, 0,
-          '/presentation-images/fish/trout-3.jpg');
+  VALUES (10000, 10, 1, '2021-07-10 00:00:00', 0.8, 0,
+          'presentation-images/fish/trout-3.jpg');
 
 INSERT into "catches" ("catchId", "userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (11, 1, 1, '2021-07-11 00:00:00', 1.4, 0,
-          '/presentation-images/fish/trout-4.jpg');
+  VALUES (11111, 1, 1, '2021-07-11 00:00:00', 1.4, 0,
+          'presentation-images/fish/trout-4.jpg');
 
 INSERT into "catches" ("catchId", "userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
-  VALUES (12, 2, 1, '2021-07-12 00:00:00', 3.6, 0,
-          '/presentation-images/fish/uninterested.jpg');
+  VALUES (12222, 2, 1, '2021-07-12 00:00:00', 3.6, 0,
+          'presentation-images/fish/uninterested.jpg');

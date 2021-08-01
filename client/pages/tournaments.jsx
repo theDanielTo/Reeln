@@ -22,16 +22,6 @@ export default class Tournaments extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/tourneys/current', {
-      headers: {
-        'x-access-token': getToken()
-      }
-    })
-      .then(res => res.json())
-      .then(tourneys => {
-        this.setState({ tourneys });
-      });
-
     fetch('/api/tourneys/counts', {
       headers: {
         'x-access-token': getToken()
@@ -40,6 +30,16 @@ export default class Tournaments extends React.Component {
       .then(res => res.json())
       .then(results => {
         this.setState({ numParticipants: results });
+      });
+
+    fetch('/api/tourneys/current', {
+      headers: {
+        'x-access-token': getToken()
+      }
+    })
+      .then(res => res.json())
+      .then(tourneys => {
+        this.setState({ tourneys });
       });
 
     window.addEventListener('hashchange', event => {
@@ -120,10 +120,12 @@ export default class Tournaments extends React.Component {
             {
               tournaments.map(tourney => {
                 if (!tourney.closed) {
-                  const found = numParticipants.find(obj => obj.tourneyId === tourney.tourneyId);
+                  const found = numParticipants.find(data => {
+                    return parseInt(data.tourneyId) === tourney.tourneyId;
+                  });
                   const line3 = tourney.maxParticipants
                     ? <>{found.numParticipants} / {tourney.maxParticipants} participants</>
-                    : <>Placed {tourney.standing}/{found.numParticipants}</>;
+                    : <>Placed 1/{found.numParticipants}</>;
                   return (
                     <Card key={'card-' + tourney.tourneyId}
                       url={`#tournaments?tourneyId=${tourney.tourneyId}`}
