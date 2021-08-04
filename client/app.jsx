@@ -1,6 +1,5 @@
 import React from 'react';
 import Splash from './pages/splash';
-import NotAuth from './pages/not-auth';
 import Authenticator from './pages/authenticator';
 import Home from './pages/home';
 import Tournaments from './pages/tournaments';
@@ -51,7 +50,7 @@ export default class App extends React.Component {
 
   handleSignOut() {
     window.localStorage.removeItem('X-Access-Token');
-    this.setState({ user: null, isAuthorizing: true });
+    this.setState({ user: null });
   }
 
   renderPage() {
@@ -94,11 +93,11 @@ export default class App extends React.Component {
 
   render() {
     if (this.state.loading) return <Splash />;
-    if (this.state.isAuthorizing) return <NotAuth />;
+    if (this.state.isAuthorizing) return null;
 
     const { user, route } = this.state;
-    const { handleSignOut } = this;
-    const contextValue = { user, route, handleSignOut };
+    const { handleAuthSubmit, handleSignOut } = this;
+    const contextValue = { user, route, handleAuthSubmit, handleSignOut };
 
     const nav = (route.path === 'sign-in' || route.path === 'sign-up')
       ? null
