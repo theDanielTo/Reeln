@@ -160,7 +160,7 @@ false, 80, 0, 0, true, true, 1, true, 0, true, 0, true, 0, 'additional');
 
 
 INSERT into "participants" ("userId", "tourneyId", "score", "standing")
-    VALUES (1, 1, 100, 1);
+    VALUES (1, 1, 0, 1);
 INSERT into "participants" ("userId", "tourneyId", "score", "standing")
     VALUES (1, 2, 100, 1);
 INSERT into "participants" ("userId", "tourneyId", "score", "standing")
@@ -217,10 +217,10 @@ INSERT into "participants" ("userId", "tourneyId", "score", "standing")
 
 
 
-INSERT into "catches" ("userId", "tourneyId",
-            "dateCaught", "weight", "length", "photo")
-  VALUES (1, 1, '2021-07-01 00:00:00', 2.1, 0,
-          'presentation-images/fish/bass-1.jpg');
+-- INSERT into "catches" ("userId", "tourneyId",
+--             "dateCaught", "weight", "length", "photo")
+--   VALUES (1, 1, '2021-07-01 00:00:00', 2.1, 0,
+--           'presentation-images/fish/bass-1.jpg');
 
 INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
@@ -267,10 +267,10 @@ INSERT into "catches" ("userId", "tourneyId",
   VALUES (10, 1, '2021-07-10 00:00:00', 0.8, 0,
           'presentation-images/fish/trout-3.jpg');
 
-INSERT into "catches" ("userId", "tourneyId",
-            "dateCaught", "weight", "length", "photo")
-  VALUES (1, 1, '2021-07-11 00:00:00', 1.4, 0,
-          'presentation-images/fish/trout-4.jpg');
+-- INSERT into "catches" ("userId", "tourneyId",
+--             "dateCaught", "weight", "length", "photo")
+--   VALUES (1, 1, '2021-07-11 00:00:00', 1.4, 0,
+--           'presentation-images/fish/trout-4.jpg');
 
 INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")

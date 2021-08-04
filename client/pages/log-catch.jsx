@@ -45,7 +45,7 @@ export default class LogCatch extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { route } = this.state;
+    const { route, weight, tourney } = this.state;
     const formData = new FormData(e.target);
     const tourneyId = route.params.get('tourneyId');
 
@@ -66,7 +66,7 @@ export default class LogCatch extends React.Component {
           },
           body: JSON.stringify({
             tourneyId: results.tourneyId,
-            score: this.state.weight * this.state.tourney.pointsPerPound
+            score: weight * tourney.pointsPerPound
           })
         })
           .then(res => res.json())

@@ -42,11 +42,6 @@ export default class TourneyForm extends React.Component {
     this.setState({ userId: this.props.user.userId });
   }
 
-  test(e) {
-    const formData = new FormData(e.target);
-    formData.get(e.target);
-  }
-
   handleInputChange(e) {
     const name = e.target.name;
     const value = e.target.value;

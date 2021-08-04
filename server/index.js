@@ -185,6 +185,7 @@ app.get('/api/tourneys/counts', (req, res, next) => {
 
 app.post('/api/tourney/create', uploadsMiddleware, (req, res, next) => {
   const { userId } = req.user;
+
   const {
     tourneyName, startDate, endDate,
     closed, maxParticipants,
@@ -196,10 +197,13 @@ app.post('/api/tourney/create', uploadsMiddleware, (req, res, next) => {
     mostCaught, pointsMostCaught,
     additionalRules
   } = req.body;
+
   if (!tourneyName || !startDate || !endDate || !closed) {
     throw new ClientError(400, 'missing required fields');
   }
+
   const url = req.file.filename;
+
   const sql = `
     INSERT into "tournaments"
       ("userId", "tourneyName", "tourneyImg",
@@ -215,6 +219,7 @@ app.post('/api/tourney/create', uploadsMiddleware, (req, res, next) => {
             $11, $12, $13, $14, $15, $16, $17, $18, $19)
     returning *
   `;
+
   const params = [
     userId, tourneyName, url,
     startDate, endDate, closed, maxParticipants,
@@ -226,6 +231,7 @@ app.post('/api/tourney/create', uploadsMiddleware, (req, res, next) => {
     mostCaught === 'true', pointsMostCaught,
     additionalRules
   ];
+
   db.query(sql, params)
     .then(result => {
       res.status(201).json(result.rows[0]);
