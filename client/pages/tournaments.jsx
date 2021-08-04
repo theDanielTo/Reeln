@@ -11,23 +11,36 @@ export default class Tournaments extends React.Component {
     super(props);
     this.state = {
       route: parseRoute(window.location.hash),
-      slider: 'slider-open',
-      headerText: 'Open Tournaments',
-      tourneys: []
+      slider: 'slider-current',
+      headerText: 'Current Tournaments',
+      tourneys: [],
+      numParticipants: []
     };
     this.handleSliderClick = this.handleSliderClick.bind(this);
-    this.renderPage = this.renderPage.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.renderPage = this.renderPage.bind(this);
   }
 
   componentDidMount() {
-    fetch('/api/tourneys/open', {
+    fetch('/api/tourneys/counts', {
       headers: {
         'x-access-token': getToken()
       }
     })
       .then(res => res.json())
-      .then(tourneys => this.setState({ tourneys }));
+      .then(results => {
+        this.setState({ numParticipants: results });
+      });
+
+    fetch('/api/tourneys/current', {
+      headers: {
+        'x-access-token': getToken()
+      }
+    })
+      .then(res => res.json())
+      .then(tourneys => {
+        this.setState({ tourneys });
+      });
 
     window.addEventListener('hashchange', event => {
       this.setState({ route: parseRoute(window.location.hash) });
@@ -89,9 +102,8 @@ export default class Tournaments extends React.Component {
       .catch(err => console.error(err));
   }
 
-  renderPage(tournaments) {
-    const { route } = this.state;
-    if (route.params.has('create')) {
+  renderPage(route, tournaments, numParticipants) {
+    if (route.params.has('createtourney')) {
       return (
         <>
           <ReelnBanner />
@@ -108,9 +120,12 @@ export default class Tournaments extends React.Component {
             {
               tournaments.map(tourney => {
                 if (!tourney.closed) {
+                  const found = numParticipants.find(data => {
+                    return parseInt(data.tourneyId) === tourney.tourneyId;
+                  });
                   const line3 = tourney.maxParticipants
-                    ? <>{tourney.numParticipants} / {tourney.maxParticipants} participants</>
-                    : <>Placed {tourney.standing}/{tourney.numParticipants}</>;
+                    ? <>{found.numParticipants} / {tourney.maxParticipants} participants</>
+                    : <>Placed 1/{found.numParticipants}</>;
                   return (
                     <Card key={'card-' + tourney.tourneyId}
                       url={`#tournaments?tourneyId=${tourney.tourneyId}`}
@@ -126,7 +141,7 @@ export default class Tournaments extends React.Component {
             }
           </div>
           <div className="t-btn-container flex-center">
-            <a href="#tournaments?create=tourney"
+            <a href="#tournaments?createtourney"
               className="create-tourney-btn border-none link-no-deco">
               Create Tournament
             </a>
@@ -137,9 +152,10 @@ export default class Tournaments extends React.Component {
   }
 
   render() {
+    const { route, tourneys, numParticipants } = this.state;
     return (
       <div className="tournaments-page">
-        {this.renderPage(this.state.tourneys)}
+        {this.renderPage(route, tourneys, numParticipants)}
       </div>
     );
   }

@@ -1,13 +1,14 @@
 import React from 'react';
 import Splash from './pages/splash';
+import NotAuth from './pages/not-auth';
 import Authenticator from './pages/authenticator';
-import AppDrawer from './components/app-drawer';
-import Header from './components/header';
-import NavBar from './components/nav-bar';
 import Home from './pages/home';
 import Tournaments from './pages/tournaments';
 import Tourney from './pages/tourney';
 import LogCatch from './pages/log-catch';
+import AppDrawer from './components/app-drawer';
+import Header from './components/header';
+import NavBar from './components/nav-bar';
 import { parseRoute, storeToken, decodeToken } from './lib';
 import AppContext from './lib/app-context';
 
@@ -50,7 +51,7 @@ export default class App extends React.Component {
 
   handleSignOut() {
     window.localStorage.removeItem('X-Access-Token');
-    this.setState({ user: null });
+    this.setState({ user: null, isAuthorizing: true });
   }
 
   renderPage() {
@@ -78,7 +79,7 @@ export default class App extends React.Component {
       }
       return (
         <div className="page">
-          <Tournaments user={this.state.user} />;
+          <Tournaments user={this.state.user} />
         </div>
       );
     }
@@ -93,11 +94,15 @@ export default class App extends React.Component {
 
   render() {
     if (this.state.loading) return <Splash />;
-    if (this.state.isAuthorizing) return null;
+    if (this.state.isAuthorizing) return <NotAuth />;
 
     const { user, route } = this.state;
     const { handleSignOut } = this;
     const contextValue = { user, route, handleSignOut };
+
+    const nav = (route.path === 'sign-in' || route.path === 'sign-up')
+      ? null
+      : <NavBar onNavClick={this.handleNavClick} />;
 
     return (
       <AppContext.Provider value={contextValue}>
@@ -106,9 +111,8 @@ export default class App extends React.Component {
         <div className="container">
           {this.renderPage()}
         </div>
-        <NavBar onNavClick={this.handleNavClick}/>
+        {nav}
       </AppContext.Provider>
     );
   }
-
 }

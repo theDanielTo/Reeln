@@ -23,13 +23,15 @@ app.post('/api/auth/sign-up', uploadsMiddleware, (req, res, next) => {
     .then(hashedPw => {
       const sql = `
         INSERT into "users"
-          ("firstName", "lastName",
-          "email", "city", "state",
-          "username", "hashedPw")
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+          ("firstName", "lastName", "email", "city", "state",
+          "username", "hashedPw", "avatar")
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         returning *
       `;
-      const params = [firstName, lastName, email, city, state, username, hashedPw];
+      const params = [
+        firstName, lastName, email, city, state,
+        username, hashedPw, 'default-avatar.jpg'
+      ];
       db.query(sql, params)
         .then(result => res.status(201).json(result.rows[0]))
         .catch(err => next(err));
@@ -75,6 +77,7 @@ app.use(authorizationMiddleware);
 
 app.get('/api/users', (req, res, next) => {
   const { userId } = req.user;
+  if (!userId) throw new ClientError(401, 'no user with that userId');
   const sql = `
     SELECT *
       FROM "users"
@@ -116,15 +119,13 @@ app.post('/api/users/upload', uploadsMiddleware, (req, res, next) => {
 app.get('/api/tourneys/open', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-    SELECT "t"."tourneyId", "tourneyName", "tourneyImg",
+    SELECT "tourneyId", "tourneyName", "tourneyImg",
             "closed", "maxParticipants",
-            count("p"."userId") AS "numParticipants",
             TO_CHAR("startDate", 'Mon DD, YYYY') AS "startDate",
             TO_CHAR("endDate", 'Mon DD, YYYY') AS "endDate"
-      FROM "participants" AS "p"
-      JOIN "tournaments" AS "t" USING ("tourneyId")
+      FROM "tournaments" AS "t"
+      JOIN "participants" AS "p" USING ("tourneyId")
       WHERE "p"."userId" != $1 AND "t"."userId" != $1 AND "endDate" > now()
-      GROUP BY "t"."tourneyId"
       ORDER BY "endDate"
   `;
   const param = [userId];
@@ -137,15 +138,14 @@ app.get('/api/tourneys/past', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
     SELECT "t"."tourneyId", "tourneyName", "tourneyImg", "closed",
-            count("p"."userId") AS "numParticipants",
             TO_CHAR("startDate", 'Mon DD, YYYY') AS "startDate",
             TO_CHAR("endDate", 'Mon DD, YYYY') AS "endDate"
       FROM "participants" AS "p"
       JOIN "tournaments" AS "t" USING ("tourneyId")
       WHERE "endDate" < now() AND "p"."userId" = $1
-      GROUP BY "t"."tourneyId"
       ORDER BY "endDate"
   `;
+
   const param = [userId];
   db.query(sql, param)
     .then(result => res.status(201).json(result.rows))
@@ -155,15 +155,13 @@ app.get('/api/tourneys/past', (req, res, next) => {
 app.get('/api/tourneys/current', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-    SELECT "t"."tourneyId", "tourneyName", "tourneyImg",
+    SELECT  "t"."tourneyId", "tourneyName", "tourneyImg",
             "closed", "maxParticipants",
-            count("p"."userId") AS "numParticipants",
             TO_CHAR("startDate", 'Mon DD, YYYY') AS "startDate",
             TO_CHAR("endDate", 'Mon DD, YYYY') AS "endDate"
-      FROM "participants" AS "p"
-      JOIN "tournaments" AS "t" USING ("tourneyId")
+      FROM "tournaments" AS "t"
+      JOIN "participants" AS "p" USING ("tourneyId")
       WHERE "endDate" > now() AND "p"."userId" = $1
-      GROUP BY "t"."tourneyId"
       ORDER BY "endDate"
   `;
   const param = [userId];
@@ -172,8 +170,22 @@ app.get('/api/tourneys/current', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/tourneys/counts', (req, res, next) => {
+  const sql = `
+    SELECT "tourneyId", count(*) AS "numParticipants"
+      FROM "participants" AS "p"
+      JOIN "tournaments" AS "t" USING ("tourneyId")
+      GROUP BY "tourneyId"
+      ORDER BY "tourneyId"
+  `;
+  db.query(sql)
+    .then(result => res.status(201).json(result.rows))
+    .catch(err => next(err));
+});
+
 app.post('/api/tourney/create', uploadsMiddleware, (req, res, next) => {
   const { userId } = req.user;
+
   const {
     tourneyName, startDate, endDate,
     closed, maxParticipants,
@@ -185,10 +197,13 @@ app.post('/api/tourney/create', uploadsMiddleware, (req, res, next) => {
     mostCaught, pointsMostCaught,
     additionalRules
   } = req.body;
+
   if (!tourneyName || !startDate || !endDate || !closed) {
     throw new ClientError(400, 'missing required fields');
   }
+
   const url = req.file.filename;
+
   const sql = `
     INSERT into "tournaments"
       ("userId", "tourneyName", "tourneyImg",
@@ -204,17 +219,19 @@ app.post('/api/tourney/create', uploadsMiddleware, (req, res, next) => {
             $11, $12, $13, $14, $15, $16, $17, $18, $19)
     returning *
   `;
+
   const params = [
     userId, tourneyName, url,
     startDate, endDate, closed, maxParticipants,
     minWeight, maxWeight,
-    heaviestFive === 'false',
-    perPound === 'false', pointsPerPound,
-    heaviest === 'false', pointsHeaviest,
-    longest === 'false', pointsLongest,
-    mostCaught === 'false', pointsMostCaught,
+    heaviestFive === 'true',
+    perPound === 'true', pointsPerPound,
+    heaviest === 'true', pointsHeaviest,
+    longest === 'true', pointsLongest,
+    mostCaught === 'true', pointsMostCaught,
     additionalRules
   ];
+
   db.query(sql, params)
     .then(result => {
       res.status(201).json(result.rows[0]);
@@ -224,6 +241,8 @@ app.post('/api/tourney/create', uploadsMiddleware, (req, res, next) => {
 
 app.get('/api/tourneys/:tourneyId', (req, res, next) => {
   const tourneyId = parseInt(req.params.tourneyId, 10);
+  if (!tourneyId) throw new ClientError(401, 'no tourney with that tourneyId');
+
   const sql = `
     SELECT "tourneyId", "userId",
           "tourneyName", "tourneyImg",
@@ -248,6 +267,8 @@ app.get('/api/tourneys/:tourneyId', (req, res, next) => {
 
 app.get('/api/participants/:tourneyId', (req, res, next) => {
   const tourneyId = parseInt(req.params.tourneyId, 10);
+  if (!tourneyId) throw new ClientError(401, 'no tourney with that tourneyId');
+
   const sql = `
     SELECT "userId", "score", "firstName", "lastName", "avatar"
       FROM "participants"
@@ -263,16 +284,19 @@ app.get('/api/participants/:tourneyId', (req, res, next) => {
 
 app.get('/api/catches/:tourneyId', (req, res, next) => {
   const tourneyId = parseInt(req.params.tourneyId, 10);
+  if (!tourneyId) throw new ClientError(401, 'no tourney with that tourneyId');
+
   const sql = `
-    SELECT "userId", "firstName", "lastName",
+    SELECT "firstName", "lastName",
           "catchId", "photo", "weight",
           TO_CHAR("dateCaught", 'Mon DD, YYYY') as "dateCaught"
       FROM "catches"
-      JOIN "users" AS "u" USING ("userId")
+      JOIN "users" USING ("userId")
     WHERE "tourneyId" = $1
-    ORDER BY "dateCaught" DESC
-    LIMIT 12
+
   `;
+  // ORDER BY "dateCaught" DESC
+  // LIMIT 12
   const param = [tourneyId];
   db.query(sql, param)
     .then(result => res.status(201).json(result.rows))
@@ -281,6 +305,8 @@ app.get('/api/catches/:tourneyId', (req, res, next) => {
 
 app.post('/api/tourneys/join/:tourneyId', (req, res, next) => {
   const tourneyId = parseInt(req.params.tourneyId, 10);
+  if (!tourneyId) throw new ClientError(401, 'no tourney with that tourneyId');
+
   const { userId } = req.user;
   const sql = `
     INSERT into "participants" ("userId", "tourneyId", "score", "standing")
@@ -295,8 +321,14 @@ app.post('/api/tourneys/join/:tourneyId', (req, res, next) => {
 app.post('/api/catches/log/:tourneyId', uploadsMiddleware, (req, res, next) => {
   const { userId } = req.user;
   const tourneyId = parseInt(req.params.tourneyId, 10);
+  if (!tourneyId) throw new ClientError(401, 'no tourney with that tourneyId');
+
   const { dateCaught, weight, length } = req.body;
+  if (!dateCaught) {
+    throw new ClientError(400, 'dateCaught is a required field');
+  }
   const url = req.file.filename;
+
   const sql = `
     INSERT into "catches"
           ("userId", "tourneyId", "dateCaught",

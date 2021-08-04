@@ -60,8 +60,10 @@ export default class Tourney extends React.Component {
           .then(res => res.json())
           .then(result => {
             this.setState({ host: result });
-          });
-      });
+          })
+          .catch(err => console.error(err));
+      })
+      .catch(err => console.error(err));
 
     fetch(`/api/participants/${this.props.tourneyId}`, {
       headers: {
@@ -69,7 +71,8 @@ export default class Tourney extends React.Component {
       }
     })
       .then(res => res.json())
-      .then(participants => this.setState({ participants }));
+      .then(participants => this.setState({ participants }))
+      .catch(err => console.error(err));
 
     fetch(`/api/catches/${this.props.tourneyId}`, {
       headers: {
@@ -77,7 +80,8 @@ export default class Tourney extends React.Component {
       }
     })
       .then(res => res.json())
-      .then(recentCatches => this.setState({ recentCatches }));
+      .then(recentCatches => this.setState({ recentCatches }))
+      .catch(err => console.error(err));
   }
 
   handleJoinBtnClick() {
@@ -93,7 +97,10 @@ export default class Tourney extends React.Component {
         }
       })
         .then(res => res.json())
-        .then(this.setState({ modalActive: false }));
+        .then(result => {
+          this.setState({ modalActive: false });
+          window.location.reload(true);
+        });
     } else if (e.target.id === 'modal-cancel') {
       this.setState({ modalActive: false });
     }

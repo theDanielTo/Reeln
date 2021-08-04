@@ -45,8 +45,9 @@ export default class LogCatch extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    const { route, weight, tourney } = this.state;
     const formData = new FormData(e.target);
-    const tourneyId = this.state.route.params.get('tourneyId');
+    const tourneyId = route.params.get('tourneyId');
 
     fetch(`/api/catches/log/${tourneyId}`, {
       method: 'POST',
@@ -65,7 +66,7 @@ export default class LogCatch extends React.Component {
           },
           body: JSON.stringify({
             tourneyId: results.tourneyId,
-            score: this.state.weight * this.state.tourney.pointsPerPound
+            score: weight * tourney.pointsPerPound
           })
         })
           .then(res => res.json())
@@ -85,14 +86,14 @@ export default class LogCatch extends React.Component {
 
           <div className="inline-groups">
             <div className="inline-group">
-              <label htmlFor="image-catch">
+              <label htmlFor="image">
                 Upload a photo:
-                <div className="file-select">
+                {/* <div className="file-select">
                   <i className="fas fa-edit" />
                   <span>{this.state.fileName}</span>
-                </div>
+                </div> */}
               </label>
-              <input required hidden type="file" name="image" id="image-catch"
+              <input required type="file" name="image" id="image"
                 onChange={this.handleFileChange} />
             </div>
             <div className="inline-group">
