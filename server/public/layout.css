@@ -45,6 +45,16 @@ body {
   min-height: 100vh;
 }
 
+.cards-container,
+.loader-spinner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  padding-bottom: 200px;
+  margin-top: 25px;
+  text-align: center;
+}
+
 .log-catch-page {
   display: flex;
   flex-direction: column;
@@ -73,5 +83,10 @@ body {
   .create-tourney-form {
     padding: 60px 5%;
     font-size: 1.5em;
+  }
+
+  .cards-container,
+  .loader-spinner {
+    margin-top: 50px;
   }
 }

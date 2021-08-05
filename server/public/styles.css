@@ -187,25 +187,25 @@ a {
 .top-triangle {
   border-top: 0 solid transparent;
   border-bottom: 40px solid transparent;
-  border-left: 375px solid var(--main-color);
+  border-left: 100vw solid var(--main-color);
 }
 
 .bottom-triangle {
   border-top: 40px solid transparent;
   border-bottom: 0 solid transparent;
-  border-right: 375px solid var(--alt-color);
+  border-right: 100vw solid var(--alt-color);
 }
 
 .top-triangle-lg {
   border-top: 0 solid transparent;
   border-bottom: 80px solid transparent;
-  border-left: 375px solid var(--main-color);
+  border-left: 100vw solid var(--main-color);
 }
 
 .bottom-triangle-lg {
   border-top: 80px solid transparent;
   border-bottom: 0 solid transparent;
-  border-right: 375px solid var(--alt-color);
+  border-right: 100vw solid var(--alt-color);
 }
 
 /* Nav */
@@ -328,19 +328,45 @@ iframe {
   text-align: center;
 }
 
-/* Card */
-.cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  padding-bottom: 200px;
-  margin-top: 25px;
+/* Loader Spinner */
+@keyframes loader {
+  0% {
+    transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+
+  100% {
+    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
 }
 
+.loader {
+  z-index: 100;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.loader::before {
+  animation: 1.5s linear infinite loader;
+  animation-play-state: inherit;
+  border: solid 5px #cfd0d1;
+  border-bottom-color: #1c87c9;
+  border-radius: 50%;
+  content: "";
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform;
+}
+
+/* Card */
 .card {
   width: 160px;
   height: 250px;
-  margin-bottom: 40px;
+  margin: 0 1rem 3rem;
 }
 
 .card-img {
@@ -791,11 +817,18 @@ iframe {
     text-align: center;
   }
 
-  /* Card */
-  .cards-container {
-    margin-top: 50px;
+  /* Loader spinner */
+  .loader {
+    top: 2rem;
+    right: 2rem;
   }
 
+  .loader::before {
+    height: 40px;
+    width: 40px;
+  }
+
+  /* Card */
   .card {
     width: 300px;
     margin: 0 20px 280px 20px;
@@ -861,7 +894,6 @@ iframe {
   /* Tourney Page */
 
   /* Modal */
-
   .modal-box {
     height: 240px;
     width: 320px;

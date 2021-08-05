@@ -2,6 +2,7 @@ import React from 'react';
 import { parseRoute, getToken } from '../lib';
 import TourneySlider from '../components/tourney-slider';
 import SubHeader from '../components/sub-header';
+import LoaderSpinner from '../components/loader-spinner';
 import Card from '../components/card';
 import TourneyForm from './tourney-form';
 import ReelnBanner from '../components/reeln-banner';
@@ -13,11 +14,13 @@ export default class Tournaments extends React.Component {
       route: parseRoute(window.location.hash),
       slider: 'slider-current',
       headerText: 'Current Tournaments',
+      cardsLoading: false,
       tourneys: [],
       numParticipants: []
     };
     this.handleSliderClick = this.handleSliderClick.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.renderLoading = this.renderLoading.bind(this);
     this.renderPage = this.renderPage.bind(this);
   }
 
@@ -52,6 +55,7 @@ export default class Tournaments extends React.Component {
   }
 
   handleSliderClick(e) {
+    this.setState({ cardsLoading: true });
     const filter = e.target.id.split('-')[1];
     fetch(`/api/tourneys/${filter}`, {
       headers: {
@@ -76,7 +80,7 @@ export default class Tournaments extends React.Component {
             headerText: 'Open Tournaments'
           });
         }
-        this.setState({ tourneys });
+        this.setState({ tourneys, cardsLoading: false });
       });
   }
 
@@ -102,6 +106,16 @@ export default class Tournaments extends React.Component {
       .catch(err => console.error(err));
   }
 
+  renderLoading() {
+    return (
+      <>
+        <TourneySlider sliderSelected={this.state.slider} onSliderClick={this.handleSliderClick} />
+        <SubHeader text={this.state.headerText} />
+        <LoaderSpinner />
+      </>
+    );
+  }
+
   renderPage(route, tournaments, numParticipants) {
     if (route.params.has('createtourney')) {
       return (
@@ -116,30 +130,9 @@ export default class Tournaments extends React.Component {
         <>
           <TourneySlider sliderSelected={this.state.slider} onSliderClick={this.handleSliderClick}/>
           <SubHeader text={this.state.headerText} />
-          <div className="cards-container">
-            {
-              tournaments.map(tourney => {
-                if (!tourney.closed) {
-                  const found = numParticipants.find(data => {
-                    return parseInt(data.tourneyId) === tourney.tourneyId;
-                  });
-                  const line3 = tourney.maxParticipants
-                    ? <>{found.numParticipants} / {tourney.maxParticipants} participants</>
-                    : <>Placed 1/{found.numParticipants}</>;
-                  return (
-                    <Card key={'card-' + tourney.tourneyId}
-                      url={`#tournaments?tourneyId=${tourney.tourneyId}`}
-                      line1={tourney.tourneyName}
-                      line2={tourney.startDate + ' - ' + tourney.endDate}
-                      line3={line3}
-                      src={'./images/' + tourney.tourneyImg} />
-                  );
-                } else {
-                  return null;
-                }
-              })
-            }
-          </div>
+          <CardsContainer
+            tournaments={tournaments}
+            numParticipants={numParticipants} />
           <div className="t-btn-container flex-center">
             <a href="#tournaments?createtourney"
               className="create-tourney-btn border-none link-no-deco">
@@ -152,11 +145,52 @@ export default class Tournaments extends React.Component {
   }
 
   render() {
-    const { route, tourneys, numParticipants } = this.state;
+    const { route, cardsLoading, tourneys, numParticipants } = this.state;
+    const render = cardsLoading
+      ? this.renderLoading()
+      : this.renderPage(route, tourneys, numParticipants);
     return (
       <div className="tournaments-page">
-        {this.renderPage(route, tourneys, numParticipants)}
+        {render}
       </div>
     );
   }
+}
+
+function CardsContainer(props) {
+  const { tournaments, numParticipants } = props;
+  if (tournaments.length === 0) {
+    return (
+    <div className="cards-container">
+      No tournaments here. :(
+    </div>
+    );
+  }
+
+  return (
+    <div className="cards-container">
+      {
+        tournaments.map(tourney => {
+          if (!tourney.closed) {
+            const found = numParticipants.find(data => {
+              return parseInt(data.tourneyId) === tourney.tourneyId;
+            });
+            const line3 = tourney.maxParticipants
+              ? `${found.numParticipants} / ${tourney.maxParticipants} participants`
+              : `Placed 1/${found.numParticipants}`;
+            return (
+              <Card key={'card-' + tourney.tourneyId}
+                url={`#tournaments?tourneyId=${tourney.tourneyId}`}
+                line1={tourney.tourneyName}
+                line2={tourney.startDate + ' - ' + tourney.endDate}
+                line3={line3}
+                src={'./images/' + tourney.tourneyImg} />
+            );
+          } else {
+            return null;
+          }
+        })
+      }
+    </div>
+  );
 }

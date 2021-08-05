@@ -217,11 +217,6 @@ INSERT into "participants" ("userId", "tourneyId", "score", "standing")
 
 
 
--- INSERT into "catches" ("userId", "tourneyId",
---             "dateCaught", "weight", "length", "photo")
---   VALUES (1, 1, '2021-07-01 00:00:00', 2.1, 0,
---           'presentation-images/fish/bass-1.jpg');
-
 INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
   VALUES (2, 1, '2021-07-02 00:00:00', 2.3, 0,
@@ -266,11 +261,6 @@ INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
   VALUES (10, 1, '2021-07-10 00:00:00', 0.8, 0,
           'presentation-images/fish/trout-3.jpg');
-
--- INSERT into "catches" ("userId", "tourneyId",
---             "dateCaught", "weight", "length", "photo")
---   VALUES (1, 1, '2021-07-11 00:00:00', 1.4, 0,
---           'presentation-images/fish/trout-4.jpg');
 
 INSERT into "catches" ("userId", "tourneyId",
             "dateCaught", "weight", "length", "photo")
