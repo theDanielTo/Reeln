@@ -162,7 +162,7 @@ function CardsContainer(props) {
   if (tournaments.length === 0) {
     return (
     <div className="cards-container">
-      No tournaments here. :(
+      {'No tournaments here. :('}
     </div>
     );
   }

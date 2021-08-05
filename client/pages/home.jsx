@@ -18,7 +18,7 @@ export default class Home extends React.Component {
         {/* GET API FOR WEATHER CONDITIONS HERE */}
 
         <h2>Featured Video</h2>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/lFF0QyNNNZ8" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
       </div>
     );
   }

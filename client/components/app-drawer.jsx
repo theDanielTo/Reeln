@@ -14,25 +14,25 @@ const navLinks = [
     icon: 'fa-trophy',
     text: 'TOURNEYS',
     href: '#tournaments'
-  },
-  {
-    id: 'logCatch',
-    icon: 'fa-book-medical',
-    text: 'LOG CATCH',
-    href: '#logcatch'
-  },
-  {
-    id: 'profile',
-    icon: 'fa-user-circle',
-    text: 'PROFILE',
-    href: '#profile'
-  },
-  {
-    id: 'settings',
-    icon: 'fa-sliders-h',
-    text: 'SETTINGS',
-    href: '#settings'
   }
+  // {
+  //   id: 'logCatch',
+  //   icon: 'fa-book-medical',
+  //   text: 'LOG CATCH',
+  //   href: '#logcatch'
+  // }
+  // {
+  //   id: 'profile',
+  //   icon: 'fa-user-circle',
+  //   text: 'PROFILE',
+  //   href: '#profile'
+  // },
+  // {
+  //   id: 'settings',
+  //   icon: 'fa-sliders-h',
+  //   text: 'SETTINGS',
+  //   href: '#settings'
+  // }
 ];
 
 export default class AppDrawer extends React.Component {
@@ -136,7 +136,9 @@ export default class AppDrawer extends React.Component {
                 </form>
                 {user !== null &&
                 <a href="#sign-in">
-                  <button onClick={handleSignOut}>
+                  <button
+                    className="sign-out-btn"
+                    onClick={handleSignOut}>
                     Sign out
                     <i className="fas fa-sign-out-alt" />
                   </button>

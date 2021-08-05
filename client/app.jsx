@@ -46,6 +46,7 @@ export default class App extends React.Component {
     const { user, token } = result;
     storeToken(token);
     this.setState({ user });
+    window.location.reload(false);
   }
 
   handleSignOut() {
