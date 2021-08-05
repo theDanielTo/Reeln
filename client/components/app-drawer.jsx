@@ -139,7 +139,7 @@ export default class AppDrawer extends React.Component {
                   <button
                     className="sign-out-btn"
                     onClick={handleSignOut}>
-                    Sign out
+                    {'Sign out '}
                     <i className="fas fa-sign-out-alt" />
                   </button>
                 </a>

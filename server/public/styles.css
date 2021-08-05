@@ -291,7 +291,7 @@ iframe {
 }
 
 .slider-btn {
-  background-color: var(--main-color);
+  background: radial-gradient(#007f81, #004445);
   color: var(--light-color);
   width: 150px;
   height: 30px;
@@ -303,7 +303,7 @@ iframe {
 }
 
 .slider-selected {
-  background-color: var(--secondary-color);
+  background: radial-gradient(#acffd0, #518869);
   color: var(--main-color);
 }
 
@@ -1083,7 +1083,7 @@ iframe {
     background-color: #2c7873;
   }
 
-  .user-avatar form > button {
+  .user-avatar button {
     color: var(--light-color);
     width: 200px;
     padding: 10px;
