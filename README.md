@@ -62,7 +62,7 @@ Try the application live at [https://reeln.herokuapp.com/](https://reeln.herokua
 - VS Code or any similar IDE supporting JavaScript ES6
 - Node.js 14 or higher
 - NPM 7 or higher
-- PostgreSQL 13 or higher
+- PostgreSQL 12 or higher
 
 ### Getting Started
 
