@@ -161,36 +161,36 @@ function CardsContainer(props) {
   const { tournaments, numParticipants } = props;
   if (tournaments.length === 0) {
     return (
-    <div className="cards-container">
-      No tournaments here. :(
-    </div>
+      <div className="cards-container">
+        {'No tournaments here. :('}
+      </div>
+    );
+  } else {
+    return (
+      <div className="cards-container">
+        {
+          tournaments.map(tourney => {
+            if (!tourney.closed) {
+              const found = numParticipants.find(data => {
+                return parseInt(data.tourneyId) === tourney.tourneyId;
+              });
+              const line3 = tourney.maxParticipants
+                ? `${found.numParticipants} / ${tourney.maxParticipants} participants`
+                : `Placed 1/${found.numParticipants}`;
+              return (
+                <Card key={'card-' + tourney.tourneyId}
+                  url={`#tournaments?tourneyId=${tourney.tourneyId}`}
+                  line1={tourney.tourneyName}
+                  line2={tourney.startDate + ' - ' + tourney.endDate}
+                  line3={line3}
+                  src={'./images/' + tourney.tourneyImg} />
+              );
+            } else {
+              return null;
+            }
+          })
+        }
+      </div>
     );
   }
-
-  return (
-    <div className="cards-container">
-      {
-        tournaments.map(tourney => {
-          if (!tourney.closed) {
-            const found = numParticipants.find(data => {
-              return parseInt(data.tourneyId) === tourney.tourneyId;
-            });
-            const line3 = tourney.maxParticipants
-              ? `${found.numParticipants} / ${tourney.maxParticipants} participants`
-              : `Placed 1/${found.numParticipants}`;
-            return (
-              <Card key={'card-' + tourney.tourneyId}
-                url={`#tournaments?tourneyId=${tourney.tourneyId}`}
-                line1={tourney.tourneyName}
-                line2={tourney.startDate + ' - ' + tourney.endDate}
-                line3={line3}
-                src={'./images/' + tourney.tourneyImg} />
-            );
-          } else {
-            return null;
-          }
-        })
-      }
-    </div>
-  );
 }
