@@ -11,7 +11,7 @@ export default class Chatbox extends React.Component {
   render() {
     return (
       <div className="chat-container text-center flex-center">
-        <h1>&quot;Chatbox coming SOON&trade;&quot;</h1>
+        <h1>&quot;Chat feature coming SOON&trade;&quot;</h1>
       </div>
     );
   }
