@@ -15,7 +15,6 @@ export default class Home extends React.Component {
         </div>
 
         <SubHeader text={'Welcome ' + firstName + ' ' + lastName + '!'} />
-        {/* GET API FOR WEATHER CONDITIONS HERE */}
 
         <div className="home-section">
           <h2 className="home-section-header">About Reel&apos;n</h2>
