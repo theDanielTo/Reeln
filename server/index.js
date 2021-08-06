@@ -295,8 +295,6 @@ app.get('/api/catches/:tourneyId', (req, res, next) => {
     WHERE "tourneyId" = $1
 
   `;
-  // ORDER BY "dateCaught" DESC
-  // LIMIT 12
   const param = [tourneyId];
   db.query(sql, param)
     .then(result => res.status(201).json(result.rows))

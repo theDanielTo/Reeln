@@ -14,24 +14,6 @@ const navIcons = [
     text: 'TOURNEYS',
     href: '#tournaments'
   }
-  // {
-  //   id: 'logCatch',
-  //   icon: 'fa-book-medical',
-  //   text: 'LOG CATCH',
-  //   href: '#logcatch'
-  // }
-  // {
-  //   id: 'profile',
-  //   icon: 'fa-user-circle',
-  //   text: 'PROFILE',
-  //   href: '#profile'
-  // },
-  // {
-  //   id: 'settings',
-  //   icon: 'fa-sliders-h',
-  //   text: 'SETTINGS',
-  //   href: '#settings'
-  // }
 ];
 
 export default class NavBar extends React.Component {
