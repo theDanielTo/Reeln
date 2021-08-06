@@ -42,9 +42,11 @@ Try the application live at [https://reeln.herokuapp.com/](https://reeln.herokua
 ## Preview
 
 #### Mobile app
+##### User log-in. View tournaments. Register to join an open tournament.
 ![reeln-demo-mobile](https://user-images.githubusercontent.com/82009814/128575620-58eac792-8653-4199-8ab5-3a111ec10865.gif)
 
 #### Browser view
+##### View lists of past/current/open tournaments. Log a catch for a current tournament. View updated leaderboard and the fish details after logging the catch.
 ![reeln-demo-browser-sm](https://user-images.githubusercontent.com/82009814/128576184-f299aaff-ef19-401d-a52c-d99a0adaab00.gif)
 
 ## Stretch Features
