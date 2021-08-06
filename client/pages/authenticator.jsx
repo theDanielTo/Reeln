@@ -30,8 +30,8 @@ class AuthForm extends React.Component {
       email: '',
       city: '',
       state: '',
-      username: '',
-      password: '',
+      username: 'admin',
+      password: 'password',
       errorMsg: ''
     };
     this.clearForm = this.clearForm.bind(this);
