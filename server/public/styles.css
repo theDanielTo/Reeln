@@ -682,6 +682,10 @@ iframe {
   margin: 0 0 10px;
 }
 
+.chat-container {
+  min-height: 600px;
+}
+
 /* Log Catch Page */
 .log-catch-form {
   padding: 10px;
