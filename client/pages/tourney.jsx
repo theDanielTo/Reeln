@@ -1,8 +1,9 @@
 import React from 'react';
 import ReelnBanner from '../components/reeln-banner';
+import ScoreCard from '../components/ScoreCard';
 import RulesOverview from '../components/rules-overview';
 import RecentCatches from '../components/recent-catches';
-import ScoreCard from '../components/ScoreCard';
+import Chatbox from '../components/chat-box';
 import { getToken } from '../lib';
 
 const tabs = [
@@ -226,9 +227,7 @@ function Tab(props) {
 function Details(props) {
   const rules = <RulesOverview tourney={props.tourney} host={props.host} />;
   const catches = <RecentCatches recentCatches={props.recentCatches} />;
-  const chat = <>
-    &quot;Chatbox coming SOON&trade;&quot;
-  </>;
+  const chat = <Chatbox />;
   let view = rules;
   if (props.tab === 'rules') view = rules;
   else if (props.tab === 'catches') view = catches;
