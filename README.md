@@ -1,6 +1,6 @@
 # Reel'n
-### A fishing tournament app for anyone who loves fishing and anyone who wants to see how they fare against other anglers.
-### A fully-responsive full-stack web app for creating invitational or public fishing competitions created with React.js and Node.js supplemented with Express.
+#### A fishing tournament app for anyone who loves fishing and anyone who wants to see how they fare against other anglers.
+#### A fully-responsive full-stack web app for creating invitational or public fishing competitions created with React.js and Node.js supplemented with Express.
 
 - Designed and built a fully responsive client-side React.js components while managing URL paths with hash routing.
 - Included multer as a file upload middleware to store and handle image files uploaded by users.
