@@ -18,7 +18,10 @@ export default class App extends React.Component {
       route: parseRoute(window.location.hash),
       loading: true,
       isAuthorizing: true,
-      user: null
+      user: null,
+      token: '',
+      tourneys: [],
+      numParticipants: []
     };
     this.handleAuthSubmit = this.handleAuthSubmit.bind(this);
     this.handleSignOut = this.handleSignOut.bind(this);
@@ -39,7 +42,27 @@ export default class App extends React.Component {
     });
     const token = window.localStorage.getItem('X-Access-Token');
     const user = token ? decodeToken(token) : null;
-    this.setState({ user, isAuthorizing: false });
+    this.setState({ user, token, isAuthorizing: false });
+
+    fetch('/api/tourneys/counts', {
+      headers: {
+        'x-access-token': token
+      }
+    })
+      .then(res => res.json())
+      .then(results => {
+        this.setState({ numParticipants: results });
+      });
+
+    fetch('/api/tourneys/current', {
+      headers: {
+        'x-access-token': token
+      }
+    })
+      .then(res => res.json())
+      .then(tourneys => {
+        this.setState({ tourneys });
+      });
   }
 
   handleAuthSubmit(result) {
@@ -54,7 +77,7 @@ export default class App extends React.Component {
     this.setState({ user: null });
   }
 
-  renderPage() {
+  renderPage(tourneys, numParticipants) {
     const { route } = this.state;
     if (route.path === '') {
       return (
@@ -73,13 +96,13 @@ export default class App extends React.Component {
       if (tourneyId) {
         return (
           <div className="page">
-            <Tourney user={this.state.user} tourneyId={tourneyId} />
+            <Tourney tourneyId={tourneyId} />
           </div>
         );
       }
       return (
         <div className="page">
-          <Tournaments user={this.state.user} />
+          <Tournaments tourneys={tourneys} numParticipants={numParticipants} />
         </div>
       );
     }
@@ -96,7 +119,7 @@ export default class App extends React.Component {
     if (this.state.loading) return <Splash />;
     if (this.state.isAuthorizing) return null;
 
-    const { user, route } = this.state;
+    const { user, route, tourneys, numParticipants } = this.state;
     const { handleAuthSubmit, handleSignOut } = this;
     const contextValue = { user, route, handleAuthSubmit, handleSignOut };
 
@@ -109,7 +132,7 @@ export default class App extends React.Component {
         <AppDrawer user={this.state.user}/>
         <Header title="Reel'n" />
         <div className="container">
-          {this.renderPage()}
+          {this.renderPage(tourneys, numParticipants)}
         </div>
         {nav}
       </AppContext.Provider>

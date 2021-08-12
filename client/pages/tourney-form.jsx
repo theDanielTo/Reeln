@@ -1,4 +1,5 @@
 import React from 'react';
+import AppContext from '../lib/app-context';
 
 const defaultAdditional = '--Example Rules--\n' +
 'Please feel free to change or omit these rules!\n\n' +
@@ -13,7 +14,7 @@ export default class TourneyForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: 1,
+      // userId: 1,
       tourneyName: '',
       startDate: '',
       endDate: '',
@@ -38,9 +39,10 @@ export default class TourneyForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
-    this.setState({ userId: this.props.user.userId });
-  }
+  // componentDidMount() {
+  //   const { userId } = this.context.user.userId;
+  //   this.setState({ userId });
+  // }
 
   handleInputChange(e) {
     const name = e.target.name;
@@ -286,3 +288,5 @@ export default class TourneyForm extends React.Component {
     );
   }
 }
+
+TourneyForm.contextType = AppContext;
