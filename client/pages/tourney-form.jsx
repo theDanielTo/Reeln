@@ -14,7 +14,6 @@ export default class TourneyForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // userId: 1,
       tourneyName: '',
       startDate: '',
       endDate: '',
@@ -38,11 +37,6 @@ export default class TourneyForm extends React.Component {
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
-  // componentDidMount() {
-  //   const { userId } = this.context.user.userId;
-  //   this.setState({ userId });
-  // }
 
   handleInputChange(e) {
     const name = e.target.name;
