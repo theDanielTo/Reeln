@@ -85,7 +85,7 @@ Try the application live at [https://reeln.herokuapp.com/](https://reeln.herokua
     npm run db:import
     ```
 
-4. Start the project. Once started you can view the application by opening http://localhost:3030 in your browser.
+4. Start the project. Once started you can view the application by opening http://localhost:3000 in your browser.
 
     ```shell
     npm run dev
