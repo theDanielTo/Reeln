@@ -14,6 +14,8 @@ export default class Tournaments extends React.Component {
     this.state = {
       slider: 'slider-current',
       headerText: 'Current Tournaments',
+      tourneys: [],
+      numParticipants: [],
       cardsLoading: false
     };
     this.handleSliderClick = this.handleSliderClick.bind(this);
@@ -122,8 +124,7 @@ export default class Tournaments extends React.Component {
   }
 
   render() {
-    const { cardsLoading } = this.state;
-    const { tourneys, numParticipants } = this.props;
+    const { tourneys, numParticipants, cardsLoading } = this.state;
     const { route } = this.context;
     const render = cardsLoading
       ? this.renderLoading()
