@@ -1,10 +1,11 @@
 import React from 'react';
+import AppContext from '../lib/app-context';
+import { getToken } from '../lib';
 import ReelnBanner from '../components/reeln-banner';
 import ScoreCard from '../components/ScoreCard';
 import RulesOverview from '../components/rules-overview';
 import RecentCatches from '../components/recent-catches';
 import Chatbox from '../components/chat-box';
-import { getToken } from '../lib';
 
 const tabs = [
   {
@@ -140,8 +141,9 @@ export default class Tourney extends React.Component {
     if (!this.state.tourney) return null;
     const { tourneyId, tourneyName, maxParticipants, tourneyImg } = this.state.tourney;
     const { participants } = this.state;
+    const { user } = this.context;
     const id = participants.find(participant => {
-      return participant.userId === this.props.user.userId;
+      return participant.userId === user.userId;
     });
     const showJoinBtn = (id || this.state.participants.length >= maxParticipants)
       ? ' hidden'
@@ -238,3 +240,5 @@ function Details(props) {
     </div>
   );
 }
+
+Tourney.contextType = AppContext;

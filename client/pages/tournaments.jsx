@@ -1,5 +1,6 @@
 import React from 'react';
-import { parseRoute, getToken } from '../lib';
+import { getToken } from '../lib';
+import AppContext from '../lib/app-context';
 import TourneySlider from '../components/tourney-slider';
 import SubHeader from '../components/sub-header';
 import LoaderSpinner from '../components/loader-spinner';
@@ -11,12 +12,11 @@ export default class Tournaments extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      route: parseRoute(window.location.hash),
       slider: 'slider-current',
       headerText: 'Current Tournaments',
-      cardsLoading: false,
       tourneys: [],
-      numParticipants: []
+      numParticipants: [],
+      cardsLoading: false
     };
     this.handleSliderClick = this.handleSliderClick.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -25,29 +25,8 @@ export default class Tournaments extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/tourneys/counts', {
-      headers: {
-        'x-access-token': getToken()
-      }
-    })
-      .then(res => res.json())
-      .then(results => {
-        this.setState({ numParticipants: results });
-      });
-
-    fetch('/api/tourneys/current', {
-      headers: {
-        'x-access-token': getToken()
-      }
-    })
-      .then(res => res.json())
-      .then(tourneys => {
-        this.setState({ tourneys });
-      });
-
-    window.addEventListener('hashchange', event => {
-      this.setState({ route: parseRoute(window.location.hash) });
-    });
+    const { tourneys, numParticipants } = this.props;
+    this.setState({ tourneys, numParticipants });
   }
 
   componentDidUpdate() {
@@ -121,7 +100,7 @@ export default class Tournaments extends React.Component {
       return (
         <>
           <ReelnBanner />
-          <TourneyForm user={this.props.user} onFormSubmit={this.handleFormSubmit} />
+          <TourneyForm onFormSubmit={this.handleFormSubmit} />
         </>
       );
     }
@@ -145,7 +124,8 @@ export default class Tournaments extends React.Component {
   }
 
   render() {
-    const { route, cardsLoading, tourneys, numParticipants } = this.state;
+    const { tourneys, numParticipants, cardsLoading } = this.state;
+    const { route } = this.context;
     const render = cardsLoading
       ? this.renderLoading()
       : this.renderPage(route, tourneys, numParticipants);
@@ -194,3 +174,5 @@ function CardsContainer(props) {
     );
   }
 }
+
+Tournaments.contextType = AppContext;
