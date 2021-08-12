@@ -152,7 +152,8 @@ export default class Tourney extends React.Component {
     return (
       <div className="tourney-page">
         <Modal hidden={this.state.modalActive}
-          onBtnClick={this.handleModalClick} />
+          onBtnClick={this.handleModalClick}
+          tourneyName={tourneyName} />
         <ReelnBanner />
         <div className={'t-btn-container flex-center'}>
           <a href={`#logcatch?tourneyId=${tourneyId}`}
@@ -197,7 +198,8 @@ function Modal(props) {
   return (
     <div className={'modal-bg flex-center ' + modalVis}>
       <div className="modal-box hidden">
-        <h2>Are you sure?</h2>
+        <h2>{props.tourneyName}</h2>
+        <h3>Are you sure?</h3>
         <div className="modal-btns">
           <button id="modal-yes" className="modal-btn"
             onClick={props.onBtnClick}>
