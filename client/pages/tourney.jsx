@@ -5,6 +5,7 @@ import ReelnBanner from '../components/reeln-banner';
 import ScoreCard from '../components/ScoreCard';
 import RulesOverview from '../components/rules-overview';
 import RecentCatches from '../components/recent-catches';
+import CatchDetailed from '../components/catch-detailed';
 import Chatbox from '../components/chat-box';
 
 const tabs = [
@@ -35,7 +36,6 @@ export default class Tourney extends React.Component {
       tourney: {},
       host: {},
       tab: 'rules',
-      fishDetail: 0,
       participants: [],
       recentCatches: [],
       catchDetailed: {}
@@ -46,6 +46,7 @@ export default class Tourney extends React.Component {
     this.renderTabs = this.renderTabs.bind(this);
     this.handleTabClick = this.handleTabClick.bind(this);
     this.handleCatchClick = this.handleCatchClick.bind(this);
+    this.closeCatchDetailed = this.closeCatchDetailed.bind(this);
   }
 
   componentDidMount() {
@@ -141,27 +142,44 @@ export default class Tourney extends React.Component {
   }
 
   handleCatchClick(e) {
-    this.setState({ fishDetail: e.target.closest('.card').id });
+    const id = parseInt(e.target.closest('.card').id);
+    const catchClicked = this.state.recentCatches.find(c => c.catchId === id);
+    this.setState({ catchDetailed: catchClicked });
+  }
+
+  closeCatchDetailed() {
+    this.setState({ catchDetailed: {} });
   }
 
   render() {
     if (!this.state.tourney) return null;
+
     const { tourneyId, tourneyName, maxParticipants, tourneyImg } = this.state.tourney;
-    const { participants } = this.state;
+    const { modalActive, participants, catchDetailed } = this.state;
     const { user } = this.context;
+
     const id = participants.find(participant => {
       return participant.userId === user.userId;
     });
-    const showJoinBtn = (id || this.state.participants.length >= maxParticipants)
+
+    const showJoinBtn = (id || participants.length >= maxParticipants)
       ? ' hidden'
       : '';
+
     const showLogBtn = !id ? ' hidden' : '';
+
     return (
       <div className="tourney-page">
-        <ModalJoin hidden={this.state.modalActive}
+        <ModalJoin hidden={modalActive}
           onBtnClick={this.handleModalClick}
           tourneyName={tourneyName} />
+
+        <CatchDetailed hidden={Object.keys(catchDetailed).length === 0}
+          catchDetailed={catchDetailed}
+          onBgClick={this.closeCatchDetailed} />
+
         <ReelnBanner />
+
         <div className={'t-btn-container flex-center'}>
           <a href={`#logcatch?tourneyId=${tourneyId}`}
             className={'join-tourney-btn border-none link-no-deco' + showLogBtn}
@@ -173,6 +191,7 @@ export default class Tourney extends React.Component {
             JOIN
           </button>
         </div>
+
         <div className="tourney-header text-center">
           <h2>{tourneyName}</h2>
           <img src={'./images/' + tourneyImg} alt="Tourney Pic" />
@@ -238,13 +257,16 @@ function Tab(props) {
 
 function Details(props) {
   const { tourney, host, recentCatches, onCardClick, tab, id } = props;
+
   const rules = <RulesOverview tourney={tourney} host={host} />;
   const catches = <RecentCatches recentCatches={recentCatches} onCardClick={onCardClick}/>;
   const chat = <Chatbox />;
+
   let view = rules;
   if (tab === 'rules') view = rules;
   else if (tab === 'catches') view = catches;
   else view = chat;
+
   return (
     <div className="detail-view" id={id}>
       {view}
