@@ -291,7 +291,7 @@ app.get('/api/catches/:tourneyId', (req, res, next) => {
 
   const sql = `
     SELECT "firstName", "lastName",
-          "catchId", "photo", "weight",
+          "catchId", "photo", "weight", "length",
           TO_CHAR("dateCaught", 'Mon DD, YYYY') as "dateCaught"
       FROM "catches"
       JOIN "users" USING ("userId")

@@ -12,8 +12,8 @@ export default function RecentCatches(props) {
               id={c.catchId}
               onCardClick={onCardClick}
               line1={c.firstName + ' ' + c.lastName}
-              line2={'Caught on: ' + c.dateCaught}
-              line3={'Weight: ' + c.weight + ' pounds'}
+              line2={'Weight: ' + c.weight + ' pounds'}
+              line3={'Points: 10'}
               src={'./images/' + c.photo} />
           );
         })

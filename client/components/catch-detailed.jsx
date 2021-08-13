@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function CatchDetailed(props) {
   const { hidden, onBgClick } = props;
-  const { photo, firstName, lastName, dateCaught, weight } = props.catchDetailed;
+  const { firstName, lastName, dateCaught, length, photo } = props.catchDetailed;
   const modalVis = (hidden)
     ? 'hidden'
     : '';
@@ -15,7 +15,7 @@ export default function CatchDetailed(props) {
         <div className="catch-detailed-text">
           <p>{'Caught by: ' + firstName + ' ' + lastName}</p>
           <p>{'On ' + dateCaught}</p>
-          <p>{'Weight: ' + weight + ' pounds'}</p>
+          <p>{'Length: ' + length + ' inches'}</p>
         </div>
         <img className="catch-detailed-img" src={'./images/' + photo} alt="Photo of fish" />
       </div>

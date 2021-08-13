@@ -87,7 +87,8 @@ export default class LogCatch extends React.Component {
           <div className="inline-groups">
             <div className="inline-group">
               <label htmlFor="image">
-                Upload a photo:
+                Upload a photo
+                <span>(Photos in landscape orientation look better)</span>
               </label>
               <input required type="file" name="image" id="image"
                 onChange={this.handleFileChange} />
