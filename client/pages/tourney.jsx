@@ -34,15 +34,18 @@ export default class Tourney extends React.Component {
       photoName: '',
       tourney: {},
       host: {},
+      tab: 'rules',
+      fishDetail: 0,
       participants: [],
       recentCatches: [],
-      tab: 'rules'
+      catchDetailed: {}
     };
     this.handleJoinBtnClick = this.handleJoinBtnClick.bind(this);
     this.handleModalClick = this.handleModalClick.bind(this);
     this.renderLeaderboard = this.renderLeaderboard.bind(this);
     this.renderTabs = this.renderTabs.bind(this);
     this.handleTabClick = this.handleTabClick.bind(this);
+    this.handleCatchClick = this.handleCatchClick.bind(this);
   }
 
   componentDidMount() {
@@ -137,6 +140,10 @@ export default class Tourney extends React.Component {
     this.setState({ tab: e.target.closest('.tab').id });
   }
 
+  handleCatchClick(e) {
+    this.setState({ fishDetail: e.target.closest('.card').id });
+  }
+
   render() {
     if (!this.state.tourney) return null;
     const { tourneyId, tourneyName, maxParticipants, tourneyImg } = this.state.tourney;
@@ -151,7 +158,7 @@ export default class Tourney extends React.Component {
     const showLogBtn = !id ? ' hidden' : '';
     return (
       <div className="tourney-page">
-        <Modal hidden={this.state.modalActive}
+        <ModalJoin hidden={this.state.modalActive}
           onBtnClick={this.handleModalClick}
           tourneyName={tourneyName} />
         <ReelnBanner />
@@ -184,14 +191,15 @@ export default class Tourney extends React.Component {
             tab={this.state.tab}
             tourney={this.state.tourney}
             host={this.state.host}
-            recentCatches={this.state.recentCatches} />
+            recentCatches={this.state.recentCatches}
+            onCardClick={this.handleCatchClick} />
         </div>
       </div>
     );
   }
 }
 
-function Modal(props) {
+function ModalJoin(props) {
   const modalVis = (props.hidden)
     ? ''
     : 'hidden';
@@ -229,15 +237,16 @@ function Tab(props) {
 }
 
 function Details(props) {
-  const rules = <RulesOverview tourney={props.tourney} host={props.host} />;
-  const catches = <RecentCatches recentCatches={props.recentCatches} />;
+  const { tourney, host, recentCatches, onCardClick, tab, id } = props;
+  const rules = <RulesOverview tourney={tourney} host={host} />;
+  const catches = <RecentCatches recentCatches={recentCatches} onCardClick={onCardClick}/>;
   const chat = <Chatbox />;
   let view = rules;
-  if (props.tab === 'rules') view = rules;
-  else if (props.tab === 'catches') view = catches;
+  if (tab === 'rules') view = rules;
+  else if (tab === 'catches') view = catches;
   else view = chat;
   return (
-    <div className="detail-view" id={props.id}>
+    <div className="detail-view" id={id}>
       {view}
     </div>
   );

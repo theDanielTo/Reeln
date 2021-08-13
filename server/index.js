@@ -119,13 +119,16 @@ app.post('/api/users/upload', uploadsMiddleware, (req, res, next) => {
 app.get('/api/tourneys/open', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-    SELECT DISTINCT "tourneyId", "tourneyName", "tourneyImg",
-            "closed", "maxParticipants",
+    SELECT DISTINCT "tourneyId", "tourneyName",
+            "tourneyImg", "maxParticipants",
             TO_CHAR("startDate", 'Mon DD, YYYY') AS "startDate",
             TO_CHAR("endDate", 'Mon DD, YYYY') AS "endDate"
       FROM "tournaments" AS "t"
       JOIN "participants" AS "p" USING ("tourneyId")
-      WHERE "p"."userId" != $1 AND "t"."userId" != $1 AND "endDate" > now()
+      WHERE "p"."userId" != $1
+        AND "t"."userId" != $1
+        AND "closed" = false
+        AND "endDate" > now()
       ORDER BY "endDate"
   `;
   const param = [userId];
@@ -137,7 +140,7 @@ app.get('/api/tourneys/open', (req, res, next) => {
 app.get('/api/tourneys/past', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-    SELECT DISTINCT "t"."tourneyId", "tourneyName", "tourneyImg", "closed",
+    SELECT DISTINCT "t"."tourneyId", "tourneyName", "tourneyImg",
             TO_CHAR("startDate", 'Mon DD, YYYY') AS "startDate",
             TO_CHAR("endDate", 'Mon DD, YYYY') AS "endDate"
       FROM "participants" AS "p"
@@ -155,8 +158,8 @@ app.get('/api/tourneys/past', (req, res, next) => {
 app.get('/api/tourneys/current', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-    SELECT DISTINCT "t"."tourneyId", "tourneyName", "tourneyImg",
-            "closed", "maxParticipants",
+    SELECT DISTINCT "t"."tourneyId", "tourneyName",
+            "tourneyImg", "maxParticipants",
             TO_CHAR("startDate", 'Mon DD, YYYY') AS "startDate",
             TO_CHAR("endDate", 'Mon DD, YYYY') AS "endDate"
       FROM "tournaments" AS "t"
