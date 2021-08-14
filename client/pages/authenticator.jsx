@@ -221,7 +221,7 @@ class AuthForm extends React.Component {
         <span>
           {message}
           <a href={hereHref}
-            onClick={this.clearForm}>
+            onClick={this.clearForm()}>
             here
           </a>.
         </span>

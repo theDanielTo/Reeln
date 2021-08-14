@@ -11,14 +11,22 @@ export default function Chatbox(props) {
   function displayMsgs() {
     return messages.map(msg => {
       return (
-        <p key={msg}>{msg}</p>
+        <div key={msg + 'key'} className="chat-msg">
+          <p className="chat-username">
+            Username <span>(date, time)</span>
+          </p>
+          <p>
+            {msg}
+          </p>
+        </div>
       );
     });
   }
 
   function sendMsg(e) {
     e.preventDefault();
-    setMessages(prevMsgs => [...prevMsgs, chatInput.value]);
+    setMessages(prevMsgs => [...prevMsgs, chatInput]);
+    setChatInput('');
   }
 
   return (
@@ -31,7 +39,8 @@ export default function Chatbox(props) {
           <i className="fas fa-plus-circle" />
         </label>
         <input type="text" className="border-none"
-          id="chat-input" name="chatInput"
+          id="chat-input" name="chatInput" autoComplete="off"
+          value={chatInput}
           onChange={handleChatInputChange} />
         <button type="submit"
           id="chat-send-button" className="border-none">
