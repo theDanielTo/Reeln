@@ -662,9 +662,10 @@ iframe {
   color: var(--selected-color);
 }
 
+/* Rules Overview */
 .rules-overview-container {
   height: 100%;
-  padding: 0 20px 200px;
+  padding: 20px 20px 200px;
   background-image: url(./images/browser-bg.svg);
   background-size: cover;
   background-repeat: no-repeat;
@@ -675,15 +676,7 @@ iframe {
   background-color: #fffdea73;
   padding: 10px;
   border-radius: 10px;
-  margin-bottom: 20px;
-}
-
-.rules-overview-section > h2 {
-  margin: 0 0 10px;
-}
-
-.chat-container {
-  min-height: 600px;
+  margin: 15px 0;
 }
 
 /* Catch Detailed */
@@ -723,6 +716,43 @@ iframe {
   justify-content: space-evenly;
   font-size: 20px;
   color: var(--light-color);
+}
+
+/* Chat Container */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 630px;
+}
+
+.messages-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 98%;
+  min-height: 400px;
+  background-color: #fffdeaab;
+}
+
+.chat-input-row {
+  width: 98%;
+  padding: 10px;
+  background-color: #fffdeaab;
+  border: 1px solid black;
+}
+
+#chat-input {
+  width: 80%;
+  background-color: #fffdeaab;
+}
+
+#chat-input:focus {
+  outline: none;
+}
+
+#chat-send-button {
+  background-color: #fffdeaab;
 }
 
 /* Log Catch Page */
@@ -1017,8 +1047,13 @@ iframe {
   }
 
   .rules-overview-container {
-    padding: 0 50px 300px;
+    padding: 30px 50px 300px;
     font-size: 1.5rem;
+  }
+
+  .rules-overview-section {
+    padding: 20px;
+    margin: 20px 0;
   }
 
   /* Leaderboard */
