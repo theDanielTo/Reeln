@@ -1,18 +1,21 @@
 import React from 'react';
 
-export default class Chatbox extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
+export default function Chatbox(props) {
+  function displayMessage(msg) {
 
-    };
   }
 
-  render() {
-    return (
-      <div className="chat-container text-center flex-center">
-        <h1>&quot;Chat feature coming SOON&trade;&quot;</h1>
+  return (
+    <div className="chat-container">
+      <div className="messages-container">
+
       </div>
-    );
-  }
+      <form onSubmit={displayMessage}>
+        <label htmlFor="message-input"></label>
+        <input type="text" id="message-input"/>
+        <button type="submit" id="send-button">Send</button>
+      </form>
+    </div>
+  );
+
 }
