@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { socket } from '../../server/socket';
 
 export default function Chatbox(props) {
   const [messages, setMessages] = useState(['test', 'msg1', 'msg2']);
   const [chatInput, setChatInput] = useState('');
+
+  useEffect(() => {
+  }, []);
 
   function handleChatInputChange(e) {
     setChatInput(chatInput => e.target.value);
   }
 
   function displayMsgs() {
-    return messages.map(msg => {
+    return messages.map((msg, index) => {
       return (
-        <div key={msg + 'key'} className="chat-msg">
+        <div key={index} className="chat-msg">
           <p className="chat-username">
             Username <span>(date, time)</span>
           </p>
@@ -28,6 +32,12 @@ export default function Chatbox(props) {
     setMessages(prevMsgs => [...prevMsgs, chatInput]);
     setChatInput('');
   }
+
+  socket.on('connect', () => {
+    setMessages(prevMsgs => [...prevMsgs, `You have connected with id: ${socket.id}`]);
+  });
+
+  socket.emit('custom-event', 10, 'hello');
 
   return (
     <div className="chat-container">
