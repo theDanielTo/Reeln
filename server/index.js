@@ -1,15 +1,20 @@
 require('dotenv/config');
 const express = require('express');
-const db = require('./db');
 const argon2 = require('argon2'); // eslint-disable-line
 const jwt = require('jsonwebtoken'); // eslint-disable-line
+
+const db = require('./db');
 const ClientError = require('./client-error');
+
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 const authorizationMiddleware = require('./authorization-middleware');
 const uploadsMiddleware = require('./uploads-middleware');
 
 const app = express();
+
+const io = require('socket.io')(process.env.SOCKET_PORT);
+
 app.use(staticMiddleware);
 app.use(express.json());
 
@@ -356,6 +361,14 @@ app.patch('/api/participants/addScore', (req, res, next) => {
   db.query(sql, params)
     .then(result => res.status(201).json(result.rows[0]))
     .catch(err => next(err));
+});
+
+io.on('connection', socket => {
+  console.log('a user connected with id:', socket.id);
+});
+
+io.on('custom-event', (number, string) => {
+  console.log(number, string);
 });
 
 app.use(errorMiddleware);

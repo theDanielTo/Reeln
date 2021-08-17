@@ -21,7 +21,8 @@ export default class App extends React.Component {
       user: null,
       token: '',
       tourneys: [],
-      numParticipants: []
+      numParticipants: [],
+      socket: null
     };
     this.handleAuthSubmit = this.handleAuthSubmit.bind(this);
     this.handleSignOut = this.handleSignOut.bind(this);

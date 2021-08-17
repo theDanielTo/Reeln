@@ -1,13 +1,13 @@
 import React from 'react';
 import SubHeader from '../components/sub-header';
-import { getToken, parseRoute } from '../lib';
+import AppContext from '../lib/app-context';
+import { getToken } from '../lib';
 
 export default class LogCatch extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      route: parseRoute(window.location.hash),
       tourney: {},
       fileName: 'Click here to select a photo',
       dateCaught: '',
@@ -21,7 +21,8 @@ export default class LogCatch extends React.Component {
   }
 
   componentDidMount() {
-    const tourneyId = this.state.route.params.get('tourneyId');
+    const { route } = this.context;
+    const tourneyId = route.params.get('tourneyId');
     fetch(`/api/tourneys/${tourneyId}`, {
       headers: {
         'x-access-token': getToken()
@@ -45,7 +46,8 @@ export default class LogCatch extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { route, weight, tourney } = this.state;
+    const { weight, tourney } = this.state;
+    const { route } = this.context;
     const formData = new FormData(e.target);
     const tourneyId = route.params.get('tourneyId');
 
@@ -128,3 +130,5 @@ export default class LogCatch extends React.Component {
     );
   }
 }
+
+LogCatch.contextType = AppContext;
